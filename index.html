@@ -8,21 +8,22 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="apple-mobile-web-app-status-bar-style" content="white">
-  <meta name="theme-color" content="#e3f2fd">
+  <meta name="theme-color" content="#ffffff">
 
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Courier+Prime&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: linear-gradient(135deg, #e3f2fd, #f3e5f5);
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --accent: #9c27b0;
-      --text: #4a148c;
+      /* Default to white/clean, updated by JS */
+      --bg: #f8f9fa;
+      --accent: #546e7a;
+      --text: #37474f;
+      --btn-text: #fff;
     }
 
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       background: var(--bg);
       display: flex;
       flex-direction: column;
@@ -30,69 +31,67 @@
       justify-content: center;
       font-family: "Quicksand", sans-serif;
       -webkit-tap-highlight-color: transparent;
-      overflow: hidden;
-      transition: background 0.5s;
+      transition: background 0.5s ease;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
+    /* --- INPUT SECTION --- */
     .controls {
-      background: var(--card-bg);
-      backdrop-filter: blur(15px);
-      padding: 25px;
-      border-radius: 30px;
+      width: 100%;
+      max-width: 360px;
       display: flex;
       flex-direction: column;
       gap: 15px;
-      width: 80%;
-      max-width: 300px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      border: 2px solid #fff;
+      margin-bottom: 20px;
     }
 
-    input, select {
-      border: 2px solid var(--accent);
+    .name-box {
       background: #fff;
+      border: 2px solid var(--accent);
       padding: 15px;
-      border-radius: 15px;
-      font-family: "Quicksand", sans-serif;
-      font-weight: 700;
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
-      text-align: center;
-      width: 100%;
-      box-sizing: border-box; /* Fixes padding issues */
-    }
-
-    /* Custom Arrow for Select Dropdown */
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%239c27b0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat;
-      background-position: right 15px top 50%;
-      background-size: 12px auto;
-    }
-
-    button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 16px;
-      border-radius: 999px;
+      border-radius: 20px;
       font-family: "Quicksand", sans-serif;
       font-weight: 700;
       font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-      transition: transform 0.2s;
+      text-align: center;
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
-    button:active { transform: scale(0.95); }
 
-    /* RECEIPT STYLES */
+    /* GRID FOR SIGNS */
+    .sign-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .sign-btn {
+      background: #fff;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 12px 5px;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .sign-btn:active {
+      transform: scale(0.95);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* --- RECEIPT --- */
     .receipt-container {
       perspective: 1000px;
-      width: 85%;
+      width: 100%;
       max-width: 340px;
-      display: none;
+      display: none; /* Hidden by default */
     }
 
     .receipt {
@@ -100,9 +99,11 @@
       padding: 25px 20px;
       font-family: "Courier Prime", monospace;
       color: #37474f;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-      animation: printReceipt 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      animation: printReceipt 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      position: relative;
       
+      /* Jagged edge */
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
@@ -115,42 +116,50 @@
     }
 
     .header { text-align: center; border-bottom: 2px dashed #b0bec5; padding-bottom: 15px; margin-bottom: 15px; }
-    .header h2 { margin: 0; font-size: 1.5rem; color: var(--accent); letter-spacing: 2px; }
+    .header h2 { margin: 0; font-size: 1.6rem; color: var(--accent); letter-spacing: 1px; }
+    .meta { font-size: 0.75rem; text-align: center; margin-bottom: 20px; line-height: 1.5; }
     
     .item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
     
-    .total { margin-top: 20px; border-top: 2px dashed #b0bec5; padding-top: 15px; display: flex; justify-content: space-between; font-weight: bold; }
+    .total { margin-top: 20px; border-top: 2px dashed #b0bec5; padding-top: 15px; display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; }
     
-    .secret-hint {
-      margin-top: 25px; text-align: center; font-size: 0.7rem; color: var(--accent); opacity: 0.8; font-weight: bold;
+    .barcode { margin-top: 25px; text-align: center; font-size: 2rem; opacity: 0.4; letter-spacing: -4px; transform: scaleY(0.7); }
+    
+    /* TROPHY BAR */
+    .trophy-bar {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.3);
+      padding: 10px 20px;
+      border-radius: 99px;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.8rem;
+      backdrop-filter: blur(5px);
+      text-align: center;
     }
-
-    .barcode { margin-top: 10px; text-align: center; font-size: 1.5rem; opacity: 0.5; letter-spacing: -3px; }
   </style>
 </head>
 <body>
 
   <div class="controls" id="controls">
-    <input type="text" id="nameInput" placeholder="Name or Secret Code">
+    <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
     
-    <select id="zodiacInput">
-      <option value="" disabled selected>Select Your Sign</option>
-      <option value="fire">Aries / Leo / Sag</option>
-      <option value="earth">Taurus / Virgo / Cap</option>
-      <option value="air">Gemini / Libra / Aqua</option>
-      <option value="water">Cancer / Scorpio / Pisces</option>
-    </select>
-
-    <button onclick="generate()">♡ PRINT RECEIPT ♡</button>
+    <div class="sign-grid" id="signGrid">
+      </div>
+    
+    <div class="trophy-bar" id="rankDisplay">
+      RANK: STAR DUST (0)
+    </div>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
     <div class="receipt">
       <div class="header">
-        <h2 id="storeName">COSMIC STORE</h2>
-        <div id="dateLine"></div>
+        <h2 id="storeName">COSMIC</h2>
+        <div style="font-size: 0.8rem; margin-top:5px;">OFFICIAL RECEIPT</div>
       </div>
 
+      <div class="meta" id="receiptMeta"></div>
       <div id="itemList"></div>
 
       <div class="total">
@@ -158,100 +167,124 @@
         <span id="totalText">100% CUTE</span>
       </div>
 
-      <div class="secret-hint" id="secretHint"></div>
-      
-      <div class="barcode">|| ||| || ||||| ||</div>
+      <div style="text-align: center; font-size: 0.7rem; margin-top: 20px; opacity: 0.7;">
+        THANK YOU FOR EXISTING
+      </div>
+      <div class="barcode">||| || ||||| || ||</div>
     </div>
-    <div style="text-align:center; color:white; font-size:0.8rem; margin-top:15px; opacity:0.8;">( tap receipt to reset )</div>
+    
+    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">
+      ( tap anywhere to reset )
+    </div>
   </div>
 
   <script>
-    // --- 1. ZODIAC SPECIFIC ITEMS ---
-    const zodiacItems = {
-      fire: [ // Aries, Leo, Sag
-        {name: "Main Character Energy", price: "priceless"},
-        {name: "Impulse Buy", price: "$50.00"},
-        {name: "Being Loud", price: "Free"},
-        {name: "God Complex", price: "Tax incl."},
-        {name: "Starting Drama", price: "$0.00"}
-      ],
-      earth: [ // Taurus, Virgo, Cap
-        {name: "Nap Time", price: "4hrs"},
-        {name: "Organizing", price: "satisfying"},
-        {name: "Overthinking", price: "Tax incl."},
-        {name: "Expensive Taste", price: "$$$"},
-        {name: "Judging People", price: "Free"}
-      ],
-      air: [ // Gemini, Libra, Aqua
-        {name: "Ghosting", price: "oops"},
-        {name: "Yap Session", price: "3hrs"},
-        {name: "Indecision", price: "forever"},
-        {name: "New Hobby", price: "$100.00"},
-        {name: "Fake Scenario", price: "Free"}
-      ],
-      water: [ // Cancer, Scorpio, Pisces
-        {name: "Crying", price: "$0.00"},
-        {name: "Intuition", price: "scary"},
-        {name: "Revenge Plot", price: "pending"},
-        {name: "Emotional Support", price: "$5.00"},
-        {name: "Yearning", price: "always"}
-      ]
+    // --- 1. THE 12 ZODIAC THEMES ---
+    const zodiacs = {
+      aries: { color: "#ff5252", bg: "#ffebee", items: ["Impulse Buy", "Being Loud", "Main Character Energy", "Starting a Fight"] },
+      taurus: { color: "#4caf50", bg: "#e8f5e9", items: ["Expensive Snack", "Nap Time", "Cozy Blanket", "Stubbornness"] },
+      gemini: { color: "#ffeb3b", bg: "#fffde7", items: ["Chaos", "Yap Session", "New Personality", "Gossip"] },
+      cancer: { color: "#2196f3", bg: "#e3f2fd", items: ["Crying", "Plushie Collection", "Holding Grudges", "Comfort Food"] },
+      leo: { color: "#ff9800", bg: "#fff3e0", items: ["Selfie", "God Complex", "Golden Jewelry", "Drama"] },
+      virgo: { color: "#795548", bg: "#efebe9", items: ["Organizing", "Judgement", "To-Do List", "Clean Sheets"] },
+      libra: { color: "#e91e63", bg: "#fce4ec", items: ["Flirting", "Indecision", "Pink Drink", "Aesthetic Post"] },
+      scorpio: { color: "#212121", bg: "#eceff1", items: ["Revenge", "Stalking", "Black Hoodie", "Secrets"] },
+      sagittarius: { color: "#673ab7", bg: "#ede7f6", items: ["Plane Ticket", "Philosophy", "Loud Laugh", "Ghosting"] },
+      capricorn: { color: "#3e2723", bg: "#d7ccc8", items: ["Money", "Work Email", "Iced Coffee", "Ambition"] },
+      aquarius: { color: "#00bcd4", bg: "#e0f7fa", items: ["Aliens", "God Complex", "Weird Hobby", "Rebellion"] },
+      pisces: { color: "#9c27b0", bg: "#f3e5f5", items: ["Delusion", "Daydreaming", "Poetry", "Intuition"] }
+    };
+
+    // --- 2. THE 10 SECRET CODES ---
+    const secrets = {
+      "ghost": { color: "#b0bec5", bg: "#cfd8dc", store: "HAUNTED", item: "Ectoplasm" },
+      "love": { color: "#f50057", bg: "#f8bbd0", store: "LOVER", item: "Heartbreak" },
+      "rich": { color: "#00c853", bg: "#b9f6ca", store: "BANK", item: "Gold Bar" },
+      "alien": { color: "#64dd17", bg: "#000000", store: "UFO", item: "Space Dust" }, // Black BG!
+      "void": { color: "#607d8b", bg: "#263238", store: "ABYSS", item: "Nothingness" },
+      "kitty": { color: "#ff80ab", bg: "#fff0f5", store: "MEOW", item: "Cat Nip" },
+      "glitch": { color: "#00e676", bg: "#000000", store: "ERR_404", item: "Bug.exe" },
+      "ocean": { color: "#0288d1", bg: "#e1f5fe", store: "ATLANTIS", item: "Salt Water" },
+      "angel": { color: "#ffd54f", bg: "#fff8e1", store: "HEAVEN", item: "Halo" },
+      "brat": { color: "#000000", bg: "#76ff03", store: "BRAT", item: "Vibes" }
     };
 
     const commonItems = [
-      {name: "Iced Coffee", price: "$7.50"},
-      {name: "Sweet Treat", price: "$4.00"},
-      {name: "Lip Gloss", price: "$12.00"},
-      {name: "Spotify Premium", price: "$11.00"},
-      {name: "Girl Dinner", price: "$8.00"}
+      {name: "Iced Coffee", price: "$7.00"}, {name: "Sweet Treat", price: "$5.00"},
+      {name: "Lip Gloss", price: "$12.00"}, {name: "Spotify Premium", price: "$11.00"},
+      {name: "Girl Dinner", price: "$8.00"}, {name: "Mental Stability", price: "Sold Out"},
+      {name: "Screen Time", price: "4hrs"}, {name: "Little Walk", price: "Free"}
     ];
 
-    // --- 2. SECRET CODES ---
-    const secrets = {
-      "moon": { theme: "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)", color: "#4facfe", store: "MOON CHILD" },
-      "love": { theme: "linear-gradient(to bottom, #ff9a9e, #fecfef)", color: "#ff6fae", store: "LOVER GIRL" },
-      "rich": { theme: "linear-gradient(to bottom, #d4fc79, #96e6a1)", color: "#2e7d32", store: "OLD MONEY" }
-    };
+    // --- 3. TROPHY LOGIC ---
+    let xp = parseInt(localStorage.getItem('cosmicXP') || 0);
 
-    // Hints to print at bottom to help user find codes
-    const hints = [
-      "Psst... try typing 'moon' next time.",
-      "Unlock pink mode? Type 'love'.",
-      "Feeling lucky? Type 'rich'.",
-      "Your vibe is immaculate.",
-      "Don't forget to drink water."
-    ];
-
-    function generate() {
-      const name = document.getElementById('nameInput').value.toLowerCase().trim();
-      const zodiacGroup = document.getElementById('zodiacInput').value;
+    function updateRank() {
+      let rank = "Star Dust";
+      if (xp > 5) rank = "Moon Child";
+      if (xp > 10) rank = "Sun Chaser";
+      if (xp > 20) rank = "Galaxy Brain";
+      if (xp > 50) rank = "Cosmic Queen";
+      if (xp > 100) rank = "Goddess";
       
-      // 1. Check for Secret Code
-      if (secrets[name]) {
-        // Unlock Secret Theme
-        const s = secrets[name];
-        document.documentElement.style.setProperty('--bg', s.theme);
-        document.documentElement.style.setProperty('--accent', s.color);
-        document.documentElement.style.setProperty('--text', s.color);
-        document.getElementById('storeName').innerText = s.store;
-      } else {
-        // Default Theme (Reset)
-        document.documentElement.style.setProperty('--bg', "linear-gradient(135deg, #e3f2fd, #f3e5f5)");
-        document.documentElement.style.setProperty('--accent', "#9c27b0");
-        document.getElementById('storeName').innerText = "COSMIC STORE";
+      document.getElementById('rankDisplay').innerText = `RANK: ${rank.toUpperCase()} (${xp})`;
+    }
+
+    // --- 4. INIT PAGE ---
+    // Generate Buttons
+    const grid = document.getElementById('signGrid');
+    Object.keys(zodiacs).forEach(sign => {
+      const btn = document.createElement('button');
+      btn.className = 'sign-btn';
+      btn.innerText = sign;
+      btn.onclick = () => generate(sign);
+      grid.appendChild(btn);
+    });
+    updateRank();
+
+    // --- 5. GENERATE FUNCTION ---
+    function generate(signKey) {
+      const nameRaw = document.getElementById('nameInput').value.trim().toLowerCase();
+      const nameDisplay = document.getElementById('nameInput').value || "Guest";
+      
+      let theme = zodiacs[signKey];
+      let storeName = "COSMIC";
+      let bonusItem = null;
+      let isSecret = false;
+
+      // Check Secret Code
+      if (secrets[nameRaw]) {
+        const s = secrets[nameRaw];
+        theme = { color: s.color, bg: s.bg };
+        storeName = s.store;
+        bonusItem = { name: s.item, price: " priceless" };
+        isSecret = true;
       }
 
-      // 2. Build the Item List
-      let pool = commonItems;
-      if (zodiacGroup && zodiacItems[zodiacGroup]) {
-        // Mix common items with zodiac specific items
-        pool = [...commonItems, ...zodiacItems[zodiacGroup]];
-      }
+      // Apply Visuals
+      document.documentElement.style.setProperty('--bg', theme.bg);
+      document.documentElement.style.setProperty('--accent', theme.color);
+      document.documentElement.style.setProperty('--text', theme.color); // Text matches accent
+      
+      // Update Content
+      document.getElementById('storeName').innerText = storeName;
+      document.getElementById('receiptMeta').innerHTML = `
+        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+        SIGN: ${signKey.toUpperCase()}<br>
+        DATE: ${new Date().toLocaleDateString()}
+      `;
 
-      // Pick 3-5 random items
+      // Build Items
+      let pool = [...commonItems];
+      // Add zodiac specific items
+      zodiacs[signKey].items.forEach(i => pool.push({name: i, price: "Special"}));
+      
       const count = Math.floor(Math.random() * 3) + 3;
       const shuffled = pool.sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, count);
+      
+      // Add secret item if applicable
+      if (bonusItem) selected.unshift(bonusItem);
 
       let html = '';
       selected.forEach(i => {
@@ -259,23 +292,25 @@
       });
       document.getElementById('itemList').innerHTML = html;
 
-      // 3. Set Date & Hint
-      document.getElementById('dateLine').innerText = new Date().toLocaleString();
-      
-      // Random hint at bottom
-      const randomHint = hints[Math.floor(Math.random() * hints.length)];
-      document.getElementById('secretHint').innerText = randomHint;
-
       // Show Receipt
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptContainer').style.display = 'block';
+
+      // Save XP
+      xp++;
+      localStorage.setItem('cosmicXP', xp);
+      updateRank();
     }
 
-    // Reset on click
-    document.getElementById('receiptContainer').addEventListener('click', () => {
-      document.getElementById('controls').style.display = 'flex';
-      document.getElementById('receiptContainer').style.display = 'none';
-      document.getElementById('nameInput').value = ""; // Clear for next code
+    // Reset Click
+    document.addEventListener('click', (e) => {
+      // Only reset if receipt is showing and we clicked the receipt container
+      const container = document.getElementById('receiptContainer');
+      if (container.style.display === 'block' && (e.target.closest('.receipt-container') || e.target.closest('.receipt'))) {
+        document.getElementById('controls').style.display = 'flex';
+        container.style.display = 'none';
+        document.getElementById('nameInput').value = ""; // Clear name for next code
+      }
     });
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
