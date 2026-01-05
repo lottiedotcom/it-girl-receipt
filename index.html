@@ -16,7 +16,6 @@
     body {
       margin: 0;
       height: 100vh;
-      /* Super Blue Doll Gradient */
       background: linear-gradient(135deg, #e3f2fd, #bbdefb);
       display: flex;
       flex-direction: column;
@@ -29,24 +28,24 @@
 
     /* The Input Area */
     .controls {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      padding: 20px;
-      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      padding: 24px;
+      border-radius: 28px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 16px;
       width: 80%;
       max-width: 320px;
       margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(144, 202, 249, 0.4);
+      box-shadow: 0 10px 30px rgba(144, 202, 249, 0.45);
       border: 2px solid #fff;
     }
 
     input {
       border: 2px solid #bbdefb;
       background: #fff;
-      padding: 12px 20px;
+      padding: 14px 20px;
       border-radius: 999px;
       font-family: "Quicksand", sans-serif;
       font-weight: 700;
@@ -54,6 +53,11 @@
       font-size: 1rem;
       outline: none;
       text-align: center;
+      transition: border-color 0.2s;
+    }
+    
+    input:focus {
+      border-color: #64b5f6;
     }
 
     input::placeholder {
@@ -61,21 +65,23 @@
     }
 
     button {
-      background: #64b5f6;
+      background: linear-gradient(135deg, #64b5f6, #42a5f5);
       color: white;
       border: none;
-      padding: 15px;
+      padding: 16px;
       border-radius: 999px;
       font-family: "Quicksand", sans-serif;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.05rem;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(100, 181, 246, 0.4);
-      transition: transform 0.2s;
+      box-shadow: 0 8px 20px rgba(100, 181, 246, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 5px;
     }
 
     button:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
+      box-shadow: 0 4px 10px rgba(100, 181, 246, 0.3);
     }
 
     /* The Receipt */
@@ -83,57 +89,64 @@
       perspective: 1000px;
       width: 85%;
       max-width: 340px;
-      display: none; /* Hidden until generated */
+      display: none;
     }
 
     .receipt {
       background: #fff;
-      padding: 25px 20px;
-      font-family: "Courier Prime", monospace; /* Typewriter look */
+      padding: 25px 22px;
+      font-family: "Courier Prime", monospace;
       color: #546e7a;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
       position: relative;
-      animation: printReceipt 0.8s ease-out forwards;
+      animation: printReceipt 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       transform-origin: top center;
       
       /* Jagged edge effect */
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
-      padding-bottom: 40px;
+      padding-bottom: 45px;
     }
 
     @keyframes printReceipt {
-      0% { height: 0; opacity: 0; transform: translateY(-50px); }
-      100% { height: auto; opacity: 1; transform: translateY(0); }
+      0% { height: 0; opacity: 0; transform: translateY(-40px) scale(0.95); }
+      100% { height: auto; opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .header {
       text-align: center;
-      border-bottom: 2px dashed #b0bec5;
+      border-bottom: 2px dashed #cfd8dc;
       padding-bottom: 15px;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
     }
 
     .header h2 {
       margin: 0;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       color: #29b6f6;
       text-transform: uppercase;
       letter-spacing: 2px;
     }
+    
+    .header div {
+      font-size: 0.8rem;
+      margin-top: 4px;
+      color: #90a4ae;
+    }
 
     .details {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+      line-height: 1.4;
     }
 
     .item-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      font-size: 0.9rem;
+      gap: 10px;
+      font-size: 0.95rem;
     }
 
     .item {
@@ -142,27 +155,36 @@
     }
 
     .total {
-      margin-top: 20px;
-      border-top: 2px dashed #b0bec5;
+      margin-top: 22px;
+      border-top: 2px dashed #cfd8dc;
       padding-top: 15px;
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
     }
 
     .barcode {
-      margin-top: 25px;
+      margin-top: 28px;
       text-align: center;
-      letter-spacing: 5px;
+      letter-spacing: 4px;
       font-size: 0.7rem;
-      opacity: 0.7;
+      opacity: 0.6;
     }
     
     .barcode div {
-      font-size: 1.5rem;
-      letter-spacing: -2px;
-      transform: scaleY(0.7);
+      font-size: 1.8rem;
+      letter-spacing: -3px;
+      transform: scaleY(0.6);
+      margin-bottom: 5px;
+    }
+    
+    .tap-hint {
+        text-align: center;
+        font-size: 0.7rem;
+        color: #b0bec5;
+        margin-top: 20px;
+        font-family: "Quicksand", sans-serif;
     }
   </style>
 </head>
@@ -178,7 +200,7 @@
     <div class="receipt">
       <div class="header">
         <h2>DOLL STORE</h2>
-        <div>est. 2026</div>
+        <div>est. 2026 • digital</div>
       </div>
 
       <div class="details" id="receiptDetails"></div>
@@ -187,25 +209,77 @@
 
       <div class="total">
         <span>TOTAL:</span>
-        <span>100% CUTE</span>
+        <span id="totalText">100% CUTE</span>
       </div>
 
       <div class="barcode">
         <div>||| |||| || | |||| ||</div>
-        THANK YOU FOR EXISTING
+        NO RETURNS • FINAL SALE
       </div>
     </div>
+    <div class="tap-hint">( tap receipt to reset )</div>
   </div>
 
   <script>
+    // --- THE BIG DATABASE OF CUTE THINGS ---
     const items = [
-      { name: "Silly Little Walk", price: "$0.00" }, { name: "Iced Coffee", price: "$7.50" },
-      { name: "Delusion", price: "FREE" }, { name: "New Lip Gloss", price: "$12.00" },
-      { name: "Pinterest Scroll", price: "2hrs" }, { name: "Sweet Treat", price: "$5.00" },
-      { name: "Main Character Energy", price: "priceless" }, { name: "Self Care", price: "$$$" },
-      { name: "Nap Time", price: "4hrs" }, { name: "Online Window Shopping", price: "$0.00" },
-      { name: "Overthinking", price: "tax included" }, { name: "Listening to Music", price: "forever" },
-      { name: "Skincare", price: "$45.00" }
+      // Free / Moods
+      { name: "Silly Little Walk", price: "$0.00" },
+      { name: "Delusion", price: "FREE" },
+      { name: "Main Character Energy", price: "priceless" },
+      { name: "Online Window Shopping", price: "$0.00" },
+      { name: "Overthinking", price: "tax included" },
+      { name: "Listening to Music", price: "forever" },
+      { name: "Rotting in Bed", price: "all day" },
+      { name: "Cyberstalking", price: "FREE" },
+      { name: "Dissociating", price: "N/A" },
+      { name: "Gaslighting Myself", price: "FREE" },
+      { name: "Crying", price: "$0.00" },
+      { name: "Calling Mom", price: "priceless" },
+      { name: "Blocking Him", price: "satisfying" },
+      { name: "Unblocking Him", price: "mistake" },
+      { name: "Digital Hoarding", price: "limitless" },
+      { name: "Staring at Ceiling", price: "1hr" },
+      { name: "Avoiding Tasks", price: "$0.00" },
+      { name: "Girl Math", price: "saved $50" },
+      { name: "Gossip Session", price: "priceless" },
+
+      // Small Treats
+      { name: "Iced Coffee", price: "$7.50" },
+      { name: "Sweet Treat", price: "$5.00" },
+      { name: "Strawberry Milk", price: "$3.50" },
+      { name: "Ribbons (just cause)", price: "$4.50" },
+      { name: "Buying Stickers", price: "$5.00" },
+      { name: "Matcha Latte", price: "$8.00" },
+      { name: "Claw Clip", price: "$8.00" },
+      { name: "Vending Machine Snack", price: "$2.50" },
+
+      // Fashion & Beauty
+      { name: "New Lip Gloss", price: "$12.00" },
+      { name: "Skincare Restock", price: "$45.00" },
+      { name: "Smelling Like Vanilla", price: "$28.00" },
+      { name: "Matching Pajama Set", price: "$60.00" },
+      { name: "Sonny Angel Unboxing", price: "$15.00" },
+      { name: "Platform Shoes", price: "$120.00" },
+      { name: "Thrift Haul", price: "$35.00" },
+      { name: "Sanrio Plushie", price: "$25.00" },
+      { name: "Face Mask", price: "$4.00" },
+      { name: "Acrylic Nails", price: "$65.00" },
+
+      // Digital / Hobby
+      { name: "Pinterest Scroll", price: "2hrs" },
+      { name: "Buying Domain Names", price: "$12.99" },
+      { name: "Making a Playlist", price: "essential" },
+      { name: "Writing Poetry", price: "vibes" },
+      { name: "Editing Theme", price: "4hrs" },
+      { name: "Charging Phone", price: "100%" },
+      { name: "Deleting Apps", price: "peace" },
+      { name: "Re-installing Apps", price: "shame" }
+    ];
+
+    const totalPhrases = [
+      "100% CUTE", "VIBES: IMMACULATE", "NO THOUGHTS", "JUST GIRL THINGS", 
+      "APPROVED", "SLAY", "TOTAL: ???", "PAID WITH TEARS"
     ];
 
     function generate() {
@@ -218,21 +292,30 @@
       const date = new Date().toLocaleString();
       document.getElementById('receiptDetails').innerHTML = `
         CUSTOMER: ${name.toUpperCase()}<br>
-        AGE: ${age} / VIBE: IMMACULATE<br>
+        AGE: ${age} / MEMBER ID: #00${Math.floor(Math.random() * 99)}<br>
         ${date}
       `;
 
+      // LOGIC: Pick a random number between 3 and 5
+      const itemCount = Math.floor(Math.random() * 3) + 3; // Returns 3, 4, or 5
+      
+      // Shuffle and pick that many items
       const shuffled = items.sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 4);
+      const selected = shuffled.slice(0, itemCount);
 
       let html = '';
       selected.forEach(item => {
         html += `<div class="item"><span>1x ${item.name}</span><span>${item.price}</span></div>`;
       });
       document.getElementById('itemList').innerHTML = html;
+
+      // Random Total Message
+      const randomTotal = totalPhrases[Math.floor(Math.random() * totalPhrases.length)];
+      document.getElementById('totalText').textContent = randomTotal;
     }
     
-    document.querySelector('.receipt').addEventListener('click', () => {
+    // Tap to reset
+    document.getElementById('receiptContainer').addEventListener('click', () => {
        document.getElementById('controls').style.display = 'flex';
        document.getElementById('receiptContainer').style.display = 'none';
        document.getElementById('nameInput').value = '';
