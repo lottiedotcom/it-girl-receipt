@@ -14,12 +14,13 @@
 
   <style>
     :root {
-      /* Default Variables (Blue Doll) - These get updated by JS */
+      /* Default Variables */
       --bg-gradient: linear-gradient(135deg, #e3f2fd, #bbdefb);
       --btn-bg: #64b5f6;
       --btn-text: #ffffff;
       --ink-color: #546e7a;
       --accent-color: #29b6f6;
+      --glass-bg: rgba(255, 255, 255, 0.75);
     }
 
     body {
@@ -36,9 +37,8 @@
       transition: background 0.5s ease;
     }
 
-    /* Input Area */
     .controls {
-      background: rgba(255, 255, 255, 0.75);
+      background: var(--glass-bg);
       backdrop-filter: blur(12px);
       padding: 24px;
       border-radius: 28px;
@@ -47,9 +47,9 @@
       gap: 16px;
       width: 80%;
       max-width: 320px;
-      margin-bottom: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       border: 2px solid #fff;
+      transition: transform 0.3s ease;
     }
 
     input {
@@ -66,11 +66,6 @@
       opacity: 0.8;
     }
 
-    input::placeholder {
-      opacity: 0.5;
-      color: var(--ink-color);
-    }
-
     button {
       background: var(--btn-bg);
       color: var(--btn-text);
@@ -83,14 +78,11 @@
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       transition: transform 0.2s;
-      margin-top: 5px;
     }
 
-    button:active {
-      transform: scale(0.96);
-    }
+    button:active { transform: scale(0.96); }
 
-    /* Receipt */
+    /* The Receipt */
     .receipt-container {
       perspective: 1000px;
       width: 85%;
@@ -99,7 +91,7 @@
     }
 
     .receipt {
-      background: #fffdf8; /* Slightly off-white paper */
+      background: #fffdf8;
       padding: 25px 22px;
       font-family: "Courier Prime", monospace;
       color: var(--ink-color);
@@ -108,7 +100,6 @@
       animation: printReceipt 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       transform-origin: top center;
       
-      /* Jagged edge */
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
@@ -134,47 +125,27 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-    
-    .header div {
-      font-size: 0.75rem;
-      margin-top: 6px;
-      opacity: 0.7;
-    }
 
-    .details {
-      font-size: 0.8rem;
-      text-align: center;
-      margin-bottom: 22px;
-      line-height: 1.4;
-      opacity: 0.9;
-    }
-
-    .item-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .details, .item-list, .total {
       font-size: 0.9rem;
+      margin-bottom: 15px;
+      line-height: 1.4;
     }
 
-    .item {
-      display: flex;
-      justify-content: space-between;
-    }
-
+    .item { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    
     .total {
-      margin-top: 22px;
+      margin-top: 20px;
       border-top: 2px dashed var(--ink-color);
       padding-top: 15px;
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 1.1rem;
     }
 
     .barcode {
-      margin-top: 28px;
+      margin-top: 25px;
       text-align: center;
-      letter-spacing: 4px;
       font-size: 0.7rem;
       opacity: 0.6;
     }
@@ -186,20 +157,21 @@
       margin-bottom: 5px;
     }
     
-    .tap-hint {
-        text-align: center;
-        font-size: 0.7rem;
-        color: rgba(255,255,255,0.8);
-        margin-top: 20px;
-        font-family: "Quicksand", sans-serif;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    /* Loyalty Badge Styling */
+    .loyalty-badge {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
 
   <div class="controls" id="controls">
-    <input type="text" id="nameInput" placeholder="name">
+    <input type="text" id="nameInput" placeholder="name (try: ghost, lottie)">
     <input type="number" id="ageInput" placeholder="age">
     <button onclick="generate()">♡ PRINT RECEIPT ♡</button>
   </div>
@@ -212,7 +184,6 @@
       </div>
 
       <div class="details" id="receiptDetails"></div>
-
       <div class="item-list" id="itemList"></div>
 
       <div class="total">
@@ -225,115 +196,88 @@
         <span id="barcodeText">NO RETURNS</span>
       </div>
     </div>
-    <div class="tap-hint">( tap receipt to reset )</div>
+    
+    <div class="loyalty-badge" id="loyaltyDisplay">
+      </div>
   </div>
 
   <script>
-    // --- 1. THE VIBE THEMES ---
+    // --- 1. THE LOYALTY SYSTEM ---
+    // We check phone storage to see how many times they visited
+    let userCount = localStorage.getItem('dollReceiptCount') || 0;
+    userCount = parseInt(userCount);
+
+    function getLoyaltyStatus(count) {
+      if (count < 5) return "New Doll";
+      if (count < 15) return "Regular";
+      if (count < 30) return "VIP";
+      if (count < 50) return "Icon";
+      if (count < 100) return "Legend";
+      return "The Owner";
+    }
+
+    // --- 2. THEMES & SECRETS ---
     const themes = [
-      { // Blue Doll (Classic)
-        bg: "linear-gradient(135deg, #e3f2fd, #bbdefb)",
-        btnBg: "#64b5f6",
-        btnText: "#ffffff",
-        ink: "#546e7a",
-        accent: "#29b6f6",
-        stores: ["DOLL STORE", "CLOUD 9", "DREAMSCAPES", "PURE IMAGINATION"],
-        footers: ["NO RETURNS", "HAVE A NICE DAY", "STAY HYDRATED"]
-      },
-      { // Pink Coquette
-        bg: "linear-gradient(135deg, #ffeef8, #ffc2d4)",
-        btnBg: "#ff8fab",
-        btnText: "#ffffff",
-        ink: "#880e4f",
-        accent: "#ff4081",
-        stores: ["LOVER GIRL", "HEARTBREAK HOTEL", "KISS KISS", "BOWS & RIBBONS"],
-        footers: ["XOXO", "LOVE YOU", "TEXT HIM", "MUAH"]
-      },
-      { // Cyber / Sour
-        bg: "linear-gradient(135deg, #f1f8e9, #c5e1a5)",
-        btnBg: "#7cb342",
-        btnText: "#ffffff",
-        ink: "#33691e",
-        accent: "#558b2f",
-        stores: ["THE MATRIX", "CYBER CAFE", "GLITCH MODE", "SYSTEM 32"],
-        footers: ["ERROR 404", "LOGGING OFF", "REALITY BROKEN"]
-      },
-      { // Dark Aura / Night
-        bg: "linear-gradient(135deg, #263238, #37474f)",
-        btnBg: "#78909c",
-        btnText: "#ffffff",
-        ink: "#263238",
-        accent: "#455a64",
-        stores: ["THE VOID", "MIDNIGHT HOUR", "INSOMNIA", "LATE NIGHTS"],
-        footers: ["GO TO SLEEP", "WHO ARE YOU?", "SECRET"]
-      }
+      { id: "blue", bg: "linear-gradient(135deg, #e3f2fd, #bbdefb)", btn: "#64b5f6", ink: "#546e7a", accent: "#29b6f6", store: "DOLL STORE" },
+      { id: "pink", bg: "linear-gradient(135deg, #ffeef8, #ffc2d4)", btn: "#ff8fab", ink: "#880e4f", accent: "#ff4081", store: "LOVER GIRL" },
+      { id: "green", bg: "linear-gradient(135deg, #f1f8e9, #c5e1a5)", btn: "#7cb342", ink: "#33691e", accent: "#558b2f", store: "FROG POND" },
+      { id: "dark", bg: "linear-gradient(135deg, #263238, #37474f)", btn: "#78909c", ink: "#263238", accent: "#455a64", store: "THE VOID" }
     ];
 
-    // --- 2. THE ITEMS ---
+    const secretThemes = {
+      "ghost": { bg: "linear-gradient(135deg, #eceff1, #b0bec5)", btn: "#b0bec5", ink: "#cfd8dc", accent: "#90a4ae", store: "HAUNTED" },
+      "lottie": { bg: "linear-gradient(135deg, #f3e5f5, #ce93d8)", btn: "#ab47bc", ink: "#4a148c", accent: "#8e24aa", store: "DEV MODE" },
+      "brat": { bg: "linear-gradient(135deg, #89f336, #73cf1f)", btn: "#000", btnText: "#89f336", ink: "#000", accent: "#000", store: "BRAT SUMMER" }
+    };
+
+    // --- 3. ITEMS ---
     const items = [
       { name: "Silly Little Walk", price: "$0.00" }, { name: "Delusion", price: "FREE" },
-      { name: "Main Character Energy", price: "priceless" }, { name: "Online Window Shopping", price: "$0.00" },
-      { name: "Overthinking", price: "tax included" }, { name: "Listening to Music", price: "forever" },
-      { name: "Rotting in Bed", price: "all day" }, { name: "Cyberstalking", price: "FREE" },
-      { name: "Dissociating", price: "N/A" }, { name: "Gaslighting Myself", price: "FREE" },
-      { name: "Crying", price: "$0.00" }, { name: "Calling Mom", price: "priceless" },
-      { name: "Blocking Him", price: "satisfying" }, { name: "Unblocking Him", price: "mistake" },
-      { name: "Digital Hoarding", price: "limitless" }, { name: "Staring at Ceiling", price: "1hr" },
-      { name: "Avoiding Tasks", price: "$0.00" }, { name: "Girl Math", price: "saved $50" },
-      { name: "Gossip Session", price: "priceless" }, { name: "Iced Coffee", price: "$7.50" },
-      { name: "Sweet Treat", price: "$5.00" }, { name: "Strawberry Milk", price: "$3.50" },
-      { name: "Ribbons", price: "$4.50" }, { name: "Buying Stickers", price: "$5.00" },
-      { name: "Matcha Latte", price: "$8.00" }, { name: "Claw Clip", price: "$8.00" },
-      { name: "Vending Machine Snack", price: "$2.50" }, { name: "New Lip Gloss", price: "$12.00" },
-      { name: "Skincare Restock", price: "$45.00" }, { name: "Smelling Like Vanilla", price: "$28.00" },
-      { name: "Matching Pajama Set", price: "$60.00" }, { name: "Sonny Angel Unboxing", price: "$15.00" },
-      { name: "Platform Shoes", price: "$120.00" }, { name: "Thrift Haul", price: "$35.00" },
-      { name: "Sanrio Plushie", price: "$25.00" }, { name: "Face Mask", price: "$4.00" },
-      { name: "Acrylic Nails", price: "$65.00" }, { name: "Pinterest Scroll", price: "2hrs" },
-      { name: "Buying Domain Names", price: "$12.99" }, { name: "Making a Playlist", price: "essential" },
-      { name: "Writing Poetry", price: "vibes" }, { name: "Editing Theme", price: "4hrs" },
-      { name: "Charging Phone", price: "100%" }, { name: "Deleting Apps", price: "peace" },
-      { name: "Re-installing Apps", price: "shame" }
-    ];
-
-    const totalPhrases = [
-      "100% CUTE", "VIBES: IMMACULATE", "NO THOUGHTS", "JUST GIRL THINGS", 
-      "APPROVED", "SLAY", "TOTAL: ???", "PAID WITH TEARS", "IN THIS ECONOMY?"
+      { name: "Iced Coffee", price: "$7.50" }, { name: "Sweet Treat", price: "$5.00" },
+      { name: "New Lip Gloss", price: "$12.00" }, { name: "Skincare", price: "$45.00" },
+      { name: "Rotting in Bed", price: "all day" }, { name: "Listening to Music", price: "forever" },
+      { name: "Pinterest Scroll", price: "2hrs" }, { name: "Mental Breakdown", price: "scheduled" },
+      { name: "Girl Math", price: "saved $50" }, { name: "Overthinking", price: "tax included" }
     ];
 
     function generate() {
-      const name = document.getElementById('nameInput').value || "Doll";
+      const nameRaw = document.getElementById('nameInput').value.toLowerCase().trim();
+      const nameDisplay = document.getElementById('nameInput').value || "Doll";
       const age = document.getElementById('ageInput').value || "25";
       
-      // 1. APPLY RANDOM THEME
-      const theme = themes[Math.floor(Math.random() * themes.length)];
+      // Update Loyalty Count
+      userCount++;
+      localStorage.setItem('dollReceiptCount', userCount);
+      const status = getLoyaltyStatus(userCount);
+
+      // Check for SECRET THEME vs RANDOM THEME
+      let theme;
+      if (secretThemes[nameRaw]) {
+        theme = secretThemes[nameRaw]; // Force secret theme
+      } else {
+        theme = themes[Math.floor(Math.random() * themes.length)]; // Random
+      }
       
+      // Apply Styles
       document.documentElement.style.setProperty('--bg-gradient', theme.bg);
-      document.documentElement.style.setProperty('--btn-bg', theme.btnBg);
-      document.documentElement.style.setProperty('--btn-text', theme.btnText);
+      document.documentElement.style.setProperty('--btn-bg', theme.btn);
+      document.documentElement.style.setProperty('--btn-text', theme.btnText || '#fff');
       document.documentElement.style.setProperty('--ink-color', theme.ink);
       document.documentElement.style.setProperty('--accent-color', theme.accent);
-      
-      // Update Texts based on theme
-      const randomStore = theme.stores[Math.floor(Math.random() * theme.stores.length)];
-      const randomFooter = theme.footers[Math.floor(Math.random() * theme.footers.length)];
-      
-      document.getElementById('storeName').textContent = randomStore;
-      document.getElementById('barcodeText').textContent = randomFooter;
 
       // Show Layout
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptContainer').style.display = 'block';
 
-      // Set Receipt Header
-      const date = new Date().toLocaleString();
+      // Set Header Info
+      document.getElementById('storeName').textContent = theme.store;
       document.getElementById('receiptDetails').innerHTML = `
-        CUSTOMER: ${name.toUpperCase()}<br>
-        AGE: ${age} / ID: #00${Math.floor(Math.random() * 99)}<br>
-        ${date}
+        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+        STATUS: ${status.toUpperCase()} (${userCount})<br>
+        ${new Date().toLocaleString()}
       `;
 
-      // 2. ITEMS LOGIC (Pick 3-5 items)
+      // Generate Items
       const itemCount = Math.floor(Math.random() * 3) + 3;
       const shuffled = items.sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, itemCount);
@@ -344,17 +288,16 @@
       });
       document.getElementById('itemList').innerHTML = html;
 
-      // Random Total
-      const randomTotal = totalPhrases[Math.floor(Math.random() * totalPhrases.length)];
-      document.getElementById('totalText').textContent = randomTotal;
+      // Loyalty Badge at bottom
+      document.getElementById('loyaltyDisplay').textContent = 
+        `★ You have printed ${userCount} receipts. You are a ${status}. ★`;
     }
     
-    // Tap to reset
+    // Reset Logic
     document.getElementById('receiptContainer').addEventListener('click', () => {
        document.getElementById('controls').style.display = 'flex';
        document.getElementById('receiptContainer').style.display = 'none';
        document.getElementById('nameInput').value = '';
-       document.getElementById('ageInput').value = '';
     });
 
     if ('serviceWorker' in navigator) {
