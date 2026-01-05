@@ -1,4 +1,5 @@
-const CACHE_NAME = 'doll-receipt-v2'; // I changed this to v2!
+
+const CACHE_NAME = 'doll-receipt-v3'; 
 const urlsToCache = [
   './',
   './index.html',
@@ -7,19 +8,20 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting(); // FORCE the new version to install immediately
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// This part deletes the old v1 cache so it doesn't get stuck
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
