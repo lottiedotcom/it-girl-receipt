@@ -3,30 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Doll Receipt</title>
+  <title>Cosmic Receipt</title>
   
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="apple-mobile-web-app-status-bar-style" content="white">
   <meta name="theme-color" content="#e3f2fd">
 
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Courier+Prime&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Courier+Prime&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      /* Default Variables */
-      --bg-gradient: linear-gradient(135deg, #e3f2fd, #bbdefb);
-      --btn-bg: #64b5f6;
-      --btn-text: #ffffff;
-      --ink-color: #546e7a;
-      --accent-color: #29b6f6;
-      --glass-bg: rgba(255, 255, 255, 0.75);
+      --bg: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --accent: #9c27b0;
+      --text: #4a148c;
     }
 
     body {
       margin: 0;
       height: 100vh;
-      background: var(--bg-gradient);
+      background: var(--bg);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -34,55 +31,63 @@
       font-family: "Quicksand", sans-serif;
       -webkit-tap-highlight-color: transparent;
       overflow: hidden;
-      transition: background 0.5s ease;
+      transition: background 0.5s;
     }
 
     .controls {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      padding: 24px;
-      border-radius: 28px;
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      padding: 25px;
+      border-radius: 30px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 15px;
       width: 80%;
-      max-width: 320px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      max-width: 300px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
       border: 2px solid #fff;
-      transition: transform 0.3s ease;
     }
 
-    input {
-      border: 2px solid var(--accent-color);
+    input, select {
+      border: 2px solid var(--accent);
       background: #fff;
-      padding: 14px 20px;
-      border-radius: 999px;
+      padding: 15px;
+      border-radius: 15px;
       font-family: "Quicksand", sans-serif;
       font-weight: 700;
-      color: var(--ink-color);
+      color: var(--text);
       font-size: 1rem;
       outline: none;
       text-align: center;
-      opacity: 0.8;
+      width: 100%;
+      box-sizing: border-box; /* Fixes padding issues */
+    }
+
+    /* Custom Arrow for Select Dropdown */
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%239c27b0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px top 50%;
+      background-size: 12px auto;
     }
 
     button {
-      background: var(--btn-bg);
-      color: var(--btn-text);
+      background: var(--accent);
+      color: white;
       border: none;
       padding: 16px;
       border-radius: 999px;
       font-family: "Quicksand", sans-serif;
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
       transition: transform 0.2s;
     }
+    button:active { transform: scale(0.95); }
 
-    button:active { transform: scale(0.96); }
-
-    /* The Receipt */
+    /* RECEIPT STYLES */
     .receipt-container {
       perspective: 1000px;
       width: 85%;
@@ -91,219 +96,189 @@
     }
 
     .receipt {
-      background: #fffdf8;
-      padding: 25px 22px;
+      background: #fff;
+      padding: 25px 20px;
       font-family: "Courier Prime", monospace;
-      color: var(--ink-color);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-      position: relative;
-      animation: printReceipt 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-      transform-origin: top center;
+      color: #37474f;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      animation: printReceipt 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
-      padding-bottom: 45px;
+      padding-bottom: 50px;
     }
 
     @keyframes printReceipt {
-      0% { height: 0; opacity: 0; transform: translateY(-40px) scale(0.95); }
-      100% { height: auto; opacity: 1; transform: translateY(0) scale(1); }
+      0% { height: 0; opacity: 0; transform: translateY(-50px); }
+      100% { height: auto; opacity: 1; transform: translateY(0); }
     }
 
-    .header {
-      text-align: center;
-      border-bottom: 2px dashed var(--ink-color);
-      padding-bottom: 15px;
-      margin-bottom: 18px;
-    }
-
-    .header h2 {
-      margin: 0;
-      font-size: 1.4rem;
-      color: var(--accent-color);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .details, .item-list, .total {
-      font-size: 0.9rem;
-      margin-bottom: 15px;
-      line-height: 1.4;
-    }
-
-    .item { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .header { text-align: center; border-bottom: 2px dashed #b0bec5; padding-bottom: 15px; margin-bottom: 15px; }
+    .header h2 { margin: 0; font-size: 1.5rem; color: var(--accent); letter-spacing: 2px; }
     
-    .total {
-      margin-top: 20px;
-      border-top: 2px dashed var(--ink-color);
-      padding-top: 15px;
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
+    .item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+    
+    .total { margin-top: 20px; border-top: 2px dashed #b0bec5; padding-top: 15px; display: flex; justify-content: space-between; font-weight: bold; }
+    
+    .secret-hint {
+      margin-top: 25px; text-align: center; font-size: 0.7rem; color: var(--accent); opacity: 0.8; font-weight: bold;
     }
 
-    .barcode {
-      margin-top: 25px;
-      text-align: center;
-      font-size: 0.7rem;
-      opacity: 0.6;
-    }
-    
-    .barcode div {
-      font-size: 1.8rem;
-      letter-spacing: -3px;
-      transform: scaleY(0.6);
-      margin-bottom: 5px;
-    }
-    
-    /* Loyalty Badge Styling */
-    .loyalty-badge {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.75rem;
-      color: #fff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      opacity: 0.9;
-    }
+    .barcode { margin-top: 10px; text-align: center; font-size: 1.5rem; opacity: 0.5; letter-spacing: -3px; }
   </style>
 </head>
 <body>
 
   <div class="controls" id="controls">
-    <input type="text" id="nameInput" placeholder="name (try: ghost, lottie)">
-    <input type="number" id="ageInput" placeholder="age">
+    <input type="text" id="nameInput" placeholder="Name or Secret Code">
+    
+    <select id="zodiacInput">
+      <option value="" disabled selected>Select Your Sign</option>
+      <option value="fire">Aries / Leo / Sag</option>
+      <option value="earth">Taurus / Virgo / Cap</option>
+      <option value="air">Gemini / Libra / Aqua</option>
+      <option value="water">Cancer / Scorpio / Pisces</option>
+    </select>
+
     <button onclick="generate()">♡ PRINT RECEIPT ♡</button>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
     <div class="receipt">
       <div class="header">
-        <h2 id="storeName">DOLL STORE</h2>
-        <div id="storeTag">est. 2026 • digital</div>
+        <h2 id="storeName">COSMIC STORE</h2>
+        <div id="dateLine"></div>
       </div>
 
-      <div class="details" id="receiptDetails"></div>
-      <div class="item-list" id="itemList"></div>
+      <div id="itemList"></div>
 
       <div class="total">
         <span>TOTAL:</span>
         <span id="totalText">100% CUTE</span>
       </div>
 
-      <div class="barcode">
-        <div>||| |||| || | |||| ||</div>
-        <span id="barcodeText">NO RETURNS</span>
-      </div>
+      <div class="secret-hint" id="secretHint"></div>
+      
+      <div class="barcode">|| ||| || ||||| ||</div>
     </div>
-    
-    <div class="loyalty-badge" id="loyaltyDisplay">
-      </div>
+    <div style="text-align:center; color:white; font-size:0.8rem; margin-top:15px; opacity:0.8;">( tap receipt to reset )</div>
   </div>
 
   <script>
-    // --- 1. THE LOYALTY SYSTEM ---
-    // We check phone storage to see how many times they visited
-    let userCount = localStorage.getItem('dollReceiptCount') || 0;
-    userCount = parseInt(userCount);
-
-    function getLoyaltyStatus(count) {
-      if (count < 5) return "New Doll";
-      if (count < 15) return "Regular";
-      if (count < 30) return "VIP";
-      if (count < 50) return "Icon";
-      if (count < 100) return "Legend";
-      return "The Owner";
-    }
-
-    // --- 2. THEMES & SECRETS ---
-    const themes = [
-      { id: "blue", bg: "linear-gradient(135deg, #e3f2fd, #bbdefb)", btn: "#64b5f6", ink: "#546e7a", accent: "#29b6f6", store: "DOLL STORE" },
-      { id: "pink", bg: "linear-gradient(135deg, #ffeef8, #ffc2d4)", btn: "#ff8fab", ink: "#880e4f", accent: "#ff4081", store: "LOVER GIRL" },
-      { id: "green", bg: "linear-gradient(135deg, #f1f8e9, #c5e1a5)", btn: "#7cb342", ink: "#33691e", accent: "#558b2f", store: "FROG POND" },
-      { id: "dark", bg: "linear-gradient(135deg, #263238, #37474f)", btn: "#78909c", ink: "#263238", accent: "#455a64", store: "THE VOID" }
-    ];
-
-    const secretThemes = {
-      "ghost": { bg: "linear-gradient(135deg, #eceff1, #b0bec5)", btn: "#b0bec5", ink: "#cfd8dc", accent: "#90a4ae", store: "HAUNTED" },
-      "lottie": { bg: "linear-gradient(135deg, #f3e5f5, #ce93d8)", btn: "#ab47bc", ink: "#4a148c", accent: "#8e24aa", store: "DEV MODE" },
-      "brat": { bg: "linear-gradient(135deg, #89f336, #73cf1f)", btn: "#000", btnText: "#89f336", ink: "#000", accent: "#000", store: "BRAT SUMMER" }
+    // --- 1. ZODIAC SPECIFIC ITEMS ---
+    const zodiacItems = {
+      fire: [ // Aries, Leo, Sag
+        {name: "Main Character Energy", price: "priceless"},
+        {name: "Impulse Buy", price: "$50.00"},
+        {name: "Being Loud", price: "Free"},
+        {name: "God Complex", price: "Tax incl."},
+        {name: "Starting Drama", price: "$0.00"}
+      ],
+      earth: [ // Taurus, Virgo, Cap
+        {name: "Nap Time", price: "4hrs"},
+        {name: "Organizing", price: "satisfying"},
+        {name: "Overthinking", price: "Tax incl."},
+        {name: "Expensive Taste", price: "$$$"},
+        {name: "Judging People", price: "Free"}
+      ],
+      air: [ // Gemini, Libra, Aqua
+        {name: "Ghosting", price: "oops"},
+        {name: "Yap Session", price: "3hrs"},
+        {name: "Indecision", price: "forever"},
+        {name: "New Hobby", price: "$100.00"},
+        {name: "Fake Scenario", price: "Free"}
+      ],
+      water: [ // Cancer, Scorpio, Pisces
+        {name: "Crying", price: "$0.00"},
+        {name: "Intuition", price: "scary"},
+        {name: "Revenge Plot", price: "pending"},
+        {name: "Emotional Support", price: "$5.00"},
+        {name: "Yearning", price: "always"}
+      ]
     };
 
-    // --- 3. ITEMS ---
-    const items = [
-      { name: "Silly Little Walk", price: "$0.00" }, { name: "Delusion", price: "FREE" },
-      { name: "Iced Coffee", price: "$7.50" }, { name: "Sweet Treat", price: "$5.00" },
-      { name: "New Lip Gloss", price: "$12.00" }, { name: "Skincare", price: "$45.00" },
-      { name: "Rotting in Bed", price: "all day" }, { name: "Listening to Music", price: "forever" },
-      { name: "Pinterest Scroll", price: "2hrs" }, { name: "Mental Breakdown", price: "scheduled" },
-      { name: "Girl Math", price: "saved $50" }, { name: "Overthinking", price: "tax included" }
+    const commonItems = [
+      {name: "Iced Coffee", price: "$7.50"},
+      {name: "Sweet Treat", price: "$4.00"},
+      {name: "Lip Gloss", price: "$12.00"},
+      {name: "Spotify Premium", price: "$11.00"},
+      {name: "Girl Dinner", price: "$8.00"}
+    ];
+
+    // --- 2. SECRET CODES ---
+    const secrets = {
+      "moon": { theme: "linear-gradient(to bottom, #0f2027, #203a43, #2c5364)", color: "#4facfe", store: "MOON CHILD" },
+      "love": { theme: "linear-gradient(to bottom, #ff9a9e, #fecfef)", color: "#ff6fae", store: "LOVER GIRL" },
+      "rich": { theme: "linear-gradient(to bottom, #d4fc79, #96e6a1)", color: "#2e7d32", store: "OLD MONEY" }
+    };
+
+    // Hints to print at bottom to help user find codes
+    const hints = [
+      "Psst... try typing 'moon' next time.",
+      "Unlock pink mode? Type 'love'.",
+      "Feeling lucky? Type 'rich'.",
+      "Your vibe is immaculate.",
+      "Don't forget to drink water."
     ];
 
     function generate() {
-      const nameRaw = document.getElementById('nameInput').value.toLowerCase().trim();
-      const nameDisplay = document.getElementById('nameInput').value || "Doll";
-      const age = document.getElementById('ageInput').value || "25";
+      const name = document.getElementById('nameInput').value.toLowerCase().trim();
+      const zodiacGroup = document.getElementById('zodiacInput').value;
       
-      // Update Loyalty Count
-      userCount++;
-      localStorage.setItem('dollReceiptCount', userCount);
-      const status = getLoyaltyStatus(userCount);
-
-      // Check for SECRET THEME vs RANDOM THEME
-      let theme;
-      if (secretThemes[nameRaw]) {
-        theme = secretThemes[nameRaw]; // Force secret theme
+      // 1. Check for Secret Code
+      if (secrets[name]) {
+        // Unlock Secret Theme
+        const s = secrets[name];
+        document.documentElement.style.setProperty('--bg', s.theme);
+        document.documentElement.style.setProperty('--accent', s.color);
+        document.documentElement.style.setProperty('--text', s.color);
+        document.getElementById('storeName').innerText = s.store;
       } else {
-        theme = themes[Math.floor(Math.random() * themes.length)]; // Random
+        // Default Theme (Reset)
+        document.documentElement.style.setProperty('--bg', "linear-gradient(135deg, #e3f2fd, #f3e5f5)");
+        document.documentElement.style.setProperty('--accent', "#9c27b0");
+        document.getElementById('storeName').innerText = "COSMIC STORE";
       }
-      
-      // Apply Styles
-      document.documentElement.style.setProperty('--bg-gradient', theme.bg);
-      document.documentElement.style.setProperty('--btn-bg', theme.btn);
-      document.documentElement.style.setProperty('--btn-text', theme.btnText || '#fff');
-      document.documentElement.style.setProperty('--ink-color', theme.ink);
-      document.documentElement.style.setProperty('--accent-color', theme.accent);
 
-      // Show Layout
-      document.getElementById('controls').style.display = 'none';
-      document.getElementById('receiptContainer').style.display = 'block';
+      // 2. Build the Item List
+      let pool = commonItems;
+      if (zodiacGroup && zodiacItems[zodiacGroup]) {
+        // Mix common items with zodiac specific items
+        pool = [...commonItems, ...zodiacItems[zodiacGroup]];
+      }
 
-      // Set Header Info
-      document.getElementById('storeName').textContent = theme.store;
-      document.getElementById('receiptDetails').innerHTML = `
-        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        STATUS: ${status.toUpperCase()} (${userCount})<br>
-        ${new Date().toLocaleString()}
-      `;
-
-      // Generate Items
-      const itemCount = Math.floor(Math.random() * 3) + 3;
-      const shuffled = items.sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, itemCount);
+      // Pick 3-5 random items
+      const count = Math.floor(Math.random() * 3) + 3;
+      const shuffled = pool.sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, count);
 
       let html = '';
-      selected.forEach(item => {
-        html += `<div class="item"><span>1x ${item.name}</span><span>${item.price}</span></div>`;
+      selected.forEach(i => {
+        html += `<div class="item"><span>${i.name}</span><span>${i.price}</span></div>`;
       });
       document.getElementById('itemList').innerHTML = html;
 
-      // Loyalty Badge at bottom
-      document.getElementById('loyaltyDisplay').textContent = 
-        `★ You have printed ${userCount} receipts. You are a ${status}. ★`;
+      // 3. Set Date & Hint
+      document.getElementById('dateLine').innerText = new Date().toLocaleString();
+      
+      // Random hint at bottom
+      const randomHint = hints[Math.floor(Math.random() * hints.length)];
+      document.getElementById('secretHint').innerText = randomHint;
+
+      // Show Receipt
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('receiptContainer').style.display = 'block';
     }
-    
-    // Reset Logic
+
+    // Reset on click
     document.getElementById('receiptContainer').addEventListener('click', () => {
-       document.getElementById('controls').style.display = 'flex';
-       document.getElementById('receiptContainer').style.display = 'none';
-       document.getElementById('nameInput').value = '';
+      document.getElementById('controls').style.display = 'flex';
+      document.getElementById('receiptContainer').style.display = 'none';
+      document.getElementById('nameInput').value = ""; // Clear for next code
     });
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
   </script>
-
 </body>
 </html>
