@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cosmic-v10'; // v10 = Everything Update
+const CACHE_NAME = 'cosmic-final'; // The Ultimate Merged Version
 const urlsToCache = [
   './',
   './index.html',
