@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cosmic-final'; // The Ultimate Merged Version
+const CACHE_NAME = 'cosmic-v12'; // v12 = Shopping Spree Update
 const urlsToCache = [
   './',
   './index.html',
