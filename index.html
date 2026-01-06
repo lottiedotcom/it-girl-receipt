@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Cosmic Loyalty</title>
+  <title>Cosmic Care</title>
   
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="apple-mobile-web-app-status-bar-style" content="white">
   <meta name="theme-color" content="#ffffff">
 
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Courier+Prime&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Courier+Prime&family=Caveat:wght@700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -78,44 +78,92 @@
     }
     .sign-btn:active { transform: scale(0.95); background: var(--accent); color: #fff; }
 
-    .stats-btn {
-      background: var(--accent);
+    .menu-btn {
       color: white;
       border: none;
       padding: 12px;
       border-radius: 99px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 5px;
+      font-size: 0.9rem;
     }
+    .stats-btn { background: var(--accent); }
+    .rx-btn { background: #ff80ab; margin-top: -5px; }
 
-    /* RECEIPT & REPORT LAYOUTS */
-    .receipt-container, .report-container {
+    /* CONTAINERS */
+    .receipt-container, .report-container, .rx-container {
       perspective: 1000px;
       width: 100%;
       max-width: 340px;
       display: none;
     }
 
+    /* RECEIPT STYLES */
     .receipt, .report {
       background: var(--paper);
       padding: 30px 25px;
       font-family: "Courier Prime", monospace;
       color: var(--text);
       box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-      animation: printReceipt 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      animation: popIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       position: relative;
       text-align: center;
-      /* Jagged Edge */
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
       padding-bottom: 60px;
     }
 
-    @keyframes printReceipt {
-      0% { height: 0; opacity: 0; transform: translateY(-50px); }
-      100% { height: auto; opacity: 1; transform: translateY(0); }
+    /* PRESCRIPTION STYLES */
+    .rx-pad {
+      background: #fff0f5; /* Light Pink Paper */
+      padding: 25px;
+      font-family: "Quicksand", sans-serif;
+      color: #880e4f;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+      animation: popIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      border: 4px solid #ff80ab;
+      border-radius: 10px;
+      position: relative;
+    }
+    
+    .rx-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ff80ab;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .rx-symbol { font-size: 2.5rem; font-weight: 900; font-family: serif; font-style: italic; }
+    .rx-title { font-size: 0.8rem; font-weight: bold; text-align: right; }
+    
+    .rx-field { text-align: left; margin-bottom: 15px; }
+    .rx-label { font-size: 0.7rem; font-weight: bold; opacity: 0.7; text-transform: uppercase; }
+    .rx-value { font-size: 1.1rem; font-weight: 700; border-bottom: 1px dashed #ff80ab; padding-bottom: 2px; }
+    
+    .rx-handwritten {
+      font-family: "Caveat", cursive;
+      font-size: 1.6rem;
+      color: #000080; /* Blue ink look */
+      margin-top: 5px;
+      line-height: 1.2;
+    }
+
+    .rx-signature {
+      margin-top: 30px;
+      text-align: right;
+      font-family: "Caveat", cursive;
+      font-size: 1.5rem;
+      border-top: 2px solid #ff80ab;
+      display: inline-block;
+      width: 100%;
+      padding-top: 5px;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     /* SHARED STYLES */
@@ -138,35 +186,17 @@
     .barcode { margin-top: 15px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
     /* REPORT CARD SPECIFIC */
-    .report-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .pixel {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      background: #eee;
-    }
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      margin-bottom: 5px;
-    }
-    .progress-bar {
-      height: 8px;
-      background: #eee;
-      border-radius: 4px;
-      margin-bottom: 15px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--accent);
+    .report-grid { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; }
+    .pixel { width: 18px; height: 18px; border-radius: 4px; background: #eee; }
+    .stat-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; }
+    .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); }
+
+    /* NAV BUTTON IN RECEIPT */
+    .nav-btn {
+      background: #ff80ab; color: white; border: none; padding: 8px 20px;
+      border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -175,7 +205,9 @@
   <div class="controls" id="controls">
     <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
     <div class="sign-grid" id="signGrid"></div>
-    <button class="stats-btn" onclick="showReport()">📊 VIEW AURA REPORT</button>
+    <button class="menu-btn stats-btn" onclick="showReport()">📊 VIEW AURA REPORT</button>
+    <button class="menu-btn rx-btn" onclick="showPrescription()">💊 GET PRESCRIPTION</button>
+    <div class="trophy-bar" id="tierDisplay" style="margin-top:15px; font-size:0.75rem; text-align:center; opacity:0.7;">LOADING...</div>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
@@ -197,9 +229,44 @@
         <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
       </div>
       <div class="bottom-extras" id="bottomExtras"></div>
-      <div style="font-size:0.7rem; margin-top:20px; opacity:0.6;">THANK YOU FOR SHOPPING</div>
+      
+      <div style="margin-top:20px;">
+        <button class="nav-btn" onclick="showPrescription()">NEED TREATMENT?</button>
+      </div>
+      <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:15px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
     </div>
-    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to reset )</div>
+  </div>
+
+  <div class="rx-container" id="rxContainer">
+    <div class="rx-pad">
+      <div class="rx-header">
+        <div class="rx-symbol">Rx</div>
+        <div class="rx-title">DR. COSMIC, M.D.<br>SELF CARE CLINIC</div>
+      </div>
+      
+      <div class="rx-field">
+        <div class="rx-label">PATIENT NAME</div>
+        <div class="rx-value" id="rxName">GUEST</div>
+      </div>
+
+      <div class="rx-field">
+        <div class="rx-label">DIAGNOSIS</div>
+        <div class="rx-handwritten" id="rxDiagnosis">Chronic Slay</div>
+      </div>
+
+      <div class="rx-field">
+        <div class="rx-label">PRESCRIPTION / TREATMENT</div>
+        <div class="rx-handwritten" id="rxTreatment">1 Iced Latte (Daily)</div>
+      </div>
+
+      <div class="rx-field">
+        <div class="rx-label">REFILLS</div>
+        <div class="rx-value">UNLIMITED</div>
+      </div>
+
+      <div class="rx-signature">Dr. Cosmic</div>
+    </div>
+    <div style="text-align:center; color: #880e4f; font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
   </div>
 
   <div class="report-container" id="reportContainer">
@@ -219,7 +286,7 @@
       <div class="barcode">|| | ||| || |||</div>
       <div style="font-size:0.7rem; margin-top:10px; opacity:0.6;">END OF REPORT</div>
     </div>
-    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to close )</div>
+    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
   </div>
 
   <script>
@@ -227,6 +294,20 @@
     const memberTitles = ["PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON", "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET", "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM", "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER", "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY", "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN", "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT", "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL", "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST", "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER", "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"];
     const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]" };
     
+    // MEDICAL DATA
+    const diagnoses = [
+      "Chronic Slay", "Acute Yearning", "Terminal Chill", "Main Character Syndrome",
+      "Iron Deficiency", "Caffeine Dependency", "Touch Starved", "Burnout",
+      "Plot Armor Deficiency", "Excessive Daydreaming", "Vibe Shift", "Glitter In Bloodstream",
+      "Chronically Online", "Hyperfixation", "Gifted Kid Burnout", "Silly Goose Disease"
+    ];
+    const treatments = [
+      "1 Iced Oat Latte (Daily)", "Touch Grass (Optional)", "Retail Therapy (Immediately)",
+      "Listen to Sad Music", "Nap for 14 Hours", "Buy a Little Treat", "Deactivate Instagram",
+      "Start a New Hobby", "Go for a Silly Little Walk", "Scream into a Pillow",
+      "Watch a Comfort Movie", "Apply Lip Gloss", "Drink Water (Ugh)", "Rot in Bed"
+    ];
+
     const moods = {
       rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
       thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", art: "🌿", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
@@ -259,7 +340,6 @@
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
     let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
-    // NEW: History Array for Pixel Grid
     let moodHistory = JSON.parse(localStorage.getItem('loyaltyHistory') || '[]');
 
     function getSignatureScent() {
@@ -269,6 +349,10 @@
         if (count > maxCount) { maxCount = count; topMood = mood; }
       }
       return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
+    }
+    
+    function updateDisplay() {
+      document.getElementById('tierDisplay').innerText = `TOTAL SPENT: $${Math.floor(lifetimeSpend)}`;
     }
 
     // --- INIT ---
@@ -280,63 +364,52 @@
       btn.onclick = () => generate(key);
       grid.appendChild(btn);
     });
+    updateDisplay();
 
-    // --- REPORT CARD FUNCTION ---
+    // --- FUNCTIONS ---
     function showReport() {
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
-      
-      // Calculate Top Era
       let topMood = "Unknown";
       let max = 0;
       for (const [m, c] of Object.entries(moodCounts)) {
         if (c > max) { max = c; topMood = m; }
       }
-
-      document.getElementById('reportInfo').innerHTML = `
-        SUBJECT: ${nameDisplay.toUpperCase()}<br>
-        CURRENT ERA: ${topMood.toUpperCase()}<br>
-        TOTAL ENTRIES: ${totalReceipts}
-      `;
-
-      // Build Pixel Grid (Last 30)
+      document.getElementById('reportInfo').innerHTML = `SUBJECT: ${nameDisplay.toUpperCase()}<br>CURRENT ERA: ${topMood.toUpperCase()}<br>TOTAL ENTRIES: ${totalReceipts}`;
       const pixelDiv = document.getElementById('pixelGrid');
       pixelDiv.innerHTML = '';
-      // Fill with up to 30 pixels from history (reverse order to show newest)
       const recent = moodHistory.slice(-30);
-      // If less than 30, pad with empty
       for(let i=0; i < 30; i++) {
         const px = document.createElement('div');
         px.className = 'pixel';
-        if (recent[i]) {
-          px.style.background = moods[recent[i]].color;
-        }
+        if (recent[i]) { px.style.background = moods[recent[i]].color; }
         pixelDiv.appendChild(px);
       }
-
-      // Build Bars
       let barsHtml = '';
-      // Sort moods by count
-      const sorted = Object.entries(moodCounts).sort((a,b) => b[1] - a[1]).slice(0, 5); // Top 5
-      
+      const sorted = Object.entries(moodCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
       sorted.forEach(([m, count]) => {
         const pct = Math.round((count / totalReceipts) * 100);
-        barsHtml += `
-          <div class="stat-row">
-            <span>${m.toUpperCase()}</span>
-            <span>${pct}%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width:${pct}%; background:${moods[m].color}"></div>
-          </div>
-        `;
+        barsHtml += `<div class="stat-row"><span>${m.toUpperCase()}</span><span>${pct}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%; background:${moods[m].color}"></div></div>`;
       });
       document.getElementById('statsBars').innerHTML = barsHtml;
-
       document.getElementById('controls').style.display = 'none';
       document.getElementById('reportContainer').style.display = 'block';
     }
 
-    // --- GENERATE RECEIPT ---
+    function showPrescription() {
+      const nameDisplay = document.getElementById('nameInput').value || "Guest";
+      document.getElementById('rxName').innerText = nameDisplay.toUpperCase();
+      
+      const randomDiag = diagnoses[Math.floor(Math.random() * diagnoses.length)];
+      const randomTreat = treatments[Math.floor(Math.random() * treatments.length)];
+      
+      document.getElementById('rxDiagnosis').innerText = randomDiag;
+      document.getElementById('rxTreatment').innerText = randomTreat;
+
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('receiptContainer').style.display = 'none'; // Hide receipt if open
+      document.getElementById('rxContainer').style.display = 'block';
+    }
+
     function generate(moodKey) {
       const nameRaw = document.getElementById('nameInput').value.trim().toLowerCase();
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
@@ -358,21 +431,16 @@
         bonusItem = { name: s.item, price: 999.00 };
       }
 
-      // Visuals
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
       document.documentElement.style.setProperty('--text', theme.color);
       document.documentElement.style.setProperty('--paper', paperColor);
       
-      // Update Stats
       moodCounts[moodKey] = (moodCounts[moodKey] || 0) + 1;
       localStorage.setItem('loyaltyMoods', JSON.stringify(moodCounts));
-      
-      // Update History (Push new mood, keep last 50)
       moodHistory.push(moodKey);
       if (moodHistory.length > 50) moodHistory.shift(); 
       localStorage.setItem('loyaltyHistory', JSON.stringify(moodHistory));
-
       totalReceipts++;
       localStorage.setItem('loyaltyCount', totalReceipts);
 
@@ -383,7 +451,6 @@
         document.getElementById('estText').innerText = "reward menu • you earned this";
         document.getElementById('asciiDisplay').innerText = "♡";
         document.getElementById('infoBubble').innerHTML = `CUSTOMER: ${nameDisplay.toUpperCase()}<br>STATUS: <b>REWARD UNLOCKED</b>`;
-        
         const tasks = selfCareTasks.sort(() => 0.5 - Math.random()).slice(0, 5);
         let html = '';
         tasks.forEach(t => html += `<div class="checklist-item">☐ ${t}</div>`);
@@ -392,7 +459,6 @@
         document.getElementById('totalText').innerText = "PRICELESS";
         document.getElementById('loyaltySection').style.display = 'none';
         document.getElementById('bottomExtras').innerHTML = `<div class="forecast">ENJOY YOUR BREAK</div>`;
-
       } else {
         document.getElementById('storeName').innerText = storeName;
         document.getElementById('estText').innerText = "est. 2026 • digital receipt";
@@ -420,15 +486,9 @@
         localStorage.setItem('loyaltySpend', lifetimeSpend);
         
         const randomIdentity = memberTitles[Math.floor(Math.random() * memberTitles.length)];
-        document.getElementById('infoBubble').innerHTML = `
-          CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-          MEMBER: ${randomIdentity}<br>
-          LIFETIME DEBT: $${lifetimeSpend.toFixed(0)}
-        `;
-
+        document.getElementById('infoBubble').innerHTML = `CUSTOMER: ${nameDisplay.toUpperCase()}<br>MEMBER: ${randomIdentity}<br>LIFETIME DEBT: $${lifetimeSpend.toFixed(0)}`;
         const finalScent = scentOverride || getSignatureScent();
         document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${finalScent}`;
-        
         const stampsFilled = totalReceipts % 5;
         let stampString = "";
         for(let i=0; i<5; i++) stampString += (i < stampsFilled) ? "♥ " : "♡ ";
@@ -448,20 +508,29 @@
       document.getElementById('receiptContainer').style.display = 'block';
     }
 
-    // CLICK HANDLERS FOR RESET
     document.addEventListener('click', (e) => {
       // Close Receipt
       const rec = document.getElementById('receiptContainer');
       if (rec.style.display === 'block' && (e.target.closest('.receipt-container') || e.target.closest('.receipt'))) {
-        document.getElementById('controls').style.display = 'flex';
-        rec.style.display = 'none';
-        document.getElementById('nameInput').value = ""; 
+        // Only close if NOT clicking the "NEED TREATMENT" button
+        if (!e.target.classList.contains('nav-btn')) {
+            document.getElementById('controls').style.display = 'flex';
+            rec.style.display = 'none';
+            document.getElementById('nameInput').value = ""; 
+            updateDisplay();
+        }
       }
       // Close Report
       const rep = document.getElementById('reportContainer');
       if (rep.style.display === 'block' && (e.target.closest('.report-container') || e.target.closest('.report'))) {
         document.getElementById('controls').style.display = 'flex';
         rep.style.display = 'none';
+      }
+      // Close Rx
+      const rx = document.getElementById('rxContainer');
+      if (rx.style.display === 'block' && (e.target.closest('.rx-container') || e.target.closest('.rx-pad'))) {
+        document.getElementById('controls').style.display = 'flex';
+        rx.style.display = 'none';
       }
     });
 
