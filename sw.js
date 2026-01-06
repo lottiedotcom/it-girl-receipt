@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cosmic-v14'; // v14 = Dr. Cosmic Update
+const CACHE_NAME = 'cosmic-v17'; // v17 = Digital Backpack
 const urlsToCache = [
   './',
   './index.html',
