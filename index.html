@@ -35,6 +35,7 @@
       box-sizing: border-box;
     }
 
+    /* CONTROLS */
     .controls {
       width: 100%;
       max-width: 360px;
@@ -77,15 +78,26 @@
     }
     .sign-btn:active { transform: scale(0.95); background: var(--accent); color: #fff; }
 
-    /* RECEIPT LAYOUT */
-    .receipt-container {
+    .stats-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 99px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    /* RECEIPT & REPORT LAYOUTS */
+    .receipt-container, .report-container {
       perspective: 1000px;
       width: 100%;
       max-width: 340px;
       display: none;
     }
 
-    .receipt {
+    .receipt, .report {
       background: var(--paper);
       padding: 30px 25px;
       font-family: "Courier Prime", monospace;
@@ -94,6 +106,7 @@
       animation: printReceipt 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       position: relative;
       text-align: center;
+      /* Jagged Edge */
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
@@ -105,91 +118,55 @@
       100% { height: auto; opacity: 1; transform: translateY(0); }
     }
 
-    /* HEADER ELEMENTS */
-    .ascii-art {
-      white-space: pre;
-      font-size: 0.8rem;
-      line-height: 1;
-      margin-bottom: 10px;
-      opacity: 0.8;
-      font-weight: bold;
-    }
-
-    .header-bubble {
-      display: inline-block;
-      border: 2px solid var(--accent);
-      border-radius: 50px;
-      padding: 8px 25px;
-      margin-bottom: 5px;
-    }
-    .header-bubble h2 {
-      margin: 0;
-      font-size: 1.4rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
+    /* SHARED STYLES */
+    .ascii-art { white-space: pre; font-size: 0.8rem; line-height: 1; margin-bottom: 10px; opacity: 0.8; font-weight: bold; }
+    .header-bubble { display: inline-block; border: 2px solid var(--accent); border-radius: 50px; padding: 8px 25px; margin-bottom: 5px; }
+    .header-bubble h2 { margin: 0; font-size: 1.4rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
     .est-text { font-size: 0.75rem; margin-bottom: 20px; opacity: 0.7; }
-
-    .info-bubble {
-      border: 2px solid var(--accent);
-      border-radius: 22px;
-      padding: 15px;
-      margin-bottom: 20px;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      text-align: center;
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* ITEMS */
+    .info-bubble { border: 2px solid var(--accent); border-radius: 22px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.6; text-align: center; background: rgba(255,255,255,0.1); }
     .item-list { text-align: left; margin-bottom: 20px; padding: 0 5px; }
     .item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
     .checklist-item { margin-bottom: 12px; font-size: 1rem; text-align: left; display: flex; align-items: center; gap: 10px;}
-    
     .divider { border-top: 2px dashed var(--accent); margin: 20px 0; opacity: 0.5; }
     .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
     
-    /* LOYALTY CARD SECTION */
-    .loyalty-section {
-      margin-top: 25px;
-      border: 1px solid var(--accent);
-      border-radius: 15px;
-      padding: 12px;
-      font-size: 0.8rem;
-      background: rgba(255,255,255,0.3);
-    }
-    
-    .stamps {
-      font-size: 1.5rem;
-      letter-spacing: 5px;
-      margin-top: 5px;
-    }
-
-    /* EXTRAS */
+    .loyalty-section { margin-top: 25px; border: 1px solid var(--accent); border-radius: 15px; padding: 12px; font-size: 0.8rem; background: rgba(255,255,255,0.3); }
+    .stamps { font-size: 1.5rem; letter-spacing: 5px; margin-top: 5px; }
     .bottom-extras { margin-top: 25px; }
-    .coupon {
-      border: 2px dashed var(--accent);
-      padding: 10px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      transform: rotate(-1deg);
-    }
+    .coupon { border: 2px dashed var(--accent); padding: 10px; font-weight: bold; font-size: 0.85rem; transform: rotate(-1deg); }
     .forecast { font-size: 0.7rem; opacity: 0.8; margin-bottom: 5px; }
     .barcode { margin-top: 15px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
-    .trophy-bar {
-      margin-top: 20px;
-      background: rgba(255,255,255,0.4);
-      padding: 12px;
-      border-radius: 99px;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 0.85rem;
-      backdrop-filter: blur(5px);
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.5);
+    /* REPORT CARD SPECIFIC */
+    .report-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .pixel {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: #eee;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 5px;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
     }
   </style>
 </head>
@@ -198,74 +175,58 @@
   <div class="controls" id="controls">
     <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
     <div class="sign-grid" id="signGrid"></div>
-    <div class="trophy-bar" id="tierDisplay">LOADING...</div>
+    <button class="stats-btn" onclick="showReport()">📊 VIEW AURA REPORT</button>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
     <div class="receipt">
-      
       <div class="ascii-art" id="asciiDisplay"></div>
-      
-      <div class="header-bubble">
-        <h2 id="storeName">LOADING...</h2>
-      </div>
-      <div class="est-text" id="estText">est. 2026 • loyalty receipt</div>
-
+      <div class="header-bubble"><h2 id="storeName">LOADING...</h2></div>
+      <div class="est-text" id="estText">est. 2026 • digital receipt</div>
       <div class="info-bubble" id="infoBubble"></div>
-
       <div class="item-list" id="itemList"></div>
       <div class="divider"></div>
       <div class="total">
         <span id="totalLabel">TOTAL:</span>
         <span id="totalText">$0.00</span>
       </div>
-
       <div class="loyalty-section" id="loyaltySection">
         <div style="font-weight:bold; font-size:0.75rem;" id="scentDisplay">SCENT: UNKNOWN</div>
         <div style="border-top:1px dashed var(--accent); opacity:0.3; margin:8px 0;"></div>
         <div>REWARD CARD:</div>
         <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
       </div>
-
       <div class="bottom-extras" id="bottomExtras"></div>
-      
       <div style="font-size:0.7rem; margin-top:20px; opacity:0.6;">THANK YOU FOR SHOPPING</div>
     </div>
-    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">
-      ( tap to reset )
+    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to reset )</div>
+  </div>
+
+  <div class="report-container" id="reportContainer">
+    <div class="report">
+      <div class="header-bubble"><h2>AURA REPORT</h2></div>
+      <div class="est-text">official analysis • confidential</div>
+      
+      <div class="info-bubble" id="reportInfo"></div>
+
+      <div style="text-align:left; font-size:0.8rem; font-weight:bold; margin-bottom:10px;">RECENT VIBES (LAST 30):</div>
+      <div class="report-grid" id="pixelGrid"></div>
+
+      <div class="divider"></div>
+      <div style="text-align:left; font-size:0.8rem; font-weight:bold; margin-bottom:15px;">DOMINANT ERAS:</div>
+      <div id="statsBars"></div>
+
+      <div class="barcode">|| | ||| || |||</div>
+      <div style="font-size:0.7rem; margin-top:10px; opacity:0.6;">END OF REPORT</div>
     </div>
+    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to close )</div>
   </div>
 
   <script>
     const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR."];
+    const memberTitles = ["PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON", "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET", "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM", "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER", "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY", "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN", "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT", "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL", "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST", "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER", "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"];
+    const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]" };
     
-    // --- RANDOM MEMBER TITLES ---
-    const memberTitles = [
-      "PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", 
-      "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON",
-      "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET",
-      "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM",
-      "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER",
-      "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY",
-      "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN",
-      "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT",
-      "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL",
-      "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST",
-      "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER",
-      "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"
-    ];
-
-    // --- ASCII ART ---
-    const arts = {
-      default: "♥",
-      nature: "    /\\\n   /  \\\n  /____\\ \n    ||", 
-      ocean: ".~ .~~~ ..~",
-      stars: "✨  ✦  ✨",
-      bow: "  /\\ /\\\n  ( o.o )\n   > ^ <",
-      cyber: "[ o_o ]"
-    };
-
-    // --- MOODS ---
     const moods = {
       rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
       thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", art: "🌿", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
@@ -281,7 +242,6 @@
       productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", items: ["Emails", "Iced Coffee", "To-Do List"] }
     };
 
-    // --- SECRETS ---
     const secrets = {
       "lottie": { color: "#00ffff", bg: "#001e3c", paper: "#002845", store: "ATLANTIS", art: arts.ocean, item: "Pearl", scent: "DEEP SEA" },
       "matt": { color: "#2e4e34", bg: "#1b3323", paper: "#d7ccc8", store: "SEQUOIA", art: arts.nature, item: "Mossy Log", scent: "PINE" },
@@ -290,43 +250,18 @@
       "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo", scent: "VANILLA" }
     };
 
-    // --- THE BIG LIST OF ITEMS (UPDATED) ---
-    const commonItems = [
-      {name: "Iced Oat Latte", price: 8.50},
-      {name: "Sonny Angel", price: 12.00},
-      {name: "Claw Clip", price: 5.00},
-      {name: "Satin Ribbon", price: 2.50},
-      {name: "Platform Shoes", price: 120.00},
-      {name: "Blind Box", price: 15.00},
-      {name: "Digicam", price: 250.00},
-      {name: "Phone Charm", price: 10.00},
-      {name: "Unread Book", price: 18.00},
-      {name: "Thrift Find", price: 25.00},
-      {name: "Delivery Fee", price: 5.99},
-      {name: "Strawberry Milk", price: 3.50},
-      {name: "Tote Bag", price: 20.00},
-      {name: "Face Mask", price: 4.00},
-      {name: "Concert Tickets", price: 300.00},
-      {name: "New Piercing", price: 60.00},
-      {name: "Vending Machine", price: 2.00},
-      {name: "Oat Milk Tax", price: 1.00},
-      {name: "Lip Gloss", price: 12.00},
-      {name: "Girl Dinner", price: 8.00},
-      {name: "Therapy", price: 150.00},
-      {name: "Little Walk", price: 0.00},
-      {name: "Sweet Treat", price: 5.00},
-      {name: "Spotify Premium", price: 11.99}
-    ];
-
+    const commonItems = [{name: "Iced Oat Latte", price: 8.50}, {name: "Sonny Angel", price: 12.00}, {name: "Claw Clip", price: 5.00}, {name: "Satin Ribbon", price: 2.50}, {name: "Platform Shoes", price: 120.00}, {name: "Blind Box", price: 15.00}, {name: "Digicam", price: 250.00}, {name: "Phone Charm", price: 10.00}, {name: "Unread Book", price: 18.00}, {name: "Thrift Find", price: 25.00}, {name: "Delivery Fee", price: 5.99}, {name: "Strawberry Milk", price: 3.50}, {name: "Tote Bag", price: 20.00}, {name: "Face Mask", price: 4.00}, {name: "Concert Tickets", price: 300.00}, {name: "New Piercing", price: 60.00}, {name: "Vending Machine", price: 2.00}, {name: "Oat Milk Tax", price: 1.00}, {name: "Lip Gloss", price: 12.00}, {name: "Girl Dinner", price: 8.00}, {name: "Therapy", price: 150.00}, {name: "Little Walk", price: 0.00}, {name: "Sweet Treat", price: 5.00}, {name: "Spotify Premium", price: 11.99}];
     const selfCareTasks = ["Drink water", "Face mask", "Phone DND 1hr", "Stretch", "Clean a corner", "Listen to music", "Go outside", "Unclench jaw"];
     const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES"];
     const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF"];
 
-    // --- STATS ---
+    // --- DATA HANDLING ---
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
     let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
-    
+    // NEW: History Array for Pixel Grid
+    let moodHistory = JSON.parse(localStorage.getItem('loyaltyHistory') || '[]');
+
     function getSignatureScent() {
       let topMood = "numb";
       let maxCount = 0;
@@ -334,10 +269,6 @@
         if (count > maxCount) { maxCount = count; topMood = mood; }
       }
       return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
-    }
-
-    function updateDisplay() {
-      document.getElementById('tierDisplay').innerText = `TOTAL SPENT: $${Math.floor(lifetimeSpend)}`;
     }
 
     // --- INIT ---
@@ -349,9 +280,63 @@
       btn.onclick = () => generate(key);
       grid.appendChild(btn);
     });
-    updateDisplay();
 
-    // --- GENERATE ---
+    // --- REPORT CARD FUNCTION ---
+    function showReport() {
+      const nameDisplay = document.getElementById('nameInput').value || "Guest";
+      
+      // Calculate Top Era
+      let topMood = "Unknown";
+      let max = 0;
+      for (const [m, c] of Object.entries(moodCounts)) {
+        if (c > max) { max = c; topMood = m; }
+      }
+
+      document.getElementById('reportInfo').innerHTML = `
+        SUBJECT: ${nameDisplay.toUpperCase()}<br>
+        CURRENT ERA: ${topMood.toUpperCase()}<br>
+        TOTAL ENTRIES: ${totalReceipts}
+      `;
+
+      // Build Pixel Grid (Last 30)
+      const pixelDiv = document.getElementById('pixelGrid');
+      pixelDiv.innerHTML = '';
+      // Fill with up to 30 pixels from history (reverse order to show newest)
+      const recent = moodHistory.slice(-30);
+      // If less than 30, pad with empty
+      for(let i=0; i < 30; i++) {
+        const px = document.createElement('div');
+        px.className = 'pixel';
+        if (recent[i]) {
+          px.style.background = moods[recent[i]].color;
+        }
+        pixelDiv.appendChild(px);
+      }
+
+      // Build Bars
+      let barsHtml = '';
+      // Sort moods by count
+      const sorted = Object.entries(moodCounts).sort((a,b) => b[1] - a[1]).slice(0, 5); // Top 5
+      
+      sorted.forEach(([m, count]) => {
+        const pct = Math.round((count / totalReceipts) * 100);
+        barsHtml += `
+          <div class="stat-row">
+            <span>${m.toUpperCase()}</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${pct}%; background:${moods[m].color}"></div>
+          </div>
+        `;
+      });
+      document.getElementById('statsBars').innerHTML = barsHtml;
+
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('reportContainer').style.display = 'block';
+    }
+
+    // --- GENERATE RECEIPT ---
     function generate(moodKey) {
       const nameRaw = document.getElementById('nameInput').value.trim().toLowerCase();
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
@@ -382,14 +367,18 @@
       // Update Stats
       moodCounts[moodKey] = (moodCounts[moodKey] || 0) + 1;
       localStorage.setItem('loyaltyMoods', JSON.stringify(moodCounts));
+      
+      // Update History (Push new mood, keep last 50)
+      moodHistory.push(moodKey);
+      if (moodHistory.length > 50) moodHistory.shift(); 
+      localStorage.setItem('loyaltyHistory', JSON.stringify(moodHistory));
+
       totalReceipts++;
       localStorage.setItem('loyaltyCount', totalReceipts);
 
-      // --- 1. REWARD CHECK (Every 5th) ---
       const isReward = (totalReceipts % 5 === 0);
       
       if (isReward) {
-        // REWARD MODE
         document.getElementById('storeName').innerText = "SELF CARE";
         document.getElementById('estText').innerText = "reward menu • you earned this";
         document.getElementById('asciiDisplay').innerText = "♡";
@@ -399,14 +388,12 @@
         let html = '';
         tasks.forEach(t => html += `<div class="checklist-item">☐ ${t}</div>`);
         document.getElementById('itemList').innerHTML = html;
-        
         document.getElementById('totalLabel').innerText = "COST:";
         document.getElementById('totalText').innerText = "PRICELESS";
         document.getElementById('loyaltySection').style.display = 'none';
         document.getElementById('bottomExtras').innerHTML = `<div class="forecast">ENJOY YOUR BREAK</div>`;
 
       } else {
-        // NORMAL MODE
         document.getElementById('storeName').innerText = storeName;
         document.getElementById('estText').innerText = "est. 2026 • digital receipt";
         document.getElementById('asciiDisplay').innerText = ascii;
@@ -415,7 +402,7 @@
         let currentTotal = 0;
         let pool = [...commonItems];
         moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
-        const count = Math.floor(Math.random() * 3) + 3; // 3 to 5 items
+        const count = Math.floor(Math.random() * 3) + 3;
         const shuffled = pool.sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, count);
         if (bonusItem) selected.unshift(bonusItem);
@@ -432,16 +419,13 @@
         lifetimeSpend += currentTotal;
         localStorage.setItem('loyaltySpend', lifetimeSpend);
         
-        // RANDOM IDENTITY GENERATOR
         const randomIdentity = memberTitles[Math.floor(Math.random() * memberTitles.length)];
-        
         document.getElementById('infoBubble').innerHTML = `
           CUSTOMER: ${nameDisplay.toUpperCase()}<br>
           MEMBER: ${randomIdentity}<br>
           LIFETIME DEBT: $${lifetimeSpend.toFixed(0)}
         `;
 
-        // SCENT & STAMPS
         const finalScent = scentOverride || getSignatureScent();
         document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${finalScent}`;
         
@@ -450,7 +434,6 @@
         for(let i=0; i<5; i++) stampString += (i < stampsFilled) ? "♥ " : "♡ ";
         document.getElementById('stampsDisplay').innerText = stampString;
 
-        // EXTRAS (Coupon vs Forecast)
         const bottomDiv = document.getElementById('bottomExtras');
         if (Math.random() < 0.3) {
            const coup = coupons[Math.floor(Math.random() * coupons.length)];
@@ -465,13 +448,20 @@
       document.getElementById('receiptContainer').style.display = 'block';
     }
 
+    // CLICK HANDLERS FOR RESET
     document.addEventListener('click', (e) => {
-      const container = document.getElementById('receiptContainer');
-      if (container.style.display === 'block' && (e.target.closest('.receipt-container') || e.target.closest('.receipt'))) {
+      // Close Receipt
+      const rec = document.getElementById('receiptContainer');
+      if (rec.style.display === 'block' && (e.target.closest('.receipt-container') || e.target.closest('.receipt'))) {
         document.getElementById('controls').style.display = 'flex';
-        container.style.display = 'none';
+        rec.style.display = 'none';
         document.getElementById('nameInput').value = ""; 
-        updateDisplay(); 
+      }
+      // Close Report
+      const rep = document.getElementById('reportContainer');
+      if (rep.style.display === 'block' && (e.target.closest('.report-container') || e.target.closest('.report'))) {
+        document.getElementById('controls').style.display = 'flex';
+        rep.style.display = 'none';
       }
     });
 
