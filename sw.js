@@ -1,6 +1,6 @@
-// NEW NAME: cosmic-v2
+// NEW NAME: cosmic-v3
 // This change forces your phone to delete the old version and get the new buttons.
-const CACHE_NAME = 'cosmic-v2'; 
+const CACHE_NAME = 'cosmic-v3'; 
 const urlsToCache = [
   './',
   './index.html',
