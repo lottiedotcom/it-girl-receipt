@@ -199,13 +199,12 @@
     const shopNames = [
       "THE VIBE", "DREAM LOG", "ARCHIVE 001", "GIRL BLOG", 
       "PURE AURA", "THE SIMULATION", "SOFT RESET", "MEMORY LANE", 
-      "STAR COMMAND", "EUPHORIA", "GLITCH MODE", "SAFE SPACE", 
-      "VOID STORE", "MOOD SWING", "INNER CHILD"
+      "STAR COMMAND", "EUPHORIA", "GLITCH MODE", "SAFE SPACE"
     ];
 
-    // --- 2. MOOD THEMES (The New Buttons) ---
+    // --- 2. MOOD THEMES ---
     const moods = {
-      rotting: { color: "#78909c", bg: "#eceff1", items: ["Doomscrolling", "Dirty Hair", "Uber Eats", "Screen Time (8h)"] },
+      rotting: { color: "#78909c", bg: "#eceff1", items: ["Doomscrolling", "Dirty Hair", "Uber Eats", "Screen Time"] },
       thriving: { color: "#43a047", bg: "#e8f5e9", items: ["Green Juice", "Yoga Mat", "Skin Glow", "Hydration"] },
       manic: { color: "#ff9100", bg: "#fff3e0", items: ["Impulse Buy", "Fast Talking", "God Complex", "New Hobby"] },
       numb: { color: "#bdbdbd", bg: "#fafafa", items: ["Staring at Wall", "Nothing", "Static Noise", "Unknown"] },
@@ -219,13 +218,28 @@
       productive: { color: "#fdd835", bg: "#fffde7", items: ["Emails", "Iced Coffee", "To-Do List", "Hustle"] }
     };
 
+    // --- 3. THE 5 SECRET CODES ---
     const secrets = {
-      "alien": { color: "#76ff03", bg: "#000000", paper: "#1a1a1a", store: "UFO", item: "Space Dust" },
-      "ghost": { color: "#b0bec5", bg: "#cfd8dc", paper: "#eceff1", store: "BOO!", item: "Ectoplasm" },
-      "love": { color: "#f50057", bg: "#f8bbd0", paper: "#fff0f5", store: "XOXO", item: "Heartbreak" },
-      "rich": { color: "#00c853", bg: "#b9f6ca", paper: "#e8f5e9", store: "BANK", item: "Gold Bar" },
-      "void": { color: "#607d8b", bg: "#263238", paper: "#37474f", store: "ABYSS", item: "Nothing" },
-      "brat": { color: "#000000", bg: "#89f336", paper: "#89f336", store: "BRAT", item: "Vibes" }
+      "lottie": { 
+        color: "#00e5ff", bg: "#001e3c", paper: "#0a1929", 
+        store: "OCEAN_NET", item: "Digital Wave" 
+      },
+      "matt": { 
+        color: "#2e7d32", bg: "#3e2723", paper: "#efebe9", 
+        store: "SEQUOIA", item: "Ancient Tree" 
+      },
+      "doll": { 
+        color: "#880e4f", bg: "#212121", paper: "#ffebee", 
+        store: "MORUTE", item: "Porcelain Heart" 
+      },
+      "cyber": { 
+        color: "#00e676", bg: "#000000", paper: "#1a1a1a", 
+        store: "SYSTEM_32", item: "Source Code" 
+      },
+      "angel": { 
+        color: "#ffd700", bg: "#fffde7", paper: "#ffffff", 
+        store: "HEAVEN", item: "Gold Halo" 
+      }
     };
 
     const commonItems = [
@@ -235,7 +249,7 @@
       {name: "Screen Time", price: "4hrs"}, {name: "Little Walk", price: "Free"}
     ];
 
-    // --- 3. RANK SYSTEM ---
+    // --- 4. RANK & COUNT SYSTEM ---
     let xp = parseInt(localStorage.getItem('cosmicXP') || 0);
 
     function getRankName(points) {
@@ -275,6 +289,7 @@
       let paperColor = "#ffffff";
       let bonusItem = null;
 
+      // Check for Secret
       if (secrets[nameRaw]) {
         const s = secrets[nameRaw];
         theme = { color: s.color, bg: s.bg };
@@ -283,6 +298,7 @@
         bonusItem = { name: s.item, price: "Priceless" };
       }
 
+      // Update Colors
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
       document.documentElement.style.setProperty('--text', theme.color);
@@ -290,18 +306,28 @@
 
       document.getElementById('storeName').innerText = storeName;
       
-      // Add XP
+      // XP Logic
       xp++;
       localStorage.setItem('cosmicXP', xp);
+      
+      // MOOD COUNTER LOGIC
+      // We create a unique name for this mood's memory (e.g., "count_rotting")
+      const counterKey = `count_${moodKey}`;
+      // Get current count, or 0 if new
+      let currentCount = parseInt(localStorage.getItem(counterKey) || 0);
+      currentCount++; // Add 1
+      localStorage.setItem(counterKey, currentCount); // Save it
+
       const currentRank = updateRankDisplay();
 
-      // RECEIPT INFO with RANK
+      // RECEIPT INFO (With Mood Count!)
       document.getElementById('infoBubble').innerHTML = `
         CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        STATUS: ${currentRank.toUpperCase()} (LVL ${xp})<br>
-        MOOD: ${moodKey.toUpperCase()}
+        STATUS: ${currentRank.toUpperCase()}<br>
+        MOOD: ${moodKey.toUpperCase()} (visit #${currentCount})
       `;
 
+      // Build Items
       let pool = [...commonItems];
       moods[moodKey].items.forEach(i => pool.push({name: i, price: "Mood"}));
       
