@@ -185,7 +185,6 @@
     .forecast { font-size: 0.7rem; opacity: 0.8; margin-bottom: 5px; }
     .barcode { margin-top: 15px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
-    /* REPORT CARD SPECIFIC */
     .report-grid { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; }
     .pixel { width: 18px; height: 18px; border-radius: 4px; background: #eee; }
     .stat-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; }
@@ -241,27 +240,22 @@
         <div class="rx-symbol">Rx</div>
         <div class="rx-title">DR. COSMIC, M.D.<br>SELF CARE CLINIC</div>
       </div>
-      
       <div class="rx-field">
         <div class="rx-label">PATIENT NAME</div>
         <div class="rx-value" id="rxName">GUEST</div>
       </div>
-
       <div class="rx-field">
         <div class="rx-label">DIAGNOSIS</div>
         <div class="rx-handwritten" id="rxDiagnosis">LOADING...</div>
       </div>
-
       <div class="rx-field">
         <div class="rx-label">PRESCRIPTION / TREATMENT</div>
         <div class="rx-handwritten" id="rxTreatment">LOADING...</div>
       </div>
-
       <div class="rx-field">
         <div class="rx-label">REFILLS</div>
         <div class="rx-value">UNLIMITED</div>
       </div>
-
       <div class="rx-signature">Dr. Cosmic</div>
     </div>
     <div style="text-align:center; color: #880e4f; font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
@@ -288,59 +282,59 @@
     const memberTitles = ["PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON", "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET", "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM", "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER", "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY", "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN", "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT", "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL", "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST", "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER", "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"];
     const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]" };
     
-    // --- MEDICAL DATABASE (MOOD SPECIFIC) ---
+    // --- UPDATED MEDICAL DATABASE (Opposite Action / Helpful Logic) ---
     const medicalDb = {
       rotting: {
-        diagnoses: ["Acute Bed Rot", "Vitamin D Deficiency", "Screen Blindness", "Horizontal Life"],
-        treatments: ["Touch Grass (Urgent)", "Open a Window", "Shower (Optional)", "10m of Sunlight"]
+        diagnoses: ["Bed-Gravity Syndrome", "Vitamin D Deficiency", "Vampire Mode", "Horizontal Life"],
+        treatments: ["Open the Blinds", "Wash Your Face", "Drink 1 Glass of Water", "Stand Up for 1 Minute"]
       },
       thriving: {
-        diagnoses: ["Main Character Syndrome", "Excessive Slay", "Chronic Success", "Glow Up Fever"],
-        treatments: ["Keep Slaying", "Humble Yourself (jk)", "Post a Selfie", "Drink Water"]
+        diagnoses: ["Main Character Energy", "Excessive Slay", "Glow Up Fever", "Momentum Spike"],
+        treatments: ["Share the Energy", "Take a Selfie", "Write it Down", "Keep Going"]
       },
       manic: {
-        diagnoses: ["Chronic Zoomies", "Chaos Energy", "Idea Overload", "Sleep Resistance"],
-        treatments: ["Decaf Coffee Only", "Box Breathing", "Put the Card Down", "Lay on Floor"]
+        diagnoses: ["System Overload", "Zoomies", "Chaos Mode", "Impulse Control Failure"],
+        treatments: ["Lay on the Floor", "Box Breathing (4s)", "Put the Card Down", "Decaf Tea"]
       },
       numb: {
-        diagnoses: ["Emotional Buffer", "Static Noise Brain", "Auto-Pilot Mode", "The Void"],
-        treatments: ["Watch a Sad Movie", "Spicy Food", "Cold Shower", "Scream into Pillow"]
+        diagnoses: ["Sensory Deprivation", "Static Noise Brain", "Auto-Pilot Mode", "The Void"],
+        treatments: ["Hold an Ice Cube", "Eat Something Sour", "5 Jumping Jacks", "Cold Water Splash"]
       },
       delusional: {
-        diagnoses: ["Clinical Delusion", "Reality Detachment", "Lover Girl Syndrome", "Fantasy Fever"],
-        treatments: ["Reality Check", "Delete His Number", "Journaling", "Delulu Lemonade"]
+        diagnoses: ["Fantasy Fever", "Reality Detachment", "Lover Girl Syndrome", "Plot Armor Check"],
+        treatments: ["Call a Real Friend", "Touch a Wall", "Check Bank Account", "List 3 Facts"]
       },
       yearning: {
-        diagnoses: ["Heart Acheness", "Nostalgia Poisoning", "Pinterest Addiction", "Poetry Brain"],
-        treatments: ["Sad Playlist Detox", "Look at the Moon", "Write a Letter (Burn it)", "Soup"]
+        diagnoses: ["Heart Acheness", "Nostalgia Poisoning", "Looking Backwards", "Soft Girl Flu"],
+        treatments: ["Write & Burn It", "Close the Photo App", "Make New Art", "Call Someone New"]
       },
       hating: {
-        diagnoses: ["Acute Hateritis", "Side-Eye Strain", "Petty Fever", "Grudge Holding"],
-        treatments: ["Kindness Gummies", "Touch Grass", "Log Off", "Forgiveness (Maybe)"]
+        diagnoses: ["Petty Fever", "Comparisonitis", "Grudge Holding", "Sour Candy Soul"],
+        treatments: ["List 3 Good Things", "Compliment Someone", "Eat Something Sweet", "Log Off"]
       },
       healing: {
-        diagnoses: ["Growth Spurt", "Boundary Setting", "Self-Awareness Spike", "Inner Peace"],
-        treatments: ["Tea & Blanket", "Yoga", "Proud of You", "Rest Day"]
+        diagnoses: ["Growth Spurt", "Boundary Setting", "Metamorphosis", "Inner Peace"],
+        treatments: ["Rest & Hydrate", "Gentle Stretch", "Proud of You", "Slow Down"]
       },
       spiraling: {
-        diagnoses: ["Overthinking Overdose", "Panic Attack (Mini)", "Doom Spiral", "System Error"],
-        treatments: ["Call a Friend", "Deep Breaths", "Delete Twitter", "Fuzzy Socks"]
+        diagnoses: ["Looping Thoughts", "Panic Spike", "System Error", "Overthinking"],
+        treatments: ["5-4-3-2-1 Method", "Weighted Blanket", "Call a Safe Person", "Look at the Sky"]
       },
       lurking: {
-        diagnoses: ["Perception Issues", "Invisibility Cloak", "Stalker Tendencies", "Digital Ghost"],
-        treatments: ["Post Something", "Comment 'Cute'", "Close the Tab", "Be Perceived"]
+        diagnoses: ["Invisibility Cloak", "Perception Fear", "Digital Ghost", "Observer Mode"],
+        treatments: ["Post a Comment", "Send a Text", "Be Perceived", "Step Away from Screen"]
       },
       posting: {
-        diagnoses: ["Validation Seeking", "Clout Chasing", "Influencer Influenza", "Caption Stress"],
-        treatments: ["Turn Off Notifications", "Phone Down", "Read a Book", "Touch Grass"]
+        diagnoses: ["Validation Seeking", "Performance Mode", "Influencer Influenza", "Caption Stress"],
+        treatments: ["Airplane Mode (1hr)", "Read a Book", "Do Nothing", "Private Journaling"]
       },
       productive: {
-        diagnoses: ["Hustle Culture Flu", "Burnout Risk", "Caffeine Overload", "Type A Virus"],
-        treatments: ["Mandatory Nap", "Do Nothing for 1hr", "Unclench Jaw", "Close Laptop"]
+        diagnoses: ["Hustle Culture Flu", "Human Doing", "Caffeine Overload", "Type A Virus"],
+        treatments: ["Do Nothing (5m)", "Unclench Jaw", "Close Eyes", "Look at a Tree"]
       },
-      general: { // Fallback
-        diagnoses: ["Chronically Online", "Silly Goose Disease", "Vibe Shift", "Touch Starved"],
-        treatments: ["Little Treat", "Hydrate", "Nap", "Go Outside"]
+      general: { 
+        diagnoses: ["Human Condition", "Vibe Shift", "Needs Maintenance", "Software Update"],
+        treatments: ["Drink Water", "Deep Breath", "Be Kind to Self", "Touch Grass"]
       }
     };
 
@@ -434,17 +428,14 @@
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
       document.getElementById('rxName').innerText = nameDisplay.toUpperCase();
       
-      // Determine Mood Logic
       let targetMood = "general";
       if (specificMood) {
         targetMood = specificMood;
       } else {
-        // If coming from home screen, use top mood or general
         targetMood = getTopMood();
         if (moodHistory.length === 0) targetMood = "general";
       }
       
-      // Get Data from DB
       const data = medicalDb[targetMood] || medicalDb.general;
       const randomDiag = data.diagnoses[Math.floor(Math.random() * data.diagnoses.length)];
       const randomTreat = data.treatments[Math.floor(Math.random() * data.treatments.length)];
@@ -506,7 +497,7 @@
         document.getElementById('totalText').innerText = "PRICELESS";
         document.getElementById('loyaltySection').style.display = 'none';
         document.getElementById('bottomExtras').innerHTML = `<div class="forecast">ENJOY YOUR BREAK</div>`;
-        document.getElementById('rxNavContainer').innerHTML = ``; // No Rx on self care reward
+        document.getElementById('rxNavContainer').innerHTML = ``; 
 
       } else {
         document.getElementById('storeName').innerText = storeName;
