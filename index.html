@@ -116,7 +116,7 @@
 
     /* PRESCRIPTION STYLES */
     .rx-pad {
-      background: #fff0f5; /* Light Pink Paper */
+      background: #fff0f5;
       padding: 25px;
       font-family: "Quicksand", sans-serif;
       color: #880e4f;
@@ -145,7 +145,7 @@
     .rx-handwritten {
       font-family: "Caveat", cursive;
       font-size: 1.6rem;
-      color: #000080; /* Blue ink look */
+      color: #000080;
       margin-top: 5px;
       line-height: 1.2;
     }
@@ -192,7 +192,6 @@
     .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--accent); }
 
-    /* NAV BUTTON IN RECEIPT */
     .nav-btn {
       background: #ff80ab; color: white; border: none; padding: 8px 20px;
       border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer;
@@ -230,9 +229,8 @@
       </div>
       <div class="bottom-extras" id="bottomExtras"></div>
       
-      <div style="margin-top:20px;">
-        <button class="nav-btn" onclick="showPrescription()">NEED TREATMENT?</button>
-      </div>
+      <div style="margin-top:20px;" id="rxNavContainer">
+        </div>
       <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:15px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
     </div>
   </div>
@@ -251,12 +249,12 @@
 
       <div class="rx-field">
         <div class="rx-label">DIAGNOSIS</div>
-        <div class="rx-handwritten" id="rxDiagnosis">Chronic Slay</div>
+        <div class="rx-handwritten" id="rxDiagnosis">LOADING...</div>
       </div>
 
       <div class="rx-field">
         <div class="rx-label">PRESCRIPTION / TREATMENT</div>
-        <div class="rx-handwritten" id="rxTreatment">1 Iced Latte (Daily)</div>
+        <div class="rx-handwritten" id="rxTreatment">LOADING...</div>
       </div>
 
       <div class="rx-field">
@@ -273,16 +271,12 @@
     <div class="report">
       <div class="header-bubble"><h2>AURA REPORT</h2></div>
       <div class="est-text">official analysis • confidential</div>
-      
       <div class="info-bubble" id="reportInfo"></div>
-
       <div style="text-align:left; font-size:0.8rem; font-weight:bold; margin-bottom:10px;">RECENT VIBES (LAST 30):</div>
       <div class="report-grid" id="pixelGrid"></div>
-
       <div class="divider"></div>
       <div style="text-align:left; font-size:0.8rem; font-weight:bold; margin-bottom:15px;">DOMINANT ERAS:</div>
       <div id="statsBars"></div>
-
       <div class="barcode">|| | ||| || |||</div>
       <div style="font-size:0.7rem; margin-top:10px; opacity:0.6;">END OF REPORT</div>
     </div>
@@ -294,19 +288,61 @@
     const memberTitles = ["PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON", "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET", "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM", "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER", "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY", "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN", "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT", "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL", "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST", "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER", "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"];
     const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]" };
     
-    // MEDICAL DATA
-    const diagnoses = [
-      "Chronic Slay", "Acute Yearning", "Terminal Chill", "Main Character Syndrome",
-      "Iron Deficiency", "Caffeine Dependency", "Touch Starved", "Burnout",
-      "Plot Armor Deficiency", "Excessive Daydreaming", "Vibe Shift", "Glitter In Bloodstream",
-      "Chronically Online", "Hyperfixation", "Gifted Kid Burnout", "Silly Goose Disease"
-    ];
-    const treatments = [
-      "1 Iced Oat Latte (Daily)", "Touch Grass (Optional)", "Retail Therapy (Immediately)",
-      "Listen to Sad Music", "Nap for 14 Hours", "Buy a Little Treat", "Deactivate Instagram",
-      "Start a New Hobby", "Go for a Silly Little Walk", "Scream into a Pillow",
-      "Watch a Comfort Movie", "Apply Lip Gloss", "Drink Water (Ugh)", "Rot in Bed"
-    ];
+    // --- MEDICAL DATABASE (MOOD SPECIFIC) ---
+    const medicalDb = {
+      rotting: {
+        diagnoses: ["Acute Bed Rot", "Vitamin D Deficiency", "Screen Blindness", "Horizontal Life"],
+        treatments: ["Touch Grass (Urgent)", "Open a Window", "Shower (Optional)", "10m of Sunlight"]
+      },
+      thriving: {
+        diagnoses: ["Main Character Syndrome", "Excessive Slay", "Chronic Success", "Glow Up Fever"],
+        treatments: ["Keep Slaying", "Humble Yourself (jk)", "Post a Selfie", "Drink Water"]
+      },
+      manic: {
+        diagnoses: ["Chronic Zoomies", "Chaos Energy", "Idea Overload", "Sleep Resistance"],
+        treatments: ["Decaf Coffee Only", "Box Breathing", "Put the Card Down", "Lay on Floor"]
+      },
+      numb: {
+        diagnoses: ["Emotional Buffer", "Static Noise Brain", "Auto-Pilot Mode", "The Void"],
+        treatments: ["Watch a Sad Movie", "Spicy Food", "Cold Shower", "Scream into Pillow"]
+      },
+      delusional: {
+        diagnoses: ["Clinical Delusion", "Reality Detachment", "Lover Girl Syndrome", "Fantasy Fever"],
+        treatments: ["Reality Check", "Delete His Number", "Journaling", "Delulu Lemonade"]
+      },
+      yearning: {
+        diagnoses: ["Heart Acheness", "Nostalgia Poisoning", "Pinterest Addiction", "Poetry Brain"],
+        treatments: ["Sad Playlist Detox", "Look at the Moon", "Write a Letter (Burn it)", "Soup"]
+      },
+      hating: {
+        diagnoses: ["Acute Hateritis", "Side-Eye Strain", "Petty Fever", "Grudge Holding"],
+        treatments: ["Kindness Gummies", "Touch Grass", "Log Off", "Forgiveness (Maybe)"]
+      },
+      healing: {
+        diagnoses: ["Growth Spurt", "Boundary Setting", "Self-Awareness Spike", "Inner Peace"],
+        treatments: ["Tea & Blanket", "Yoga", "Proud of You", "Rest Day"]
+      },
+      spiraling: {
+        diagnoses: ["Overthinking Overdose", "Panic Attack (Mini)", "Doom Spiral", "System Error"],
+        treatments: ["Call a Friend", "Deep Breaths", "Delete Twitter", "Fuzzy Socks"]
+      },
+      lurking: {
+        diagnoses: ["Perception Issues", "Invisibility Cloak", "Stalker Tendencies", "Digital Ghost"],
+        treatments: ["Post Something", "Comment 'Cute'", "Close the Tab", "Be Perceived"]
+      },
+      posting: {
+        diagnoses: ["Validation Seeking", "Clout Chasing", "Influencer Influenza", "Caption Stress"],
+        treatments: ["Turn Off Notifications", "Phone Down", "Read a Book", "Touch Grass"]
+      },
+      productive: {
+        diagnoses: ["Hustle Culture Flu", "Burnout Risk", "Caffeine Overload", "Type A Virus"],
+        treatments: ["Mandatory Nap", "Do Nothing for 1hr", "Unclench Jaw", "Close Laptop"]
+      },
+      general: { // Fallback
+        diagnoses: ["Chronically Online", "Silly Goose Disease", "Vibe Shift", "Touch Starved"],
+        treatments: ["Little Treat", "Hydrate", "Nap", "Go Outside"]
+      }
+    };
 
     const moods = {
       rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
@@ -336,21 +372,24 @@
     const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES"];
     const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF"];
 
-    // --- DATA HANDLING ---
+    // --- DATA ---
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
     let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
     let moodHistory = JSON.parse(localStorage.getItem('loyaltyHistory') || '[]');
 
     function getSignatureScent() {
-      let topMood = "numb";
-      let maxCount = 0;
-      for (const [mood, count] of Object.entries(moodCounts)) {
-        if (count > maxCount) { maxCount = count; topMood = mood; }
-      }
+      let topMood = "numb"; let max = 0;
+      for (const [m, c] of Object.entries(moodCounts)) { if (c > max) { max = c; topMood = m; } }
       return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
     }
     
+    function getTopMood() {
+      let topMood = "general"; let max = 0;
+      for (const [m, c] of Object.entries(moodCounts)) { if (c > max) { max = c; topMood = m; } }
+      return topMood;
+    }
+
     function updateDisplay() {
       document.getElementById('tierDisplay').innerText = `TOTAL SPENT: $${Math.floor(lifetimeSpend)}`;
     }
@@ -369,11 +408,7 @@
     // --- FUNCTIONS ---
     function showReport() {
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
-      let topMood = "Unknown";
-      let max = 0;
-      for (const [m, c] of Object.entries(moodCounts)) {
-        if (c > max) { max = c; topMood = m; }
-      }
+      const topMood = getTopMood();
       document.getElementById('reportInfo').innerHTML = `SUBJECT: ${nameDisplay.toUpperCase()}<br>CURRENT ERA: ${topMood.toUpperCase()}<br>TOTAL ENTRIES: ${totalReceipts}`;
       const pixelDiv = document.getElementById('pixelGrid');
       pixelDiv.innerHTML = '';
@@ -395,18 +430,30 @@
       document.getElementById('reportContainer').style.display = 'block';
     }
 
-    function showPrescription() {
+    function showPrescription(specificMood = null) {
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
       document.getElementById('rxName').innerText = nameDisplay.toUpperCase();
       
-      const randomDiag = diagnoses[Math.floor(Math.random() * diagnoses.length)];
-      const randomTreat = treatments[Math.floor(Math.random() * treatments.length)];
+      // Determine Mood Logic
+      let targetMood = "general";
+      if (specificMood) {
+        targetMood = specificMood;
+      } else {
+        // If coming from home screen, use top mood or general
+        targetMood = getTopMood();
+        if (moodHistory.length === 0) targetMood = "general";
+      }
+      
+      // Get Data from DB
+      const data = medicalDb[targetMood] || medicalDb.general;
+      const randomDiag = data.diagnoses[Math.floor(Math.random() * data.diagnoses.length)];
+      const randomTreat = data.treatments[Math.floor(Math.random() * data.treatments.length)];
       
       document.getElementById('rxDiagnosis').innerText = randomDiag;
       document.getElementById('rxTreatment').innerText = randomTreat;
 
       document.getElementById('controls').style.display = 'none';
-      document.getElementById('receiptContainer').style.display = 'none'; // Hide receipt if open
+      document.getElementById('receiptContainer').style.display = 'none';
       document.getElementById('rxContainer').style.display = 'block';
     }
 
@@ -459,6 +506,8 @@
         document.getElementById('totalText').innerText = "PRICELESS";
         document.getElementById('loyaltySection').style.display = 'none';
         document.getElementById('bottomExtras').innerHTML = `<div class="forecast">ENJOY YOUR BREAK</div>`;
+        document.getElementById('rxNavContainer').innerHTML = ``; // No Rx on self care reward
+
       } else {
         document.getElementById('storeName').innerText = storeName;
         document.getElementById('estText').innerText = "est. 2026 • digital receipt";
@@ -502,6 +551,9 @@
            const fort = fortunes[Math.floor(Math.random() * fortunes.length)];
            bottomDiv.innerHTML = `<div class="forecast">${fort}</div><div class="barcode">|| | ||| || |||</div>`;
         }
+
+        // UPDATE RX NAV BUTTON WITH SPECIFIC MOOD
+        document.getElementById('rxNavContainer').innerHTML = `<button class="nav-btn" onclick="showPrescription('${moodKey}')">NEED TREATMENT?</button>`;
       }
 
       document.getElementById('controls').style.display = 'none';
@@ -512,7 +564,6 @@
       // Close Receipt
       const rec = document.getElementById('receiptContainer');
       if (rec.style.display === 'block' && (e.target.closest('.receipt-container') || e.target.closest('.receipt'))) {
-        // Only close if NOT clicking the "NEED TREATMENT" button
         if (!e.target.classList.contains('nav-btn')) {
             document.getElementById('controls').style.display = 'flex';
             rec.style.display = 'none';
