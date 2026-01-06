@@ -1,5 +1,4 @@
-// NEW NAME: cosmic-v6
-const CACHE_NAME = 'cosmic-v6'; 
+const CACHE_NAME = 'cosmic-v7'; // v7 = Loyalty Card System
 const urlsToCache = [
   './',
   './index.html',
