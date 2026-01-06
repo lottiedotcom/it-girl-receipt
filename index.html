@@ -167,7 +167,7 @@
       margin-top: 5px;
     }
 
-    /* EXTRAS (Forecast/Coupon) */
+    /* EXTRAS */
     .bottom-extras { margin-top: 25px; }
     .coupon {
       border: 2px dashed var(--accent);
@@ -198,7 +198,7 @@
   <div class="controls" id="controls">
     <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
     <div class="sign-grid" id="signGrid"></div>
-    <div class="trophy-bar" id="tierDisplay">MEMBER: LOADING...</div>
+    <div class="trophy-bar" id="tierDisplay">LOADING...</div>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
@@ -239,6 +239,22 @@
   <script>
     const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR."];
     
+    // --- RANDOM MEMBER TITLES ---
+    const memberTitles = [
+      "PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", 
+      "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON",
+      "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET",
+      "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM",
+      "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER",
+      "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY",
+      "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN",
+      "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT",
+      "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL",
+      "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST",
+      "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER",
+      "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"
+    ];
+
     // --- ASCII ART ---
     const arts = {
       default: "♥",
@@ -274,7 +290,34 @@
       "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo", scent: "VANILLA" }
     };
 
-    const commonItems = [{name: "Iced Coffee", price: 7.50}, {name: "Sweet Treat", price: 5.00}, {name: "Lip Gloss", price: 12.00}, {name: "Girl Dinner", price: 8.00}];
+    // --- THE BIG LIST OF ITEMS (UPDATED) ---
+    const commonItems = [
+      {name: "Iced Oat Latte", price: 8.50},
+      {name: "Sonny Angel", price: 12.00},
+      {name: "Claw Clip", price: 5.00},
+      {name: "Satin Ribbon", price: 2.50},
+      {name: "Platform Shoes", price: 120.00},
+      {name: "Blind Box", price: 15.00},
+      {name: "Digicam", price: 250.00},
+      {name: "Phone Charm", price: 10.00},
+      {name: "Unread Book", price: 18.00},
+      {name: "Thrift Find", price: 25.00},
+      {name: "Delivery Fee", price: 5.99},
+      {name: "Strawberry Milk", price: 3.50},
+      {name: "Tote Bag", price: 20.00},
+      {name: "Face Mask", price: 4.00},
+      {name: "Concert Tickets", price: 300.00},
+      {name: "New Piercing", price: 60.00},
+      {name: "Vending Machine", price: 2.00},
+      {name: "Oat Milk Tax", price: 1.00},
+      {name: "Lip Gloss", price: 12.00},
+      {name: "Girl Dinner", price: 8.00},
+      {name: "Therapy", price: 150.00},
+      {name: "Little Walk", price: 0.00},
+      {name: "Sweet Treat", price: 5.00},
+      {name: "Spotify Premium", price: 11.99}
+    ];
+
     const selfCareTasks = ["Drink water", "Face mask", "Phone DND 1hr", "Stretch", "Clean a corner", "Listen to music", "Go outside", "Unclench jaw"];
     const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES"];
     const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF"];
@@ -283,14 +326,6 @@
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
     let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
-
-    function getTier(spend) {
-      if (spend < 500) return "WINDOW SHOPPER";
-      if (spend < 1500) return "MALL RAT";
-      if (spend < 5000) return "VIP";
-      if (spend < 10000) return "INFLUENCER";
-      return "THE 1%";
-    }
     
     function getSignatureScent() {
       let topMood = "numb";
@@ -302,8 +337,7 @@
     }
 
     function updateDisplay() {
-      const tier = getTier(lifetimeSpend);
-      document.getElementById('tierDisplay').innerText = `MEMBER: ${tier} ($${Math.floor(lifetimeSpend)})`;
+      document.getElementById('tierDisplay').innerText = `TOTAL SPENT: $${Math.floor(lifetimeSpend)}`;
     }
 
     // --- INIT ---
@@ -381,7 +415,7 @@
         let currentTotal = 0;
         let pool = [...commonItems];
         moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
-        const count = Math.floor(Math.random() * 3) + 3;
+        const count = Math.floor(Math.random() * 3) + 3; // 3 to 5 items
         const shuffled = pool.sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, count);
         if (bonusItem) selected.unshift(bonusItem);
@@ -398,11 +432,13 @@
         lifetimeSpend += currentTotal;
         localStorage.setItem('loyaltySpend', lifetimeSpend);
         
-        const tier = getTier(lifetimeSpend);
+        // RANDOM IDENTITY GENERATOR
+        const randomIdentity = memberTitles[Math.floor(Math.random() * memberTitles.length)];
+        
         document.getElementById('infoBubble').innerHTML = `
           CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-          MEMBER: ${tier}<br>
-          MOOD: ${moodKey.toUpperCase()} #${moodCounts[moodKey]}
+          MEMBER: ${randomIdentity}<br>
+          LIFETIME DEBT: $${lifetimeSpend.toFixed(0)}
         `;
 
         // SCENT & STAMPS
