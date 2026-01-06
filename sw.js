@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cosmic-v13'; // v13 = Aura Report & Stats
+const CACHE_NAME = 'cosmic-v14'; // v14 = Dr. Cosmic Update
 const urlsToCache = [
   './',
   './index.html',
