@@ -41,7 +41,7 @@
       max-width: 360px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .name-box {
@@ -60,46 +60,57 @@
 
     .sign-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(4, 1fr); /* Changed to 4 columns for more moods */
+      gap: 6px;
     }
 
     .sign-btn {
       background: rgba(255,255,255,0.8);
       border: 2px solid var(--accent);
       color: var(--accent);
-      padding: 15px 5px;
-      border-radius: 18px;
+      padding: 10px 2px;
+      border-radius: 12px;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       cursor: pointer;
       transition: transform 0.1s;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
     }
     .sign-btn:active { transform: scale(0.95); background: var(--accent); color: #fff; }
 
+    .menu-row {
+      display: flex;
+      gap: 8px;
+    }
     .menu-btn {
+      flex: 1;
       color: white;
       border: none;
       padding: 12px;
       border-radius: 99px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     .stats-btn { background: var(--accent); }
-    .rx-btn { background: #ff80ab; margin-top: -5px; }
+    .rx-btn { background: #ff80ab; }
+    .bag-btn { background: #5c6bc0; }
 
     /* CONTAINERS */
-    .receipt-container, .report-container, .rx-container {
+    .receipt-container, .report-container, .rx-container, .bag-container {
       perspective: 1000px;
       width: 100%;
       max-width: 340px;
       display: none;
     }
 
-    /* RECEIPT STYLES */
-    .receipt, .report {
+    /* RECEIPT & REPORT & BAG STYLES */
+    .receipt, .report, .bag {
       background: var(--paper);
       padding: 30px 25px;
       font-family: "Courier Prime", monospace;
@@ -127,39 +138,14 @@
       position: relative;
     }
     
-    .rx-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #ff80ab;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
+    .rx-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff80ab; padding-bottom: 10px; margin-bottom: 20px; }
     .rx-symbol { font-size: 2.5rem; font-weight: 900; font-family: serif; font-style: italic; }
     .rx-title { font-size: 0.8rem; font-weight: bold; text-align: right; }
-    
     .rx-field { text-align: left; margin-bottom: 15px; }
     .rx-label { font-size: 0.7rem; font-weight: bold; opacity: 0.7; text-transform: uppercase; }
     .rx-value { font-size: 1.1rem; font-weight: 700; border-bottom: 1px dashed #ff80ab; padding-bottom: 2px; }
-    
-    .rx-handwritten {
-      font-family: "Caveat", cursive;
-      font-size: 1.6rem;
-      color: #000080;
-      margin-top: 5px;
-      line-height: 1.2;
-    }
-
-    .rx-signature {
-      margin-top: 30px;
-      text-align: right;
-      font-family: "Caveat", cursive;
-      font-size: 1.5rem;
-      border-top: 2px solid #ff80ab;
-      display: inline-block;
-      width: 100%;
-      padding-top: 5px;
-    }
+    .rx-handwritten { font-family: "Caveat", cursive; font-size: 1.6rem; color: #000080; margin-top: 5px; line-height: 1.2; }
+    .rx-signature { margin-top: 30px; text-align: right; font-family: "Caveat", cursive; font-size: 1.5rem; border-top: 2px solid #ff80ab; display: inline-block; width: 100%; padding-top: 5px; }
 
     @keyframes popIn {
       0% { opacity: 0; transform: translateY(40px) scale(0.95); }
@@ -177,7 +163,6 @@
     .checklist-item { margin-bottom: 12px; font-size: 1rem; text-align: left; display: flex; align-items: center; gap: 10px;}
     .divider { border-top: 2px dashed var(--accent); margin: 20px 0; opacity: 0.5; }
     .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
-    
     .loyalty-section { margin-top: 25px; border: 1px solid var(--accent); border-radius: 15px; padding: 12px; font-size: 0.8rem; background: rgba(255,255,255,0.3); }
     .stamps { font-size: 1.5rem; letter-spacing: 5px; margin-top: 5px; }
     .bottom-extras { margin-top: 25px; }
@@ -185,11 +170,36 @@
     .forecast { font-size: 0.7rem; opacity: 0.8; margin-bottom: 5px; }
     .barcode { margin-top: 15px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
+    /* REPORT GRID */
     .report-grid { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; }
     .pixel { width: 18px; height: 18px; border-radius: 4px; background: #eee; }
     .stat-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; }
     .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--accent); }
+
+    /* INVENTORY GRID */
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .inv-item {
+      background: rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70px;
+    }
+    .inv-item.rare { border: 1px solid #ffd700; background: #fffde7; }
+    .inv-item.legendary { border: 1px solid #ff4081; background: #fce4ec; }
+    .inv-count { font-weight: bold; font-size: 1.2rem; color: var(--accent); margin-bottom: 4px; }
+    .inv-name { line-height: 1.1; opacity: 0.8; }
 
     .nav-btn {
       background: #ff80ab; color: white; border: none; padding: 8px 20px;
@@ -203,8 +213,11 @@
   <div class="controls" id="controls">
     <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
     <div class="sign-grid" id="signGrid"></div>
-    <button class="menu-btn stats-btn" onclick="showReport()">📊 VIEW AURA REPORT</button>
-    <button class="menu-btn rx-btn" onclick="showPrescription()">💊 GET PRESCRIPTION</button>
+    <div class="menu-row">
+      <button class="menu-btn stats-btn" onclick="showReport()">📊 AURA</button>
+      <button class="menu-btn bag-btn" onclick="showBag()">🎒 BAG</button>
+      <button class="menu-btn rx-btn" onclick="showPrescription()">💊 Rx</button>
+    </div>
     <div class="trophy-bar" id="tierDisplay" style="margin-top:15px; font-size:0.75rem; text-align:center; opacity:0.7;">LOADING...</div>
   </div>
 
@@ -227,9 +240,7 @@
         <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
       </div>
       <div class="bottom-extras" id="bottomExtras"></div>
-      
-      <div style="margin-top:20px;" id="rxNavContainer">
-        </div>
+      <div style="margin-top:20px;" id="rxNavContainer"></div>
       <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:15px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
     </div>
   </div>
@@ -277,67 +288,48 @@
     <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
   </div>
 
+  <div class="bag-container" id="bagContainer">
+    <div class="bag">
+      <div class="header-bubble"><h2>MY BACKPACK</h2></div>
+      <div class="est-text">digital hoard • inventory</div>
+      <div class="info-bubble">
+        TOTAL ITEMS COLLECTED: <span id="bagCount">0</span>
+      </div>
+      <div class="inventory-grid" id="inventoryGrid">
+        </div>
+      <div class="barcode">|| | ||| || |||</div>
+      <div style="font-size:0.7rem; margin-top:10px; opacity:0.6;">KEEP IT SAFE</div>
+    </div>
+    <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">( tap to go home )</div>
+  </div>
+
   <script>
     const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR."];
     const memberTitles = ["PASSENGER PRINCESS", "FORMER GIFTED KID", "LOCAL CRYPTID", "IPAD ADULT", "PROFESSIONAL NAPPER", "CAFFEINE DEPENDENT", "SILLY GOOSE", "ACADEMIC WEAPON", "CHRONICALLY ONLINE", "THEATRE KID", "HORSE GIRL", "SPACE CADET", "VINTED SELLER", "FANFICTION AUTHOR", "PLAYLIST CURATOR", "CAT MOM", "PLANT KILLER", "MALL RAT", "DEPARTMENT STORE GHOST", "PROFESSIONAL YEARNER", "CERTIFIED PRINCESS", "EMOTIONAL SUPPORT HUMAN", "DISCORD MOD", "REPLY GUY", "PINTEREST BOARD", "TUMBLR FAMOUS", "SLEEPY SOLDIER", "DRAMA QUEEN", "MAIN CHARACTER", "NPC", "SIDE CHARACTER", "VILLAIN ERA", "TIKTOK ADDICT", "SCREEN TIME VICTIM", "GIRL BLOGGER", "DIGITAL HOARDER", "STARGIRL", "CYBER ANGEL", "FOREST FAIRY", "DUNGEON MASTER", "GLITTER ENTHUSIAST", "BURNOUT VICTIM", "PROCRASTINATOR", "NIGHT OWL", "MORNING HATER", "WINDOW SHOPPER", "VIP", "INFLUENCER", "THE CHOSEN ONE"];
-    const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]" };
+    const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]", happy: "^___^", neutral: "-___-" };
     
     // --- UPDATED MEDICAL DATABASE (Opposite Action / Helpful Logic) ---
     const medicalDb = {
-      rotting: {
-        diagnoses: ["Bed-Gravity Syndrome", "Vitamin D Deficiency", "Vampire Mode", "Horizontal Life"],
-        treatments: ["Open the Blinds", "Wash Your Face", "Drink 1 Glass of Water", "Stand Up for 1 Minute"]
-      },
-      thriving: {
-        diagnoses: ["Main Character Energy", "Excessive Slay", "Glow Up Fever", "Momentum Spike"],
-        treatments: ["Share the Energy", "Take a Selfie", "Write it Down", "Keep Going"]
-      },
-      manic: {
-        diagnoses: ["System Overload", "Zoomies", "Chaos Mode", "Impulse Control Failure"],
-        treatments: ["Lay on the Floor", "Box Breathing (4s)", "Put the Card Down", "Decaf Tea"]
-      },
-      numb: {
-        diagnoses: ["Sensory Deprivation", "Static Noise Brain", "Auto-Pilot Mode", "The Void"],
-        treatments: ["Hold an Ice Cube", "Eat Something Sour", "5 Jumping Jacks", "Cold Water Splash"]
-      },
-      delusional: {
-        diagnoses: ["Fantasy Fever", "Reality Detachment", "Lover Girl Syndrome", "Plot Armor Check"],
-        treatments: ["Call a Real Friend", "Touch a Wall", "Check Bank Account", "List 3 Facts"]
-      },
-      yearning: {
-        diagnoses: ["Heart Acheness", "Nostalgia Poisoning", "Looking Backwards", "Soft Girl Flu"],
-        treatments: ["Write & Burn It", "Close the Photo App", "Make New Art", "Call Someone New"]
-      },
-      hating: {
-        diagnoses: ["Petty Fever", "Comparisonitis", "Grudge Holding", "Sour Candy Soul"],
-        treatments: ["List 3 Good Things", "Compliment Someone", "Eat Something Sweet", "Log Off"]
-      },
-      healing: {
-        diagnoses: ["Growth Spurt", "Boundary Setting", "Metamorphosis", "Inner Peace"],
-        treatments: ["Rest & Hydrate", "Gentle Stretch", "Proud of You", "Slow Down"]
-      },
-      spiraling: {
-        diagnoses: ["Looping Thoughts", "Panic Spike", "System Error", "Overthinking"],
-        treatments: ["5-4-3-2-1 Method", "Weighted Blanket", "Call a Safe Person", "Look at the Sky"]
-      },
-      lurking: {
-        diagnoses: ["Invisibility Cloak", "Perception Fear", "Digital Ghost", "Observer Mode"],
-        treatments: ["Post a Comment", "Send a Text", "Be Perceived", "Step Away from Screen"]
-      },
-      posting: {
-        diagnoses: ["Validation Seeking", "Performance Mode", "Influencer Influenza", "Caption Stress"],
-        treatments: ["Airplane Mode (1hr)", "Read a Book", "Do Nothing", "Private Journaling"]
-      },
-      productive: {
-        diagnoses: ["Hustle Culture Flu", "Human Doing", "Caffeine Overload", "Type A Virus"],
-        treatments: ["Do Nothing (5m)", "Unclench Jaw", "Close Eyes", "Look at a Tree"]
-      },
-      general: { 
-        diagnoses: ["Human Condition", "Vibe Shift", "Needs Maintenance", "Software Update"],
-        treatments: ["Drink Water", "Deep Breath", "Be Kind to Self", "Touch Grass"]
-      }
+      rotting: { diagnoses: ["Bed-Gravity Syndrome", "Vitamin D Deficiency"], treatments: ["Open the Blinds", "Wash Your Face", "Stand Up for 1m"] },
+      thriving: { diagnoses: ["Main Character Energy", "Excessive Slay"], treatments: ["Keep Slaying", "Take a Selfie", "Write it Down"] },
+      manic: { diagnoses: ["System Overload", "Zoomies"], treatments: ["Lay on the Floor", "Box Breathing (4s)", "Decaf Tea"] },
+      numb: { diagnoses: ["Sensory Deprivation", "Static Noise Brain"], treatments: ["Hold Ice Cube", "Eat Sour Candy", "Cold Water Splash"] },
+      delusional: { diagnoses: ["Fantasy Fever", "Reality Detachment"], treatments: ["Call a Real Friend", "Touch a Wall", "List 3 Facts"] },
+      yearning: { diagnoses: ["Heart Acheness", "Nostalgia Poisoning"], treatments: ["Write & Burn It", "Make New Art", "Call Someone New"] },
+      hating: { diagnoses: ["Petty Fever", "Sour Candy Soul"], treatments: ["List 3 Good Things", "Compliment Someone", "Log Off"] },
+      healing: { diagnoses: ["Growth Spurt", "Metamorphosis"], treatments: ["Rest & Hydrate", "Gentle Stretch", "Proud of You"] },
+      spiraling: { diagnoses: ["Looping Thoughts", "System Error"], treatments: ["5-4-3-2-1 Method", "Weighted Blanket", "Look at the Sky"] },
+      lurking: { diagnoses: ["Invisibility Cloak", "Observer Mode"], treatments: ["Post a Comment", "Be Perceived", "Step Away"] },
+      posting: { diagnoses: ["Validation Seeking", "Performance Mode"], treatments: ["Airplane Mode (1hr)", "Read a Book", "Private Journal"] },
+      productive: { diagnoses: ["Hustle Culture Flu", "Human Doing"], treatments: ["Do Nothing (5m)", "Unclench Jaw", "Look at a Tree"] },
+      silly: { diagnoses: ["Chronic Goofiness", "Clownery"], treatments: ["Do a Little Dance", "Make Someone Laugh", "Enjoy the Joy"] },
+      grateful: { diagnoses: ["Heart Expansion", "Peaceful Mind"], treatments: ["Say Thank You", "Soak it In", "Share the Love"] },
+      chill: { diagnoses: ["Low Cortisol", "Vibe Stabilization"], treatments: ["Stay Hydrated", "Enjoy the Quiet", "Nap"] },
+      bored: { diagnoses: ["Dopamine Deficiency", "Buffering"], treatments: ["Read a Page", "Draw a Circle", "Clean One Thing"] },
+      general: { diagnoses: ["Human Condition", "Vibe Shift"], treatments: ["Drink Water", "Deep Breath", "Be Kind to Self"] }
     };
 
+    // --- EXPANDED MOOD LIST (16 Total) ---
     const moods = {
       rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
       thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", art: "🌿", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
@@ -350,7 +342,12 @@
       spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "WINE", art: "🌀", items: ["Overthinking", "Panic", "Regret"] },
       lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "SCREEN", art: "👁️", items: ["Screenshots", "Private Tab", "Research"] },
       posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", art: "📸", items: ["Drafts", "Clout", "Validation"] },
-      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", items: ["Emails", "Iced Coffee", "To-Do List"] }
+      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", items: ["Emails", "Iced Coffee", "To-Do List"] },
+      // NEW MOODS
+      silly: { color: "#ff4081", bg: "#fce4ec", scent: "BUBBLEGUM", art: arts.happy, items: ["Clown Nose", "Giggles", "Prank Call"] },
+      grateful: { color: "#ffd700", bg: "#fffde7", scent: "SUNSHINE", art: arts.happy, items: ["Thank You Note", "Warm Hug", "Flowers"] },
+      chill: { color: "#81d4fa", bg: "#e1f5fe", scent: "OCEAN AIR", art: arts.neutral, items: ["Lo-Fi Beats", "Hoodie", "Snack"] },
+      bored: { color: "#b0bec5", bg: "#eceff1", scent: "CARDBOARD", art: arts.neutral, items: ["Ceiling Tile", "Daydream", "Nap"] }
     };
 
     const secrets = {
@@ -361,7 +358,32 @@
       "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo", scent: "VANILLA" }
     };
 
-    const commonItems = [{name: "Iced Oat Latte", price: 8.50}, {name: "Sonny Angel", price: 12.00}, {name: "Claw Clip", price: 5.00}, {name: "Satin Ribbon", price: 2.50}, {name: "Platform Shoes", price: 120.00}, {name: "Blind Box", price: 15.00}, {name: "Digicam", price: 250.00}, {name: "Phone Charm", price: 10.00}, {name: "Unread Book", price: 18.00}, {name: "Thrift Find", price: 25.00}, {name: "Delivery Fee", price: 5.99}, {name: "Strawberry Milk", price: 3.50}, {name: "Tote Bag", price: 20.00}, {name: "Face Mask", price: 4.00}, {name: "Concert Tickets", price: 300.00}, {name: "New Piercing", price: 60.00}, {name: "Vending Machine", price: 2.00}, {name: "Oat Milk Tax", price: 1.00}, {name: "Lip Gloss", price: 12.00}, {name: "Girl Dinner", price: 8.00}, {name: "Therapy", price: 150.00}, {name: "Little Walk", price: 0.00}, {name: "Sweet Treat", price: 5.00}, {name: "Spotify Premium", price: 11.99}];
+    // --- HUGE ITEM LIBRARY ---
+    const allItems = [
+      {name: "Iced Oat Latte", price: 8.50, rare: false}, {name: "Sonny Angel", price: 12.00, rare: false},
+      {name: "Claw Clip", price: 5.00, rare: false}, {name: "Satin Ribbon", price: 2.50, rare: false},
+      {name: "Platform Shoes", price: 120.00, rare: true}, {name: "Blind Box", price: 15.00, rare: false},
+      {name: "Digicam", price: 250.00, rare: true}, {name: "Phone Charm", price: 10.00, rare: false},
+      {name: "Unread Book", price: 18.00, rare: false}, {name: "Thrift Find", price: 25.00, rare: false},
+      {name: "Delivery Fee", price: 5.99, rare: false}, {name: "Strawberry Milk", price: 3.50, rare: false},
+      {name: "Tote Bag", price: 20.00, rare: false}, {name: "Face Mask", price: 4.00, rare: false},
+      {name: "Concert Tickets", price: 300.00, rare: true}, {name: "New Piercing", price: 60.00, rare: true},
+      {name: "Vending Machine", price: 2.00, rare: false}, {name: "Oat Milk Tax", price: 1.00, rare: false},
+      {name: "Lip Gloss", price: 12.00, rare: false}, {name: "Girl Dinner", price: 8.00, rare: false},
+      {name: "Therapy", price: 150.00, rare: true}, {name: "Little Walk", price: 0.00, rare: false},
+      {name: "Sweet Treat", price: 5.00, rare: false}, {name: "Spotify Premium", price: 11.99, rare: false},
+      {name: "Vintage Lamp", price: 45.00, rare: true}, {name: "Cat Ear Headphones", price: 80.00, rare: true},
+      {name: "Crystal", price: 15.00, rare: false}, {name: "Tarot Deck", price: 25.00, rare: false},
+      {name: "Mechanical Keyboard", price: 150.00, rare: true}, {name: "Matcha Whisk", price: 15.00, rare: false},
+      {name: "Weighted Blanket", price: 60.00, rare: true}, {name: "Essential Oil", price: 10.00, rare: false},
+      {name: "Film Roll", price: 18.00, rare: false}, {name: "Succulent", price: 6.00, rare: false},
+      {name: "Fuzzy Socks", price: 8.00, rare: false}, {name: "Sheet Mask", price: 3.00, rare: false},
+      {name: "Crochet Top", price: 35.00, rare: false}, {name: "Vinyl Record", price: 30.00, rare: false},
+      {name: "Rare Sticker", price: 2.00, rare: true}, {name: "Sanrio Plush", price: 25.00, rare: false},
+      {name: "Bubble Tea", price: 7.00, rare: false}, {name: "Crocs", price: 50.00, rare: false},
+      {name: "Designer Bag", price: 2500.00, rare: true}, {name: "Emotional Support Bottle", price: 40.00, rare: false}
+    ];
+
     const selfCareTasks = ["Drink water", "Face mask", "Phone DND 1hr", "Stretch", "Clean a corner", "Listen to music", "Go outside", "Unclench jaw"];
     const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES"];
     const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF"];
@@ -371,6 +393,7 @@
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
     let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
     let moodHistory = JSON.parse(localStorage.getItem('loyaltyHistory') || '[]');
+    let inventory = JSON.parse(localStorage.getItem('loyaltyInventory') || '{}');
 
     function getSignatureScent() {
       let topMood = "numb"; let max = 0;
@@ -424,17 +447,35 @@
       document.getElementById('reportContainer').style.display = 'block';
     }
 
+    function showBag() {
+      const bagGrid = document.getElementById('inventoryGrid');
+      bagGrid.innerHTML = '';
+      let totalItems = 0;
+      
+      const sortedItems = Object.entries(inventory).sort((a,b) => b[1] - a[1]);
+      
+      sortedItems.forEach(([name, count]) => {
+        totalItems += count;
+        // Find if rare
+        const itemObj = allItems.find(i => i.name === name);
+        const isRare = itemObj ? itemObj.rare : false;
+        
+        const div = document.createElement('div');
+        div.className = `inv-item ${isRare ? (itemObj.price > 100 ? 'legendary' : 'rare') : ''}`;
+        div.innerHTML = `<div class="inv-count">x${count}</div><div class="inv-name">${name}</div>`;
+        bagGrid.appendChild(div);
+      });
+
+      document.getElementById('bagCount').innerText = totalItems;
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('bagContainer').style.display = 'block';
+    }
+
     function showPrescription(specificMood = null) {
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
       document.getElementById('rxName').innerText = nameDisplay.toUpperCase();
-      
-      let targetMood = "general";
-      if (specificMood) {
-        targetMood = specificMood;
-      } else {
-        targetMood = getTopMood();
-        if (moodHistory.length === 0) targetMood = "general";
-      }
+      let targetMood = specificMood || getTopMood();
+      if (moodHistory.length === 0) targetMood = "general";
       
       const data = medicalDb[targetMood] || medicalDb.general;
       const randomDiag = data.diagnoses[Math.floor(Math.random() * data.diagnoses.length)];
@@ -442,7 +483,6 @@
       
       document.getElementById('rxDiagnosis').innerText = randomDiag;
       document.getElementById('rxTreatment').innerText = randomTreat;
-
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptContainer').style.display = 'none';
       document.getElementById('rxContainer').style.display = 'block';
@@ -474,6 +514,7 @@
       document.documentElement.style.setProperty('--text', theme.color);
       document.documentElement.style.setProperty('--paper', paperColor);
       
+      // Update Stats
       moodCounts[moodKey] = (moodCounts[moodKey] || 0) + 1;
       localStorage.setItem('loyaltyMoods', JSON.stringify(moodCounts));
       moodHistory.push(moodKey);
@@ -506,8 +547,9 @@
         document.getElementById('loyaltySection').style.display = 'block';
 
         let currentTotal = 0;
-        let pool = [...commonItems];
-        moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
+        let pool = [...allItems]; // Use the HUGE list
+        moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00, rare: false}));
+        
         const count = Math.floor(Math.random() * 3) + 3;
         const shuffled = pool.sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, count);
@@ -517,7 +559,12 @@
         selected.forEach(i => {
           currentTotal += i.price;
           html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
+          
+          // ADD TO INVENTORY
+          inventory[i.name] = (inventory[i.name] || 0) + 1;
         });
+        localStorage.setItem('loyaltyInventory', JSON.stringify(inventory));
+
         document.getElementById('itemList').innerHTML = html;
         document.getElementById('totalLabel').innerText = "TOTAL:";
         document.getElementById('totalText').innerText = `$${currentTotal.toFixed(2)}`;
@@ -543,7 +590,6 @@
            bottomDiv.innerHTML = `<div class="forecast">${fort}</div><div class="barcode">|| | ||| || |||</div>`;
         }
 
-        // UPDATE RX NAV BUTTON WITH SPECIFIC MOOD
         document.getElementById('rxNavContainer').innerHTML = `<button class="nav-btn" onclick="showPrescription('${moodKey}')">NEED TREATMENT?</button>`;
       }
 
@@ -562,17 +608,18 @@
             updateDisplay();
         }
       }
-      // Close Report
+      // Close Reports/Bags
       const rep = document.getElementById('reportContainer');
       if (rep.style.display === 'block' && (e.target.closest('.report-container') || e.target.closest('.report'))) {
-        document.getElementById('controls').style.display = 'flex';
-        rep.style.display = 'none';
+        document.getElementById('controls').style.display = 'flex'; rep.style.display = 'none';
       }
-      // Close Rx
       const rx = document.getElementById('rxContainer');
       if (rx.style.display === 'block' && (e.target.closest('.rx-container') || e.target.closest('.rx-pad'))) {
-        document.getElementById('controls').style.display = 'flex';
-        rx.style.display = 'none';
+        document.getElementById('controls').style.display = 'flex'; rx.style.display = 'none';
+      }
+      const bag = document.getElementById('bagContainer');
+      if (bag.style.display === 'block' && (e.target.closest('.bag-container') || e.target.closest('.bag'))) {
+        document.getElementById('controls').style.display = 'flex'; bag.style.display = 'none';
       }
     });
 
