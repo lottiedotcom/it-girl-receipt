@@ -1,3 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mood Receipt</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <meta name="theme-color" content="#ffffff">
+
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Courier+Prime&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f3e5f5;
+      --accent: #ab47bc;
+      --text: #4a148c;
+      --paper: #fff;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: "Quicksand", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.5s ease;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .controls {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .name-box {
+      background: rgba(255,255,255,0.9);
+      border: 2px solid var(--accent);
+      padding: 16px;
+      border-radius: 25px;
+      font-family: "Quicksand", sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: center;
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .sign-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .sign-btn {
+      background: rgba(255,255,255,0.8);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 15px 5px;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: transform 0.1s;
+      text-transform: uppercase;
+    }
+
+    .sign-btn:active {
+      transform: scale(0.95);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* RECEIPT LAYOUT */
+    .receipt-container {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 340px;
+      display: none;
+    }
+
+    .receipt {
+      background: var(--paper);
+      padding: 30px 25px;
+      font-family: "Courier Prime", monospace;
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      animation: printReceipt 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      position: relative;
+      text-align: center;
+      --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
       padding-bottom: 60px;
@@ -38,7 +140,6 @@
 
     .item-list { text-align: left; margin-bottom: 20px; padding: 0 5px; }
     
-    /* Updated Item Style for Checklist */
     .item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
     .checklist-item { margin-bottom: 12px; font-size: 1rem; text-align: left; display: flex; align-items: center; gap: 10px;}
     
@@ -109,7 +210,7 @@
       </div>
 
       <div class="loyalty-section" id="loyaltySection">
-        <div class="scent-text" id="scentDisplay">SIGNATURE SCENT: UNKNOWN</div>
+        <div class="scent-text" id="statsDisplay">TOP 3 MOODS: LOADING...</div>
         <div style="border-top:1px dashed var(--accent); opacity:0.3; margin:8px 0;"></div>
         <div id="rewardLabel">REWARD STATUS:</div>
         <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
@@ -127,31 +228,42 @@
     
     // --- MOODS ---
     const moods = {
-      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS & STATIC", items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
-      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA & AMBITION", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
-      manic: { color: "#ff9100", bg: "#fff3e0", scent: "ENERGY DRINKS", items: ["Impulse Buy", "Fast Talking", "God Complex"] },
-      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "UNSCENTED LOTION", items: ["Staring at Wall", "Nothing", "Static"] },
-      delusional: { color: "#f06292", bg: "#fce4ec", scent: "WEDDING CAKE", items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
-      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN ON CONCRETE", items: ["Poetry", "Old Photos", "Sad Music"] },
-      hating: { color: "#d32f2f", bg: "#ffebee", scent: "BURNING BRIDGES", items: ["Blocking Him", "Side Eye", "Judgment"] },
-      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE & TEARS", items: ["Therapy", "Journaling", "Boundaries"] },
-      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "SPILLED WINE", items: ["Overthinking", "Panic", "Regret"] },
-      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "BLUE LIGHT", items: ["Screenshots", "Private Tab", "Research"] },
+      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
+      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
+      manic: { color: "#ff9100", bg: "#fff3e0", scent: "RED BULL", items: ["Impulse Buy", "Fast Talking", "God Complex"] },
+      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "STATIC", items: ["Staring at Wall", "Nothing", "White Noise"] },
+      delusional: { color: "#f06292", bg: "#fce4ec", scent: "FROSTING", items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
+      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN", items: ["Poetry", "Old Photos", "Sad Music"] },
+      hating: { color: "#d32f2f", bg: "#ffebee", scent: "SMOKE", items: ["Blocking Him", "Side Eye", "Judgment"] },
+      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE", items: ["Therapy", "Journaling", "Boundaries"] },
+      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "WINE", items: ["Overthinking", "Panic", "Regret"] },
+      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "SCREEN CLEANER", items: ["Screenshots", "Private Tab", "Research"] },
       posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", items: ["Drafts", "Clout", "Validation"] },
-      productive: { color: "#fdd835", bg: "#fffde7", scent: "FRESH PAPER", items: ["Emails", "Iced Coffee", "To-Do List"] }
+      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", items: ["Emails", "Iced Coffee", "To-Do List"] }
     };
 
-    // --- SECRETS (Updated Lottie Theme) ---
+    // --- SECRETS (Updated Matt Theme) ---
     const secrets = {
       "lottie": { 
-        color: "#00ffff", bg: "#001e3c", paper: "#002845", // Ocean Night Mode
-        store: "ATLANTIS.WEB", scent: "DEEP SEA & WIFI", 
-        item: "Bioluminescence" 
+        color: "#00ffff", bg: "#001e3c", paper: "#002845", 
+        store: "ATLANTIS.WEB", scent: "DEEP SEA", item: "Bioluminescence" 
       },
-      "matt": { color: "#2e7d32", bg: "#3e2723", paper: "#efebe9", store: "SEQUOIA", item: "Ancient Tree", scent: "PINE NEEDLES" },
-      "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", item: "Porcelain Heart", scent: "DUSTY LACE" },
-      "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", item: "Source Code", scent: "OZONE" },
-      "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", item: "Gold Halo", scent: "VANILLA" }
+      "matt": { 
+        color: "#33691e", bg: "#1b5e20", paper: "#d7ccc8", // Deep Green & Wood
+        store: "SEQUOIA NAT'L", scent: "PINE NEEDLES", item: "Giant Redwood" 
+      },
+      "doll": { 
+        color: "#880e4f", bg: "#212121", paper: "#ffebee", 
+        store: "MORUTE", scent: "DUSTY LACE", item: "Porcelain Heart" 
+      },
+      "cyber": { 
+        color: "#00e676", bg: "#000000", paper: "#1a1a1a", 
+        store: "SYSTEM_32", scent: "OZONE", item: "Source Code" 
+      },
+      "angel": { 
+        color: "#ffd700", bg: "#fffde7", paper: "#ffffff", 
+        store: "HEAVEN", scent: "VANILLA", item: "Gold Halo" 
+      }
     };
 
     const commonItems = [
@@ -161,7 +273,6 @@
       {name: "Screen Time", price: 0.00}, {name: "Little Walk", price: 0.00}
     ];
 
-    // --- SELF CARE REWARD TASKS ---
     const selfCareTasks = [
       "Drink a full glass of water", "Face mask & chill", "Put phone on DND for 1hr",
       "Stretch your back", "Clean one small corner", "Listen to your fav song",
@@ -182,13 +293,14 @@
       return "THE 1%";
     }
 
-    function getSignatureScent() {
-      let topMood = "numb";
-      let maxCount = 0;
-      for (const [mood, count] of Object.entries(moodCounts)) {
-        if (count > maxCount) { maxCount = count; topMood = mood; }
-      }
-      return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
+    function getTopMoods() {
+      // Convert object to array and sort
+      const sorted = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
+      // Get top 3
+      const top3 = sorted.slice(0, 3).map(entry => entry[0].toUpperCase());
+      
+      if (top3.length === 0) return "UNKNOWN";
+      return top3.join(", ");
     }
 
     function updateDisplay() {
@@ -241,7 +353,6 @@
       const isRewardTurn = (totalReceipts % 5 === 0);
 
       if (isRewardTurn) {
-        // --- REWARD MODE ---
         document.getElementById('storeName').innerText = "SELF CARE";
         document.getElementById('estText').innerText = "you earned this • reward menu";
         
@@ -251,7 +362,6 @@
           ENJOY YOUR BREAK ♡
         `;
 
-        // Pick 5 random self care tasks
         const shuffledTasks = selfCareTasks.sort(() => 0.5 - Math.random()).slice(0, 5);
         let html = '';
         shuffledTasks.forEach(task => {
@@ -261,16 +371,20 @@
         
         document.getElementById('totalLabel').innerText = "COST:";
         document.getElementById('totalText').innerText = "PRICELESS";
-        document.getElementById('loyaltySection').style.display = 'none'; // Hide stamps for this one
+        document.getElementById('loyaltySection').style.display = 'none';
 
       } else {
-        // --- NORMAL MODE ---
         document.getElementById('storeName').innerText = storeName;
         document.getElementById('estText').innerText = "est. 2026 • loyalty receipt";
         document.getElementById('loyaltySection').style.display = 'block';
 
         let currentTotal = 0;
         let pool = [...commonItems];
+        // Special matt items if secret code used
+        if (secrets[nameRaw] && nameRaw === 'matt') {
+            pool.push({name: "Mossy Rock", price: 0.00}, {name: "Fresh Air", price: 0.00}, {name: "Hiking Boots", price: 150.00});
+        }
+        
         moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
         
         const count = Math.floor(Math.random() * 3) + 3;
@@ -291,7 +405,6 @@
         lifetimeSpend += currentTotal;
         localStorage.setItem('loyaltySpend', lifetimeSpend);
         
-        // Receipt Info
         const currentTier = getTier(lifetimeSpend);
         const currentCount = moodCounts[moodKey];
         document.getElementById('infoBubble').innerHTML = `
@@ -300,14 +413,16 @@
           MOOD: ${moodKey.toUpperCase()} #${currentCount}
         `;
 
-        // Stamps
         const stampsFilled = totalReceipts % 5;
         let stampString = "";
         for(let i=0; i<5; i++) {
           stampString += (i < stampsFilled) ? "♥ " : "♡ ";
         }
         document.getElementById('stampsDisplay').innerText = stampString;
-        document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${getSignatureScent()}`;
+        
+        // DISPLAY TOP 3 MOODS
+        const topMoods = getTopMoods();
+        document.getElementById('statsDisplay').innerText = `YOUR MOOD BOARD: ${topMoods}`;
       }
 
       document.getElementById('controls').style.display = 'none';
