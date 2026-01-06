@@ -1,5 +1,5 @@
-
-const CACHE_NAME = 'cosmic-v5'; 
+// NEW NAME: cosmic-v6
+const CACHE_NAME = 'cosmic-v6'; 
 const urlsToCache = [
   './',
   './index.html',
@@ -7,7 +7,6 @@ const urlsToCache = [
   './icon.png'
 ];
 
-// INSTALL: Force the new version to take over immediately
 self.addEventListener('install', event => {
   self.skipWaiting(); 
   event.waitUntil(
@@ -16,14 +15,12 @@ self.addEventListener('install', event => {
   );
 });
 
-// ACTIVATE: Delete any old caches (v1, v2, v3, v4)
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -32,7 +29,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-// FETCH: Serve from cache if available, otherwise go to network
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
