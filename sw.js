@@ -1,6 +1,5 @@
-// NEW NAME: cosmic-v3
-// This change forces your phone to delete the old version and get the new buttons.
-const CACHE_NAME = 'cosmic-v3'; 
+
+const CACHE_NAME = 'cosmic-v5'; 
 const urlsToCache = [
   './',
   './index.html',
@@ -17,7 +16,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// ACTIVATE: Delete any old caches (like v1 or doll-receipts)
+// ACTIVATE: Delete any old caches (v1, v2, v3, v4)
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
