@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Cosmic Receipt</title>
+  <title>Cosmic Loyalty</title>
   
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
@@ -18,7 +18,6 @@
       --accent: #ab47bc;
       --text: #4a148c;
       --paper: #fff;
-      --radius: 20px;
     }
 
     body {
@@ -76,12 +75,7 @@
       transition: transform 0.1s;
       text-transform: uppercase;
     }
-
-    .sign-btn:active {
-      transform: scale(0.95);
-      background: var(--accent);
-      color: #fff;
-    }
+    .sign-btn:active { transform: scale(0.95); background: var(--accent); color: #fff; }
 
     /* RECEIPT LAYOUT */
     .receipt-container {
@@ -111,6 +105,7 @@
       100% { height: auto; opacity: 1; transform: translateY(0); }
     }
 
+    /* HEADER ELEMENTS */
     .ascii-art {
       white-space: pre;
       font-size: 0.8rem;
@@ -141,44 +136,48 @@
       border: 2px solid var(--accent);
       border-radius: 22px;
       padding: 15px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       font-size: 0.85rem;
       line-height: 1.6;
       text-align: center;
       background: rgba(255,255,255,0.1);
     }
 
+    /* ITEMS */
     .item-list { text-align: left; margin-bottom: 20px; padding: 0 5px; }
-    
     .item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
     .checklist-item { margin-bottom: 12px; font-size: 1rem; text-align: left; display: flex; align-items: center; gap: 10px;}
     
     .divider { border-top: 2px dashed var(--accent); margin: 20px 0; opacity: 0.5; }
-
     .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
     
-    /* NEW SECTIONS */
-    .forecast-box {
+    /* LOYALTY CARD SECTION */
+    .loyalty-section {
       margin-top: 25px;
-      font-size: 0.75rem;
-      opacity: 0.9;
       border: 1px solid var(--accent);
-      padding: 8px;
-      display: inline-block;
-      width: 90%;
-    }
-
-    .coupon {
-      margin-top: 25px;
-      border: 2px dashed var(--accent);
-      padding: 15px;
-      font-weight: bold;
-      font-size: 0.9rem;
-      background: rgba(255,255,255,0.2);
-      transform: rotate(-1deg);
+      border-radius: 15px;
+      padding: 12px;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.3);
     }
     
-    .barcode { margin-top: 20px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
+    .stamps {
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+      margin-top: 5px;
+    }
+
+    /* EXTRAS (Forecast/Coupon) */
+    .bottom-extras { margin-top: 25px; }
+    .coupon {
+      border: 2px dashed var(--accent);
+      padding: 10px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      transform: rotate(-1deg);
+    }
+    .forecast { font-size: 0.7rem; opacity: 0.8; margin-bottom: 5px; }
+    .barcode { margin-top: 15px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
     .trophy-bar {
       margin-top: 20px;
@@ -192,13 +191,6 @@
       text-align: center;
       border: 1px solid rgba(255,255,255,0.5);
     }
-    
-    /* GOLDEN TICKET ANIMATION */
-    @keyframes shine {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
   </style>
 </head>
 <body>
@@ -211,26 +203,31 @@
 
   <div class="receipt-container" id="receiptContainer">
     <div class="receipt">
+      
       <div class="ascii-art" id="asciiDisplay"></div>
       
       <div class="header-bubble">
         <h2 id="storeName">LOADING...</h2>
       </div>
-      <div class="est-text" id="estText">est. 2026 • digital receipt</div>
+      <div class="est-text" id="estText">est. 2026 • loyalty receipt</div>
 
       <div class="info-bubble" id="infoBubble"></div>
 
       <div class="item-list" id="itemList"></div>
-
       <div class="divider"></div>
-
       <div class="total">
         <span id="totalLabel">TOTAL:</span>
         <span id="totalText">$0.00</span>
       </div>
 
-      <div id="bottomSection">
-        </div>
+      <div class="loyalty-section" id="loyaltySection">
+        <div style="font-weight:bold; font-size:0.75rem;" id="scentDisplay">SCENT: UNKNOWN</div>
+        <div style="border-top:1px dashed var(--accent); opacity:0.3; margin:8px 0;"></div>
+        <div>REWARD CARD:</div>
+        <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
+      </div>
+
+      <div class="bottom-extras" id="bottomExtras"></div>
       
       <div style="font-size:0.7rem; margin-top:20px; opacity:0.6;">THANK YOU FOR SHOPPING</div>
     </div>
@@ -242,10 +239,10 @@
   <script>
     const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR."];
     
-    // --- ASCII ART COLLECTION ---
+    // --- ASCII ART ---
     const arts = {
       default: "♥",
-      nature: "    /\\\n   /  \\\n  /____\\ \n    ||", // Simple tree
+      nature: "    /\\\n   /  \\\n  /____\\ \n    ||", 
       ocean: ".~ .~~~ ..~",
       stars: "✨  ✦  ✨",
       bow: "  /\\ /\\\n  ( o.o )\n   > ^ <",
@@ -268,23 +265,19 @@
       productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", items: ["Emails", "Iced Coffee", "To-Do List"] }
     };
 
-    // --- SECRETS (Updated Matt) ---
+    // --- SECRETS ---
     const secrets = {
-      "lottie": { color: "#00ffff", bg: "#001e3c", paper: "#002845", store: "ATLANTIS", art: arts.ocean, item: "Pearl" },
-      "matt": { 
-        color: "#2e4e34", bg: "#1b3323", paper: "#d7ccc8", // Recycled Paper Look
-        store: "SEQUOIA", art: arts.nature, item: "Mossy Log", scent: "PINE" 
-      },
-      "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", art: arts.bow, item: "Porcelain" },
-      "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", art: arts.cyber, item: "Data" },
-      "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo" }
+      "lottie": { color: "#00ffff", bg: "#001e3c", paper: "#002845", store: "ATLANTIS", art: arts.ocean, item: "Pearl", scent: "DEEP SEA" },
+      "matt": { color: "#2e4e34", bg: "#1b3323", paper: "#d7ccc8", store: "SEQUOIA", art: arts.nature, item: "Mossy Log", scent: "PINE" },
+      "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", art: arts.bow, item: "Porcelain", scent: "LACE" },
+      "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", art: arts.cyber, item: "Data", scent: "OZONE" },
+      "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo", scent: "VANILLA" }
     };
 
     const commonItems = [{name: "Iced Coffee", price: 7.50}, {name: "Sweet Treat", price: 5.00}, {name: "Lip Gloss", price: 12.00}, {name: "Girl Dinner", price: 8.00}];
-    
-    // --- FORTUNES & COUPONS ---
-    const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES", "ENERGY: PROTECTED"];
-    const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF", "PASS: SKIP SCHOOL/WORK"];
+    const selfCareTasks = ["Drink water", "Face mask", "Phone DND 1hr", "Stretch", "Clean a corner", "Listen to music", "Go outside", "Unclench jaw"];
+    const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES"];
+    const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF"];
 
     // --- STATS ---
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
@@ -298,11 +291,14 @@
       if (spend < 10000) return "INFLUENCER";
       return "THE 1%";
     }
-
-    function getTopMoods() {
-      const sorted = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
-      const top3 = sorted.slice(0, 3).map(entry => entry[0].toUpperCase());
-      return top3.length > 0 ? top3.join(", ") : "UNKNOWN";
+    
+    function getSignatureScent() {
+      let topMood = "numb";
+      let maxCount = 0;
+      for (const [mood, count] of Object.entries(moodCounts)) {
+        if (count > maxCount) { maxCount = count; topMood = mood; }
+      }
+      return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
     }
 
     function updateDisplay() {
@@ -331,32 +327,22 @@
       let paperColor = "#ffffff";
       let bonusItem = null;
       let ascii = theme.art || arts.default;
+      let scentOverride = null;
 
-      // Check Secret
       if (secrets[nameRaw]) {
         const s = secrets[nameRaw];
         theme = { color: s.color, bg: s.bg };
         storeName = s.store;
         paperColor = s.paper;
         ascii = s.art || arts.stars;
+        scentOverride = s.scent;
         bonusItem = { name: s.item, price: 999.00 };
       }
 
-      // GOLDEN TICKET CHECK (2% Chance)
-      const isGold = Math.random() < 0.02;
-      if (isGold) {
-        theme = { color: "#d50000", bg: "#fff8e1" }; // Gold/Red vibe
-        paperColor = "linear-gradient(135deg, #fffde7, #ffd700)";
-        storeName = "JACKPOT";
-        ascii = "💰 💰 💰";
-        document.documentElement.style.setProperty('--text', '#bf360c');
-      } else {
-        document.documentElement.style.setProperty('--text', theme.color);
-      }
-
-      // Apply Visuals
+      // Visuals
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
+      document.documentElement.style.setProperty('--text', theme.color);
       document.documentElement.style.setProperty('--paper', paperColor);
       
       // Update Stats
@@ -365,62 +351,78 @@
       totalReceipts++;
       localStorage.setItem('loyaltyCount', totalReceipts);
 
-      // --- BUILD RECEIPT ---
-      document.getElementById('storeName').innerText = storeName;
-      document.getElementById('asciiDisplay').innerText = ascii;
-
-      let currentTotal = 0;
-      let pool = [...commonItems];
-      moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
-      const count = Math.floor(Math.random() * 3) + 3;
-      const shuffled = pool.sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, count);
-      if (bonusItem) selected.unshift(bonusItem);
-
-      let html = '';
-      selected.forEach(i => {
-        currentTotal += i.price;
-        html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
-      });
-      document.getElementById('itemList').innerHTML = html;
+      // --- 1. REWARD CHECK (Every 5th) ---
+      const isReward = (totalReceipts % 5 === 0);
       
-      // Handle Gold Total
-      if (isGold) {
-        currentTotal = -1000.00; // Refund!
-        document.getElementById('totalText').innerText = "-$1,000.00";
+      if (isReward) {
+        // REWARD MODE
+        document.getElementById('storeName').innerText = "SELF CARE";
+        document.getElementById('estText').innerText = "reward menu • you earned this";
+        document.getElementById('asciiDisplay').innerText = "♡";
+        document.getElementById('infoBubble').innerHTML = `CUSTOMER: ${nameDisplay.toUpperCase()}<br>STATUS: <b>REWARD UNLOCKED</b>`;
+        
+        const tasks = selfCareTasks.sort(() => 0.5 - Math.random()).slice(0, 5);
+        let html = '';
+        tasks.forEach(t => html += `<div class="checklist-item">☐ ${t}</div>`);
+        document.getElementById('itemList').innerHTML = html;
+        
+        document.getElementById('totalLabel').innerText = "COST:";
+        document.getElementById('totalText').innerText = "PRICELESS";
+        document.getElementById('loyaltySection').style.display = 'none';
+        document.getElementById('bottomExtras').innerHTML = `<div class="forecast">ENJOY YOUR BREAK</div>`;
+
       } else {
+        // NORMAL MODE
+        document.getElementById('storeName').innerText = storeName;
+        document.getElementById('estText').innerText = "est. 2026 • digital receipt";
+        document.getElementById('asciiDisplay').innerText = ascii;
+        document.getElementById('loyaltySection').style.display = 'block';
+
+        let currentTotal = 0;
+        let pool = [...commonItems];
+        moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
+        const count = Math.floor(Math.random() * 3) + 3;
+        const shuffled = pool.sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, count);
+        if (bonusItem) selected.unshift(bonusItem);
+
+        let html = '';
+        selected.forEach(i => {
+          currentTotal += i.price;
+          html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
+        });
+        document.getElementById('itemList').innerHTML = html;
+        document.getElementById('totalLabel').innerText = "TOTAL:";
         document.getElementById('totalText').innerText = `$${currentTotal.toFixed(2)}`;
-      }
 
-      lifetimeSpend += currentTotal;
-      localStorage.setItem('loyaltySpend', lifetimeSpend);
-      
-      const currentTier = isGold ? "THE CHOSEN ONE" : getTier(lifetimeSpend);
-      document.getElementById('infoBubble').innerHTML = `
-        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        MEMBER: ${currentTier}<br>
-        MOOD: ${moodKey.toUpperCase()} #${moodCounts[moodKey]}
-      `;
-
-      // --- BOTTOM SECTION LOGIC (Forecast or Coupon or Barcode) ---
-      const bottomDiv = document.getElementById('bottomSection');
-      const rand = Math.random();
-      
-      if (rand < 0.3) {
-        // 30% Chance: COUPON
-        const coup = coupons[Math.floor(Math.random() * coupons.length)];
-        bottomDiv.innerHTML = `<div class="coupon">✂ --- ${coup} --- ✂</div>`;
-      } else {
-        // 70% Chance: FORECAST + BARCODE
-        const fort = fortunes[Math.floor(Math.random() * fortunes.length)];
-        const topMoods = getTopMoods();
-        bottomDiv.innerHTML = `
-           <div class="forecast-box">
-             <div>${fort}</div>
-             <div style="margin-top:5px; font-size:0.65rem;">MOOD BOARD: ${topMoods}</div>
-           </div>
-           <div class="barcode">|| | ||| || |||</div>
+        lifetimeSpend += currentTotal;
+        localStorage.setItem('loyaltySpend', lifetimeSpend);
+        
+        const tier = getTier(lifetimeSpend);
+        document.getElementById('infoBubble').innerHTML = `
+          CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+          MEMBER: ${tier}<br>
+          MOOD: ${moodKey.toUpperCase()} #${moodCounts[moodKey]}
         `;
+
+        // SCENT & STAMPS
+        const finalScent = scentOverride || getSignatureScent();
+        document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${finalScent}`;
+        
+        const stampsFilled = totalReceipts % 5;
+        let stampString = "";
+        for(let i=0; i<5; i++) stampString += (i < stampsFilled) ? "♥ " : "♡ ";
+        document.getElementById('stampsDisplay').innerText = stampString;
+
+        // EXTRAS (Coupon vs Forecast)
+        const bottomDiv = document.getElementById('bottomExtras');
+        if (Math.random() < 0.3) {
+           const coup = coupons[Math.floor(Math.random() * coupons.length)];
+           bottomDiv.innerHTML = `<div class="coupon">✂ ${coup} ✂</div>`;
+        } else {
+           const fort = fortunes[Math.floor(Math.random() * fortunes.length)];
+           bottomDiv.innerHTML = `<div class="forecast">${fort}</div><div class="barcode">|| | ||| || |||</div>`;
+        }
       }
 
       document.getElementById('controls').style.display = 'none';
