@@ -135,17 +135,19 @@
       font-size: 0.85rem;
       line-height: 1.6;
       text-align: center;
-      background: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.1);
     }
 
     .item-list { text-align: left; margin-bottom: 20px; padding: 0 5px; }
+    
+    /* Updated Item Style for Checklist */
     .item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+    .checklist-item { margin-bottom: 12px; font-size: 1rem; text-align: left; display: flex; align-items: center; gap: 10px;}
     
     .divider { border-top: 2px dashed var(--accent); margin: 20px 0; opacity: 0.5; }
 
     .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
     
-    /* STAMP CARD AREA */
     .loyalty-section {
       margin-top: 30px;
       border: 1px solid var(--accent);
@@ -195,7 +197,7 @@
       <div class="header-bubble">
         <h2 id="storeName">LOADING...</h2>
       </div>
-      <div class="est-text">est. 2026 • loyalty receipt</div>
+      <div class="est-text" id="estText">est. 2026 • loyalty receipt</div>
 
       <div class="info-bubble" id="infoBubble"></div>
 
@@ -204,14 +206,14 @@
       <div class="divider"></div>
 
       <div class="total">
-        <span>TOTAL:</span>
+        <span id="totalLabel">TOTAL:</span>
         <span id="totalText">$0.00</span>
       </div>
 
-      <div class="loyalty-section">
+      <div class="loyalty-section" id="loyaltySection">
         <div class="scent-text" id="scentDisplay">SIGNATURE SCENT: UNKNOWN</div>
         <div style="border-top:1px dashed var(--accent); opacity:0.3; margin:8px 0;"></div>
-        <div>REWARD STATUS:</div>
+        <div id="rewardLabel">REWARD STATUS:</div>
         <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
       </div>
       
@@ -223,10 +225,9 @@
   </div>
 
   <script>
-    // --- 1. CONFIGURATION ---
     const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR.", "VIP ONLY"];
     
-    // MOODS + SCENTS
+    // --- MOODS ---
     const moods = {
       rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS & STATIC", items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
       thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA & AMBITION", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
@@ -242,8 +243,13 @@
       productive: { color: "#fdd835", bg: "#fffde7", scent: "FRESH PAPER", items: ["Emails", "Iced Coffee", "To-Do List"] }
     };
 
+    // --- SECRETS (Updated Lottie Theme) ---
     const secrets = {
-      "lottie": { color: "#00e5ff", bg: "#001e3c", paper: "#0a1929", store: "OCEAN_NET", item: "Digital Wave", scent: "SALT WATER" },
+      "lottie": { 
+        color: "#00ffff", bg: "#001e3c", paper: "#002845", // Ocean Night Mode
+        store: "ATLANTIS.WEB", scent: "DEEP SEA & WIFI", 
+        item: "Bioluminescence" 
+      },
       "matt": { color: "#2e7d32", bg: "#3e2723", paper: "#efebe9", store: "SEQUOIA", item: "Ancient Tree", scent: "PINE NEEDLES" },
       "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", item: "Porcelain Heart", scent: "DUSTY LACE" },
       "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", item: "Source Code", scent: "OZONE" },
@@ -257,8 +263,15 @@
       {name: "Screen Time", price: 0.00}, {name: "Little Walk", price: 0.00}
     ];
 
-    // --- 2. STAT TRACKING SYSTEM ---
-    // We load all data from storage
+    // --- SELF CARE REWARD TASKS ---
+    const selfCareTasks = [
+      "Drink a full glass of water", "Face mask & chill", "Put phone on DND for 1hr",
+      "Stretch your back", "Clean one small corner", "Listen to your fav song",
+      "Step outside for fresh air", "Unclench your jaw", "Write down 3 things you love",
+      "Take a hot shower", "Read 5 pages of a book", "Eat a fruit"
+    ];
+
+    // --- STATS ---
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
     let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
@@ -272,15 +285,10 @@
     }
 
     function getSignatureScent() {
-      // Find the mood with the highest count
-      let topMood = "numb"; // default
+      let topMood = "numb";
       let maxCount = 0;
-      
       for (const [mood, count] of Object.entries(moodCounts)) {
-        if (count > maxCount) {
-          maxCount = count;
-          topMood = mood;
-        }
+        if (count > maxCount) { maxCount = count; topMood = mood; }
       }
       return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
     }
@@ -316,7 +324,7 @@
         theme = { color: s.color, bg: s.bg };
         storeName = s.store;
         paperColor = s.paper;
-        bonusItem = { name: s.item, price: 999.00 }; // Secret items are expensive!
+        bonusItem = { name: s.item, price: 999.00 };
       }
 
       // Visuals
@@ -324,61 +332,85 @@
       document.documentElement.style.setProperty('--accent', theme.color);
       document.documentElement.style.setProperty('--text', theme.color);
       document.documentElement.style.setProperty('--paper', paperColor);
-      document.getElementById('storeName').innerText = storeName;
       
-      // --- LOGIC UPDATES ---
-      // 1. Mood Count
+      // Update Stats
       moodCounts[moodKey] = (moodCounts[moodKey] || 0) + 1;
       localStorage.setItem('loyaltyMoods', JSON.stringify(moodCounts));
-
-      // 2. Receipt Count (for Stamps)
       totalReceipts++;
       localStorage.setItem('loyaltyCount', totalReceipts);
 
-      // 3. Build Items & Calculate Total for THIS receipt
-      let currentTotal = 0;
-      let pool = [...commonItems];
-      moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00})); // Mood items cost $20
-      
-      const count = Math.floor(Math.random() * 3) + 3;
-      const shuffled = pool.sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, count);
-      
-      if (bonusItem) selected.unshift(bonusItem);
+      // --- CHECK FOR FREE REWARD (Every 5th receipt) ---
+      const isRewardTurn = (totalReceipts % 5 === 0);
 
-      let html = '';
-      selected.forEach(i => {
-        currentTotal += i.price;
-        html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
-      });
-      document.getElementById('itemList').innerHTML = html;
-      document.getElementById('totalText').innerText = `$${currentTotal.toFixed(2)}`;
+      if (isRewardTurn) {
+        // --- REWARD MODE ---
+        document.getElementById('storeName').innerText = "SELF CARE";
+        document.getElementById('estText').innerText = "you earned this • reward menu";
+        
+        document.getElementById('infoBubble').innerHTML = `
+          CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+          STATUS: <b>REWARD UNLOCKED</b><br>
+          ENJOY YOUR BREAK ♡
+        `;
 
-      // 4. Update Lifetime Spend
-      lifetimeSpend += currentTotal;
-      localStorage.setItem('loyaltySpend', lifetimeSpend);
-      const currentTier = getTier(lifetimeSpend);
+        // Pick 5 random self care tasks
+        const shuffledTasks = selfCareTasks.sort(() => 0.5 - Math.random()).slice(0, 5);
+        let html = '';
+        shuffledTasks.forEach(task => {
+          html += `<div class="checklist-item">☐ ${task}</div>`;
+        });
+        document.getElementById('itemList').innerHTML = html;
+        
+        document.getElementById('totalLabel').innerText = "COST:";
+        document.getElementById('totalText').innerText = "PRICELESS";
+        document.getElementById('loyaltySection').style.display = 'none'; // Hide stamps for this one
 
-      // --- FILL RECEIPT DATA ---
-      document.getElementById('infoBubble').innerHTML = `
-        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        MEMBER: ${currentTier}<br>
-        LIFETIME SPEND: $${lifetimeSpend.toFixed(2)}
-      `;
+      } else {
+        // --- NORMAL MODE ---
+        document.getElementById('storeName').innerText = storeName;
+        document.getElementById('estText').innerText = "est. 2026 • loyalty receipt";
+        document.getElementById('loyaltySection').style.display = 'block';
 
-      // Signature Scent
-      const myScent = getSignatureScent();
-      document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${myScent}`;
+        let currentTotal = 0;
+        let pool = [...commonItems];
+        moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
+        
+        const count = Math.floor(Math.random() * 3) + 3;
+        const shuffled = pool.sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, count);
+        
+        if (bonusItem) selected.unshift(bonusItem);
 
-      // Stamp Card Logic (0-5)
-      const stampsFilled = totalReceipts % 5;
-      let stampString = "";
-      for(let i=0; i<5; i++) {
-        stampString += (i < stampsFilled) ? "♥ " : "♡ ";
+        let html = '';
+        selected.forEach(i => {
+          currentTotal += i.price;
+          html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
+        });
+        document.getElementById('itemList').innerHTML = html;
+        document.getElementById('totalLabel').innerText = "TOTAL:";
+        document.getElementById('totalText').innerText = `$${currentTotal.toFixed(2)}`;
+
+        lifetimeSpend += currentTotal;
+        localStorage.setItem('loyaltySpend', lifetimeSpend);
+        
+        // Receipt Info
+        const currentTier = getTier(lifetimeSpend);
+        const currentCount = moodCounts[moodKey];
+        document.getElementById('infoBubble').innerHTML = `
+          CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+          MEMBER: ${currentTier}<br>
+          MOOD: ${moodKey.toUpperCase()} #${currentCount}
+        `;
+
+        // Stamps
+        const stampsFilled = totalReceipts % 5;
+        let stampString = "";
+        for(let i=0; i<5; i++) {
+          stampString += (i < stampsFilled) ? "♥ " : "♡ ";
+        }
+        document.getElementById('stampsDisplay').innerText = stampString;
+        document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${getSignatureScent()}`;
       }
-      // If we just hit a multiple of 5, make them all full!
-      if (stampsFilled === 0 && totalReceipts > 0) stampString = "♥ ♥ ♥ ♥ ♥ (FREE!)";
-      document.getElementById('stampsDisplay').innerText = stampString;
 
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptContainer').style.display = 'block';
@@ -390,7 +422,7 @@
         document.getElementById('controls').style.display = 'flex';
         container.style.display = 'none';
         document.getElementById('nameInput').value = ""; 
-        updateDisplay(); // Refresh the main screen tier display
+        updateDisplay(); 
       }
     });
 
