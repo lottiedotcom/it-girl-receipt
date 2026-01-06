@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mood Receipt</title>
+  <title>Cosmic Receipt</title>
   
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
@@ -18,6 +18,7 @@
       --accent: #ab47bc;
       --text: #4a148c;
       --paper: #fff;
+      --radius: 20px;
     }
 
     body {
@@ -110,6 +111,15 @@
       100% { height: auto; opacity: 1; transform: translateY(0); }
     }
 
+    .ascii-art {
+      white-space: pre;
+      font-size: 0.8rem;
+      line-height: 1;
+      margin-bottom: 10px;
+      opacity: 0.8;
+      font-weight: bold;
+    }
+
     .header-bubble {
       display: inline-block;
       border: 2px solid var(--accent);
@@ -147,27 +157,28 @@
 
     .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
     
-    .loyalty-section {
-      margin-top: 30px;
-      border: 1px solid var(--accent);
-      border-radius: 15px;
-      padding: 10px;
-      font-size: 0.8rem;
-    }
-    
-    .scent-text {
-      text-transform: uppercase;
-      margin-bottom: 5px;
-      font-weight: bold;
+    /* NEW SECTIONS */
+    .forecast-box {
+      margin-top: 25px;
       font-size: 0.75rem;
-      opacity: 0.8;
+      opacity: 0.9;
+      border: 1px solid var(--accent);
+      padding: 8px;
+      display: inline-block;
+      width: 90%;
     }
 
-    .stamps {
-      font-size: 1.5rem;
-      letter-spacing: 5px;
-      margin-top: 5px;
+    .coupon {
+      margin-top: 25px;
+      border: 2px dashed var(--accent);
+      padding: 15px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.2);
+      transform: rotate(-1deg);
     }
+    
+    .barcode { margin-top: 20px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
     .trophy-bar {
       margin-top: 20px;
@@ -181,6 +192,13 @@
       text-align: center;
       border: 1px solid rgba(255,255,255,0.5);
     }
+    
+    /* GOLDEN TICKET ANIMATION */
+    @keyframes shine {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
   </style>
 </head>
 <body>
@@ -193,10 +211,12 @@
 
   <div class="receipt-container" id="receiptContainer">
     <div class="receipt">
+      <div class="ascii-art" id="asciiDisplay"></div>
+      
       <div class="header-bubble">
         <h2 id="storeName">LOADING...</h2>
       </div>
-      <div class="est-text" id="estText">est. 2026 • loyalty receipt</div>
+      <div class="est-text" id="estText">est. 2026 • digital receipt</div>
 
       <div class="info-bubble" id="infoBubble"></div>
 
@@ -209,12 +229,8 @@
         <span id="totalText">$0.00</span>
       </div>
 
-      <div class="loyalty-section" id="loyaltySection">
-        <div class="scent-text" id="statsDisplay">TOP 3 MOODS: LOADING...</div>
-        <div style="border-top:1px dashed var(--accent); opacity:0.3; margin:8px 0;"></div>
-        <div id="rewardLabel">REWARD STATUS:</div>
-        <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
-      </div>
+      <div id="bottomSection">
+        </div>
       
       <div style="font-size:0.7rem; margin-top:20px; opacity:0.6;">THANK YOU FOR SHOPPING</div>
     </div>
@@ -224,61 +240,51 @@
   </div>
 
   <script>
-    const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR.", "VIP ONLY"];
+    const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR."];
     
+    // --- ASCII ART COLLECTION ---
+    const arts = {
+      default: "♥",
+      nature: "    /\\\n   /  \\\n  /____\\ \n    ||", // Simple tree
+      ocean: ".~ .~~~ ..~",
+      stars: "✨  ✦  ✨",
+      bow: "  /\\ /\\\n  ( o.o )\n   > ^ <",
+      cyber: "[ o_o ]"
+    };
+
     // --- MOODS ---
     const moods = {
-      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
-      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
-      manic: { color: "#ff9100", bg: "#fff3e0", scent: "RED BULL", items: ["Impulse Buy", "Fast Talking", "God Complex"] },
-      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "STATIC", items: ["Staring at Wall", "Nothing", "White Noise"] },
-      delusional: { color: "#f06292", bg: "#fce4ec", scent: "FROSTING", items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
-      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN", items: ["Poetry", "Old Photos", "Sad Music"] },
-      hating: { color: "#d32f2f", bg: "#ffebee", scent: "SMOKE", items: ["Blocking Him", "Side Eye", "Judgment"] },
-      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE", items: ["Therapy", "Journaling", "Boundaries"] },
-      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "WINE", items: ["Overthinking", "Panic", "Regret"] },
-      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "SCREEN CLEANER", items: ["Screenshots", "Private Tab", "Research"] },
-      posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", items: ["Drafts", "Clout", "Validation"] },
-      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", items: ["Emails", "Iced Coffee", "To-Do List"] }
+      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
+      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", art: "🌿", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
+      manic: { color: "#ff9100", bg: "#fff3e0", scent: "RED BULL", art: "⚡", items: ["Impulse Buy", "Fast Talking", "God Complex"] },
+      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "STATIC", art: "...", items: ["Staring at Wall", "Nothing", "White Noise"] },
+      delusional: { color: "#f06292", bg: "#fce4ec", scent: "FROSTING", art: arts.bow, items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
+      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN", art: "☁️", items: ["Poetry", "Old Photos", "Sad Music"] },
+      hating: { color: "#d32f2f", bg: "#ffebee", scent: "SMOKE", art: "✖", items: ["Blocking Him", "Side Eye", "Judgment"] },
+      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE", art: "🕯️", items: ["Therapy", "Journaling", "Boundaries"] },
+      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "WINE", art: "🌀", items: ["Overthinking", "Panic", "Regret"] },
+      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "SCREEN", art: "👁️", items: ["Screenshots", "Private Tab", "Research"] },
+      posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", art: "📸", items: ["Drafts", "Clout", "Validation"] },
+      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", items: ["Emails", "Iced Coffee", "To-Do List"] }
     };
 
-    // --- SECRETS (Updated Matt Theme) ---
+    // --- SECRETS (Updated Matt) ---
     const secrets = {
-      "lottie": { 
-        color: "#00ffff", bg: "#001e3c", paper: "#002845", 
-        store: "ATLANTIS.WEB", scent: "DEEP SEA", item: "Bioluminescence" 
-      },
+      "lottie": { color: "#00ffff", bg: "#001e3c", paper: "#002845", store: "ATLANTIS", art: arts.ocean, item: "Pearl" },
       "matt": { 
-        color: "#33691e", bg: "#1b5e20", paper: "#d7ccc8", // Deep Green & Wood
-        store: "SEQUOIA NAT'L", scent: "PINE NEEDLES", item: "Giant Redwood" 
+        color: "#2e4e34", bg: "#1b3323", paper: "#d7ccc8", // Recycled Paper Look
+        store: "SEQUOIA", art: arts.nature, item: "Mossy Log", scent: "PINE" 
       },
-      "doll": { 
-        color: "#880e4f", bg: "#212121", paper: "#ffebee", 
-        store: "MORUTE", scent: "DUSTY LACE", item: "Porcelain Heart" 
-      },
-      "cyber": { 
-        color: "#00e676", bg: "#000000", paper: "#1a1a1a", 
-        store: "SYSTEM_32", scent: "OZONE", item: "Source Code" 
-      },
-      "angel": { 
-        color: "#ffd700", bg: "#fffde7", paper: "#ffffff", 
-        store: "HEAVEN", scent: "VANILLA", item: "Gold Halo" 
-      }
+      "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", art: arts.bow, item: "Porcelain" },
+      "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", art: arts.cyber, item: "Data" },
+      "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo" }
     };
 
-    const commonItems = [
-      {name: "Iced Coffee", price: 7.50}, {name: "Sweet Treat", price: 5.00},
-      {name: "Lip Gloss", price: 12.00}, {name: "Spotify Premium", price: 11.00},
-      {name: "Girl Dinner", price: 8.00}, {name: "Therapy", price: 150.00},
-      {name: "Screen Time", price: 0.00}, {name: "Little Walk", price: 0.00}
-    ];
-
-    const selfCareTasks = [
-      "Drink a full glass of water", "Face mask & chill", "Put phone on DND for 1hr",
-      "Stretch your back", "Clean one small corner", "Listen to your fav song",
-      "Step outside for fresh air", "Unclench your jaw", "Write down 3 things you love",
-      "Take a hot shower", "Read 5 pages of a book", "Eat a fruit"
-    ];
+    const commonItems = [{name: "Iced Coffee", price: 7.50}, {name: "Sweet Treat", price: 5.00}, {name: "Lip Gloss", price: 12.00}, {name: "Girl Dinner", price: 8.00}];
+    
+    // --- FORTUNES & COUPONS ---
+    const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES", "ENERGY: PROTECTED"];
+    const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF", "PASS: SKIP SCHOOL/WORK"];
 
     // --- STATS ---
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
@@ -294,13 +300,9 @@
     }
 
     function getTopMoods() {
-      // Convert object to array and sort
       const sorted = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
-      // Get top 3
       const top3 = sorted.slice(0, 3).map(entry => entry[0].toUpperCase());
-      
-      if (top3.length === 0) return "UNKNOWN";
-      return top3.join(", ");
+      return top3.length > 0 ? top3.join(", ") : "UNKNOWN";
     }
 
     function updateDisplay() {
@@ -328,19 +330,33 @@
       let storeName = shopNames[Math.floor(Math.random() * shopNames.length)];
       let paperColor = "#ffffff";
       let bonusItem = null;
+      let ascii = theme.art || arts.default;
 
+      // Check Secret
       if (secrets[nameRaw]) {
         const s = secrets[nameRaw];
         theme = { color: s.color, bg: s.bg };
         storeName = s.store;
         paperColor = s.paper;
+        ascii = s.art || arts.stars;
         bonusItem = { name: s.item, price: 999.00 };
       }
 
-      // Visuals
+      // GOLDEN TICKET CHECK (2% Chance)
+      const isGold = Math.random() < 0.02;
+      if (isGold) {
+        theme = { color: "#d50000", bg: "#fff8e1" }; // Gold/Red vibe
+        paperColor = "linear-gradient(135deg, #fffde7, #ffd700)";
+        storeName = "JACKPOT";
+        ascii = "💰 💰 💰";
+        document.documentElement.style.setProperty('--text', '#bf360c');
+      } else {
+        document.documentElement.style.setProperty('--text', theme.color);
+      }
+
+      // Apply Visuals
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
-      document.documentElement.style.setProperty('--text', theme.color);
       document.documentElement.style.setProperty('--paper', paperColor);
       
       // Update Stats
@@ -349,80 +365,62 @@
       totalReceipts++;
       localStorage.setItem('loyaltyCount', totalReceipts);
 
-      // --- CHECK FOR FREE REWARD (Every 5th receipt) ---
-      const isRewardTurn = (totalReceipts % 5 === 0);
+      // --- BUILD RECEIPT ---
+      document.getElementById('storeName').innerText = storeName;
+      document.getElementById('asciiDisplay').innerText = ascii;
 
-      if (isRewardTurn) {
-        document.getElementById('storeName').innerText = "SELF CARE";
-        document.getElementById('estText').innerText = "you earned this • reward menu";
-        
-        document.getElementById('infoBubble').innerHTML = `
-          CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-          STATUS: <b>REWARD UNLOCKED</b><br>
-          ENJOY YOUR BREAK ♡
-        `;
+      let currentTotal = 0;
+      let pool = [...commonItems];
+      moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
+      const count = Math.floor(Math.random() * 3) + 3;
+      const shuffled = pool.sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, count);
+      if (bonusItem) selected.unshift(bonusItem);
 
-        const shuffledTasks = selfCareTasks.sort(() => 0.5 - Math.random()).slice(0, 5);
-        let html = '';
-        shuffledTasks.forEach(task => {
-          html += `<div class="checklist-item">☐ ${task}</div>`;
-        });
-        document.getElementById('itemList').innerHTML = html;
-        
-        document.getElementById('totalLabel').innerText = "COST:";
-        document.getElementById('totalText').innerText = "PRICELESS";
-        document.getElementById('loyaltySection').style.display = 'none';
-
+      let html = '';
+      selected.forEach(i => {
+        currentTotal += i.price;
+        html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
+      });
+      document.getElementById('itemList').innerHTML = html;
+      
+      // Handle Gold Total
+      if (isGold) {
+        currentTotal = -1000.00; // Refund!
+        document.getElementById('totalText').innerText = "-$1,000.00";
       } else {
-        document.getElementById('storeName').innerText = storeName;
-        document.getElementById('estText').innerText = "est. 2026 • loyalty receipt";
-        document.getElementById('loyaltySection').style.display = 'block';
-
-        let currentTotal = 0;
-        let pool = [...commonItems];
-        // Special matt items if secret code used
-        if (secrets[nameRaw] && nameRaw === 'matt') {
-            pool.push({name: "Mossy Rock", price: 0.00}, {name: "Fresh Air", price: 0.00}, {name: "Hiking Boots", price: 150.00});
-        }
-        
-        moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00}));
-        
-        const count = Math.floor(Math.random() * 3) + 3;
-        const shuffled = pool.sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, count);
-        
-        if (bonusItem) selected.unshift(bonusItem);
-
-        let html = '';
-        selected.forEach(i => {
-          currentTotal += i.price;
-          html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
-        });
-        document.getElementById('itemList').innerHTML = html;
-        document.getElementById('totalLabel').innerText = "TOTAL:";
         document.getElementById('totalText').innerText = `$${currentTotal.toFixed(2)}`;
+      }
 
-        lifetimeSpend += currentTotal;
-        localStorage.setItem('loyaltySpend', lifetimeSpend);
-        
-        const currentTier = getTier(lifetimeSpend);
-        const currentCount = moodCounts[moodKey];
-        document.getElementById('infoBubble').innerHTML = `
-          CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-          MEMBER: ${currentTier}<br>
-          MOOD: ${moodKey.toUpperCase()} #${currentCount}
-        `;
+      lifetimeSpend += currentTotal;
+      localStorage.setItem('loyaltySpend', lifetimeSpend);
+      
+      const currentTier = isGold ? "THE CHOSEN ONE" : getTier(lifetimeSpend);
+      document.getElementById('infoBubble').innerHTML = `
+        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+        MEMBER: ${currentTier}<br>
+        MOOD: ${moodKey.toUpperCase()} #${moodCounts[moodKey]}
+      `;
 
-        const stampsFilled = totalReceipts % 5;
-        let stampString = "";
-        for(let i=0; i<5; i++) {
-          stampString += (i < stampsFilled) ? "♥ " : "♡ ";
-        }
-        document.getElementById('stampsDisplay').innerText = stampString;
-        
-        // DISPLAY TOP 3 MOODS
+      // --- BOTTOM SECTION LOGIC (Forecast or Coupon or Barcode) ---
+      const bottomDiv = document.getElementById('bottomSection');
+      const rand = Math.random();
+      
+      if (rand < 0.3) {
+        // 30% Chance: COUPON
+        const coup = coupons[Math.floor(Math.random() * coupons.length)];
+        bottomDiv.innerHTML = `<div class="coupon">✂ --- ${coup} --- ✂</div>`;
+      } else {
+        // 70% Chance: FORECAST + BARCODE
+        const fort = fortunes[Math.floor(Math.random() * fortunes.length)];
         const topMoods = getTopMoods();
-        document.getElementById('statsDisplay').innerText = `YOUR MOOD BOARD: ${topMoods}`;
+        bottomDiv.innerHTML = `
+           <div class="forecast-box">
+             <div>${fort}</div>
+             <div style="margin-top:5px; font-size:0.65rem;">MOOD BOARD: ${topMoods}</div>
+           </div>
+           <div class="barcode">|| | ||| || |||</div>
+        `;
       }
 
       document.getElementById('controls').style.display = 'none';
