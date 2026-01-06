@@ -14,11 +14,10 @@
 
   <style>
     :root {
-      /* Default to white/clean, updated by JS */
-      --bg: #f8f9fa;
+      --bg: #f0f4f8;
       --accent: #546e7a;
       --text: #37474f;
-      --btn-text: #fff;
+      --paper: #fff;
     }
 
     body {
@@ -36,47 +35,44 @@
       box-sizing: border-box;
     }
 
-    /* --- INPUT SECTION --- */
     .controls {
       width: 100%;
       max-width: 360px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 12px;
     }
 
     .name-box {
-      background: #fff;
+      background: rgba(255,255,255,0.9);
       border: 2px solid var(--accent);
-      padding: 15px;
-      border-radius: 20px;
+      padding: 16px;
+      border-radius: 25px;
       font-family: "Quicksand", sans-serif;
       font-weight: 700;
       font-size: 1.1rem;
       text-align: center;
       color: var(--text);
       outline: none;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
     }
 
-    /* GRID FOR SIGNS */
     .sign-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
     .sign-btn {
-      background: #fff;
+      background: rgba(255,255,255,0.8);
       border: 2px solid var(--accent);
       color: var(--accent);
-      padding: 12px 5px;
-      border-radius: 15px;
+      padding: 15px 5px;
+      border-radius: 18px;
       font-weight: 700;
       font-size: 0.8rem;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: transform 0.1s;
       text-transform: uppercase;
     }
 
@@ -86,28 +82,27 @@
       color: #fff;
     }
 
-    /* --- RECEIPT --- */
+    /* RECEIPT BUBBLE LAYOUT */
     .receipt-container {
       perspective: 1000px;
       width: 100%;
       max-width: 340px;
-      display: none; /* Hidden by default */
+      display: none;
     }
 
     .receipt {
-      background: #fff;
-      padding: 25px 20px;
+      background: var(--paper);
+      padding: 30px 25px;
       font-family: "Courier Prime", monospace;
-      color: #37474f;
+      color: var(--text);
       box-shadow: 0 20px 60px rgba(0,0,0,0.15);
       animation: printReceipt 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       position: relative;
-      
-      /* Jagged edge */
+      text-align: center;
       --mask: radial-gradient(10px at 50% 100%, #0000 98%, #000 100%) 50% calc(100% - 10px)/20px 100% repeat-x;
       -webkit-mask: var(--mask); 
       mask: var(--mask);
-      padding-bottom: 50px;
+      padding-bottom: 60px;
     }
 
     @keyframes printReceipt {
@@ -115,27 +110,81 @@
       100% { height: auto; opacity: 1; transform: translateY(0); }
     }
 
-    .header { text-align: center; border-bottom: 2px dashed #b0bec5; padding-bottom: 15px; margin-bottom: 15px; }
-    .header h2 { margin: 0; font-size: 1.6rem; color: var(--accent); letter-spacing: 1px; }
-    .meta { font-size: 0.75rem; text-align: center; margin-bottom: 20px; line-height: 1.5; }
+    .header-bubble {
+      display: inline-block;
+      border: 2px solid var(--accent);
+      border-radius: 50px;
+      padding: 8px 25px;
+      margin-bottom: 5px;
+    }
+    .header-bubble h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
     
-    .item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+    .est-text {
+      font-size: 0.75rem;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .info-bubble {
+      border: 2px solid var(--accent);
+      border-radius: 22px;
+      padding: 15px;
+      margin-bottom: 25px;
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .item-list {
+      text-align: left;
+      margin-bottom: 20px;
+      padding: 0 5px;
+    }
+    .item { 
+      display: flex; 
+      justify-content: space-between; 
+      margin-bottom: 10px; 
+      font-size: 0.95rem; 
+    }
     
-    .total { margin-top: 20px; border-top: 2px dashed #b0bec5; padding-top: 15px; display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; }
+    .divider {
+      border-top: 2px dashed var(--accent);
+      margin: 20px 0;
+      opacity: 0.5;
+    }
+
+    .total { 
+      display: flex; 
+      justify-content: space-between; 
+      font-weight: bold; 
+      font-size: 1.2rem; 
+      color: var(--accent);
+    }
     
-    .barcode { margin-top: 25px; text-align: center; font-size: 2rem; opacity: 0.4; letter-spacing: -4px; transform: scaleY(0.7); }
-    
-    /* TROPHY BAR */
+    .barcode { 
+      margin-top: 35px; 
+      font-size: 2rem; 
+      opacity: 0.4; 
+      letter-spacing: -3px; 
+      transform: scaleY(0.7); 
+    }
+
     .trophy-bar {
       margin-top: 20px;
-      background: rgba(255,255,255,0.3);
-      padding: 10px 20px;
+      background: rgba(255,255,255,0.4);
+      padding: 12px;
       border-radius: 99px;
       color: var(--text);
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       backdrop-filter: blur(5px);
       text-align: center;
+      border: 1px solid rgba(255,255,255,0.5);
     }
   </style>
 </head>
@@ -143,95 +192,98 @@
 
   <div class="controls" id="controls">
     <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
-    
-    <div class="sign-grid" id="signGrid">
-      </div>
-    
-    <div class="trophy-bar" id="rankDisplay">
-      RANK: STAR DUST (0)
-    </div>
+    <div class="sign-grid" id="signGrid"></div>
+    <div class="trophy-bar" id="rankDisplay">RANK: LOADING...</div>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
     <div class="receipt">
-      <div class="header">
-        <h2 id="storeName">COSMIC</h2>
-        <div style="font-size: 0.8rem; margin-top:5px;">OFFICIAL RECEIPT</div>
+      <div class="header-bubble">
+        <h2 id="storeName">LOADING...</h2>
       </div>
+      <div class="est-text">est. 2026 • digital receipt</div>
 
-      <div class="meta" id="receiptMeta"></div>
-      <div id="itemList"></div>
+      <div class="info-bubble" id="infoBubble"></div>
+
+      <div class="item-list" id="itemList"></div>
+
+      <div class="divider"></div>
 
       <div class="total">
         <span>TOTAL:</span>
         <span id="totalText">100% CUTE</span>
       </div>
 
-      <div style="text-align: center; font-size: 0.7rem; margin-top: 20px; opacity: 0.7;">
-        THANK YOU FOR EXISTING
-      </div>
       <div class="barcode">||| || ||||| || ||</div>
+      <div style="font-size:0.7rem; margin-top:10px; opacity:0.6;">NO RETURNS • FINAL SALE</div>
     </div>
-    
     <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">
-      ( tap anywhere to reset )
+      ( tap to reset )
     </div>
   </div>
 
   <script>
-    // --- 1. THE 12 ZODIAC THEMES ---
+    // --- 1. RANDOM SHOP NAMES ---
+    // Every time you click, one of these will appear!
+    const shopNames = [
+      "THE VIBE", "ANGEL NUMBERS", "DREAM LOG", "ARCHIVE 001", 
+      "GIRL BLOG", "PURE AURA", "THE SIMULATION", "SOFT RESET",
+      "LOVE LETTER", "MEMORY LANE", "STAR COMMAND", "EUPHORIA",
+      "GLITCH MODE", "SAFE SPACE", "VOID STORE"
+    ];
+
+    // --- 2. ZODIAC THEMES ---
     const zodiacs = {
-      aries: { color: "#ff5252", bg: "#ffebee", items: ["Impulse Buy", "Being Loud", "Main Character Energy", "Starting a Fight"] },
-      taurus: { color: "#4caf50", bg: "#e8f5e9", items: ["Expensive Snack", "Nap Time", "Cozy Blanket", "Stubbornness"] },
-      gemini: { color: "#ffeb3b", bg: "#fffde7", items: ["Chaos", "Yap Session", "New Personality", "Gossip"] },
-      cancer: { color: "#2196f3", bg: "#e3f2fd", items: ["Crying", "Plushie Collection", "Holding Grudges", "Comfort Food"] },
-      leo: { color: "#ff9800", bg: "#fff3e0", items: ["Selfie", "God Complex", "Golden Jewelry", "Drama"] },
-      virgo: { color: "#795548", bg: "#efebe9", items: ["Organizing", "Judgement", "To-Do List", "Clean Sheets"] },
-      libra: { color: "#e91e63", bg: "#fce4ec", items: ["Flirting", "Indecision", "Pink Drink", "Aesthetic Post"] },
-      scorpio: { color: "#212121", bg: "#eceff1", items: ["Revenge", "Stalking", "Black Hoodie", "Secrets"] },
-      sagittarius: { color: "#673ab7", bg: "#ede7f6", items: ["Plane Ticket", "Philosophy", "Loud Laugh", "Ghosting"] },
-      capricorn: { color: "#3e2723", bg: "#d7ccc8", items: ["Money", "Work Email", "Iced Coffee", "Ambition"] },
-      aquarius: { color: "#00bcd4", bg: "#e0f7fa", items: ["Aliens", "God Complex", "Weird Hobby", "Rebellion"] },
-      pisces: { color: "#9c27b0", bg: "#f3e5f5", items: ["Delusion", "Daydreaming", "Poetry", "Intuition"] }
+      aries: { color: "#e57373", bg: "#ffebee", items: ["Impulse Buy", "Loud Laugh", "Red Lipstick", "Main Character"] },
+      taurus: { color: "#66bb6a", bg: "#e8f5e9", items: ["Cozy Blanket", "Nap Time", "Expensive Snack", "Self Care"] },
+      gemini: { color: "#fdd835", bg: "#fffde7", items: ["Chaos", "Yap Session", "Two Phones", "Gossip"] },
+      cancer: { color: "#42a5f5", bg: "#e3f2fd", items: ["Plushie", "Crying", "Comfort Food", "Love Letter"] },
+      leo: { color: "#ffa726", bg: "#fff3e0", items: ["Mirror Selfie", "Gold Jewelry", "Drama", "The Spotlight"] },
+      virgo: { color: "#8d6e63", bg: "#efebe9", items: ["To-Do List", "Clean Room", "Judgement", "Ice Coffee"] },
+      libra: { color: "#ec407a", bg: "#fce4ec", items: ["Pink Drink", "Flirting", "Aesthetic", "Indecision"] },
+      scorpio: { color: "#455a64", bg: "#eceff1", items: ["Revenge", "Sunglasses", "Secrets", "Loyalty"] },
+      sagittarius: { color: "#7e57c2", bg: "#ede7f6", items: ["Plane Ticket", "Philosophy", "Adventure", "Memes"] },
+      capricorn: { color: "#5d4037", bg: "#d7ccc8", items: ["Money", "CEO Energy", "Blazer", "Ambition"] },
+      aquarius: { color: "#26c6da", bg: "#e0f7fa", items: ["Aliens", "God Complex", "Weird Hobby", "Rebellion"] },
+      pisces: { color: "#ab47bc", bg: "#f3e5f5", items: ["Daydream", "Poetry", "Intuition", "Magic Crystals"] }
     };
 
-    // --- 2. THE 10 SECRET CODES ---
     const secrets = {
-      "ghost": { color: "#b0bec5", bg: "#cfd8dc", store: "HAUNTED", item: "Ectoplasm" },
-      "love": { color: "#f50057", bg: "#f8bbd0", store: "LOVER", item: "Heartbreak" },
-      "rich": { color: "#00c853", bg: "#b9f6ca", store: "BANK", item: "Gold Bar" },
-      "alien": { color: "#64dd17", bg: "#000000", store: "UFO", item: "Space Dust" }, // Black BG!
-      "void": { color: "#607d8b", bg: "#263238", store: "ABYSS", item: "Nothingness" },
-      "kitty": { color: "#ff80ab", bg: "#fff0f5", store: "MEOW", item: "Cat Nip" },
-      "glitch": { color: "#00e676", bg: "#000000", store: "ERR_404", item: "Bug.exe" },
-      "ocean": { color: "#0288d1", bg: "#e1f5fe", store: "ATLANTIS", item: "Salt Water" },
-      "angel": { color: "#ffd54f", bg: "#fff8e1", store: "HEAVEN", item: "Halo" },
-      "brat": { color: "#000000", bg: "#76ff03", store: "BRAT", item: "Vibes" }
+      "alien": { color: "#76ff03", bg: "#000000", paper: "#1a1a1a", store: "UFO", item: "Space Dust" },
+      "ghost": { color: "#b0bec5", bg: "#cfd8dc", paper: "#eceff1", store: "BOO!", item: "Ectoplasm" },
+      "love": { color: "#f50057", bg: "#f8bbd0", paper: "#fff0f5", store: "XOXO", item: "Heartbreak" },
+      "rich": { color: "#00c853", bg: "#b9f6ca", paper: "#e8f5e9", store: "BANK", item: "Gold Bar" },
+      "void": { color: "#607d8b", bg: "#263238", paper: "#37474f", store: "ABYSS", item: "Nothing" },
+      "brat": { color: "#000000", bg: "#89f336", paper: "#89f336", store: "BRAT", item: "Vibes" }
     };
 
     const commonItems = [
-      {name: "Iced Coffee", price: "$7.00"}, {name: "Sweet Treat", price: "$5.00"},
+      {name: "Iced Coffee", price: "$7.50"}, {name: "Sweet Treat", price: "$5.00"},
       {name: "Lip Gloss", price: "$12.00"}, {name: "Spotify Premium", price: "$11.00"},
       {name: "Girl Dinner", price: "$8.00"}, {name: "Mental Stability", price: "Sold Out"},
       {name: "Screen Time", price: "4hrs"}, {name: "Little Walk", price: "Free"}
     ];
 
-    // --- 3. TROPHY LOGIC ---
+    // --- 3. EXPANDED RANK SYSTEM ---
     let xp = parseInt(localStorage.getItem('cosmicXP') || 0);
 
-    function updateRank() {
-      let rank = "Star Dust";
-      if (xp > 5) rank = "Moon Child";
-      if (xp > 10) rank = "Sun Chaser";
-      if (xp > 20) rank = "Galaxy Brain";
-      if (xp > 50) rank = "Cosmic Queen";
-      if (xp > 100) rank = "Goddess";
-      
-      document.getElementById('rankDisplay').innerText = `RANK: ${rank.toUpperCase()} (${xp})`;
+    function getRankName(points) {
+      if (points < 5) return "Baby Doll";
+      if (points < 15) return "Star Dust";
+      if (points < 30) return "Moon Child";
+      if (points < 50) return "Sun Chaser";
+      if (points < 80) return "Galaxy Brain";
+      if (points < 120) return "Cosmic Queen";
+      return "The Universe"; // Max Rank
     }
 
-    // --- 4. INIT PAGE ---
-    // Generate Buttons
+    function updateRankDisplay() {
+      const rank = getRankName(xp);
+      document.getElementById('rankDisplay').innerText = `CURRENT RANK: ${rank.toUpperCase()} (${xp})`;
+      return rank;
+    }
+
+    // --- INIT ---
     const grid = document.getElementById('signGrid');
     Object.keys(zodiacs).forEach(sign => {
       const btn = document.createElement('button');
@@ -240,76 +292,71 @@
       btn.onclick = () => generate(sign);
       grid.appendChild(btn);
     });
-    updateRank();
+    updateRankDisplay();
 
-    // --- 5. GENERATE FUNCTION ---
+    // --- GENERATE ---
     function generate(signKey) {
       const nameRaw = document.getElementById('nameInput').value.trim().toLowerCase();
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
       
       let theme = zodiacs[signKey];
-      let storeName = "COSMIC";
+      // Randomly pick a store name!
+      let storeName = shopNames[Math.floor(Math.random() * shopNames.length)];
+      let paperColor = "#ffffff";
       let bonusItem = null;
-      let isSecret = false;
 
-      // Check Secret Code
       if (secrets[nameRaw]) {
         const s = secrets[nameRaw];
         theme = { color: s.color, bg: s.bg };
-        storeName = s.store;
-        bonusItem = { name: s.item, price: " priceless" };
-        isSecret = true;
+        storeName = s.store; // Secrets override the random name
+        paperColor = s.paper;
+        bonusItem = { name: s.item, price: "Priceless" };
       }
 
-      // Apply Visuals
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
-      document.documentElement.style.setProperty('--text', theme.color); // Text matches accent
-      
-      // Update Content
+      document.documentElement.style.setProperty('--text', theme.color);
+      document.documentElement.style.setProperty('--paper', paperColor);
+
       document.getElementById('storeName').innerText = storeName;
-      document.getElementById('receiptMeta').innerHTML = `
+      
+      // Add XP
+      xp++;
+      localStorage.setItem('cosmicXP', xp);
+      const currentRank = updateRankDisplay();
+
+      // RECEIPT INFO
+      document.getElementById('infoBubble').innerHTML = `
         CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        SIGN: ${signKey.toUpperCase()}<br>
-        DATE: ${new Date().toLocaleDateString()}
+        TITLE: ${currentRank.toUpperCase()}<br>
+        SIGN: ${signKey.toUpperCase()}
       `;
 
-      // Build Items
       let pool = [...commonItems];
-      // Add zodiac specific items
       zodiacs[signKey].items.forEach(i => pool.push({name: i, price: "Special"}));
       
       const count = Math.floor(Math.random() * 3) + 3;
       const shuffled = pool.sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, count);
       
-      // Add secret item if applicable
       if (bonusItem) selected.unshift(bonusItem);
 
       let html = '';
       selected.forEach(i => {
-        html += `<div class="item"><span>${i.name}</span><span>${i.price}</span></div>`;
+        html += `<div class="item"><span>1x ${i.name}</span><span>${i.price}</span></div>`;
       });
       document.getElementById('itemList').innerHTML = html;
 
-      // Show Receipt
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptContainer').style.display = 'block';
-
-      // Save XP
-      xp++;
-      localStorage.setItem('cosmicXP', xp);
-      updateRank();
     }
 
-    // Reset Click
     document.addEventListener('click', (e) => {
-      // Only reset if receipt is showing and we clicked the receipt container
       const container = document.getElementById('receiptContainer');
       if (container.style.display === 'block' && (e.target.closest('.receipt-container') || e.target.closest('.receipt'))) {
         document.getElementById('controls').style.display = 'flex';
         container.style.display = 'none';
-        document.getElementById('nameInput').value = ""; // Clear name for next code
+        document.getElementById('nameInput').value = ""; 
       }
     });
 
