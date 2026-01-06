@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mood Receipt</title>
+  <title>Loyalty Card</title>
   
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
@@ -14,9 +14,9 @@
 
   <style>
     :root {
-      --bg: #f0f4f8;
-      --accent: #546e7a;
-      --text: #37474f;
+      --bg: #f3e5f5;
+      --accent: #ab47bc;
+      --text: #4a148c;
       --paper: #fff;
     }
 
@@ -133,8 +133,9 @@
       padding: 15px;
       margin-bottom: 25px;
       font-size: 0.85rem;
-      line-height: 1.8;
+      line-height: 1.6;
       text-align: center;
+      background: rgba(255,255,255,0.5);
     }
 
     .item-list { text-align: left; margin-bottom: 20px; padding: 0 5px; }
@@ -144,7 +145,28 @@
 
     .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
     
-    .barcode { margin-top: 35px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
+    /* STAMP CARD AREA */
+    .loyalty-section {
+      margin-top: 30px;
+      border: 1px solid var(--accent);
+      border-radius: 15px;
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+    
+    .scent-text {
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .stamps {
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+      margin-top: 5px;
+    }
 
     .trophy-bar {
       margin-top: 20px;
@@ -165,7 +187,7 @@
   <div class="controls" id="controls">
     <input type="text" id="nameInput" class="name-box" placeholder="Your Name (or Secret Code)">
     <div class="sign-grid" id="signGrid"></div>
-    <div class="trophy-bar" id="rankDisplay">RANK: LOADING...</div>
+    <div class="trophy-bar" id="tierDisplay">MEMBER: LOADING...</div>
   </div>
 
   <div class="receipt-container" id="receiptContainer">
@@ -173,7 +195,7 @@
       <div class="header-bubble">
         <h2 id="storeName">LOADING...</h2>
       </div>
-      <div class="est-text">est. 2026 • digital receipt</div>
+      <div class="est-text">est. 2026 • loyalty receipt</div>
 
       <div class="info-bubble" id="infoBubble"></div>
 
@@ -183,11 +205,17 @@
 
       <div class="total">
         <span>TOTAL:</span>
-        <span id="totalText">100% VALID</span>
+        <span id="totalText">$0.00</span>
       </div>
 
-      <div class="barcode">||| || ||||| || ||</div>
-      <div style="font-size:0.7rem; margin-top:10px; opacity:0.6;">NO RETURNS • FINAL SALE</div>
+      <div class="loyalty-section">
+        <div class="scent-text" id="scentDisplay">SIGNATURE SCENT: UNKNOWN</div>
+        <div style="border-top:1px dashed var(--accent); opacity:0.3; margin:8px 0;"></div>
+        <div>REWARD STATUS:</div>
+        <div class="stamps" id="stampsDisplay">♡♡♡♡♡</div>
+      </div>
+      
+      <div style="font-size:0.7rem; margin-top:20px; opacity:0.6;">THANK YOU FOR SHOPPING</div>
     </div>
     <div style="text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer;">
       ( tap to reset )
@@ -195,77 +223,71 @@
   </div>
 
   <script>
-    // --- 1. SHOP NAMES ---
-    const shopNames = [
-      "THE VIBE", "DREAM LOG", "ARCHIVE 001", "GIRL BLOG", 
-      "PURE AURA", "THE SIMULATION", "SOFT RESET", "MEMORY LANE", 
-      "STAR COMMAND", "EUPHORIA", "GLITCH MODE", "SAFE SPACE"
-    ];
-
-    // --- 2. MOOD THEMES ---
+    // --- 1. CONFIGURATION ---
+    const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR.", "VIP ONLY"];
+    
+    // MOODS + SCENTS
     const moods = {
-      rotting: { color: "#78909c", bg: "#eceff1", items: ["Doomscrolling", "Dirty Hair", "Uber Eats", "Screen Time"] },
-      thriving: { color: "#43a047", bg: "#e8f5e9", items: ["Green Juice", "Yoga Mat", "Skin Glow", "Hydration"] },
-      manic: { color: "#ff9100", bg: "#fff3e0", items: ["Impulse Buy", "Fast Talking", "God Complex", "New Hobby"] },
-      numb: { color: "#bdbdbd", bg: "#fafafa", items: ["Staring at Wall", "Nothing", "Static Noise", "Unknown"] },
-      delusional: { color: "#f06292", bg: "#fce4ec", items: ["Fake Scenario", "Wedding Plan", "He Loves Me", "Fantasy"] },
-      yearning: { color: "#7e57c2", bg: "#ede7f6", items: ["Poetry", "Old Photos", "Sad Music", "The Moon"] },
-      hating: { color: "#d32f2f", bg: "#ffebee", items: ["Blocking Him", "Side Eye", "Gatekeeping", "Judgment"] },
-      healing: { color: "#8d6e63", bg: "#efebe9", items: ["Therapy", "Journaling", "Boundaries", "Tea"] },
-      spiraling: { color: "#304ffe", bg: "#e8eaf6", items: ["Overthinking", "Panic", "Deleting Apps", "Regret"] },
-      lurking: { color: "#2e7d32", bg: "#e8f5e9", items: ["Screenshots", "Refreshing", "Private Tab", "Research"] },
-      posting: { color: "#00b0ff", bg: "#e1f5fe", items: ["Drafts", "Caption Idea", "Clout", "Validation"] },
-      productive: { color: "#fdd835", bg: "#fffde7", items: ["Emails", "Iced Coffee", "To-Do List", "Hustle"] }
+      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS & STATIC", items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
+      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA & AMBITION", items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
+      manic: { color: "#ff9100", bg: "#fff3e0", scent: "ENERGY DRINKS", items: ["Impulse Buy", "Fast Talking", "God Complex"] },
+      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "UNSCENTED LOTION", items: ["Staring at Wall", "Nothing", "Static"] },
+      delusional: { color: "#f06292", bg: "#fce4ec", scent: "WEDDING CAKE", items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
+      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN ON CONCRETE", items: ["Poetry", "Old Photos", "Sad Music"] },
+      hating: { color: "#d32f2f", bg: "#ffebee", scent: "BURNING BRIDGES", items: ["Blocking Him", "Side Eye", "Judgment"] },
+      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE & TEARS", items: ["Therapy", "Journaling", "Boundaries"] },
+      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "SPILLED WINE", items: ["Overthinking", "Panic", "Regret"] },
+      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "BLUE LIGHT", items: ["Screenshots", "Private Tab", "Research"] },
+      posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", items: ["Drafts", "Clout", "Validation"] },
+      productive: { color: "#fdd835", bg: "#fffde7", scent: "FRESH PAPER", items: ["Emails", "Iced Coffee", "To-Do List"] }
     };
 
-    // --- 3. THE 5 SECRET CODES ---
     const secrets = {
-      "lottie": { 
-        color: "#00e5ff", bg: "#001e3c", paper: "#0a1929", 
-        store: "OCEAN_NET", item: "Digital Wave" 
-      },
-      "matt": { 
-        color: "#2e7d32", bg: "#3e2723", paper: "#efebe9", 
-        store: "SEQUOIA", item: "Ancient Tree" 
-      },
-      "doll": { 
-        color: "#880e4f", bg: "#212121", paper: "#ffebee", 
-        store: "MORUTE", item: "Porcelain Heart" 
-      },
-      "cyber": { 
-        color: "#00e676", bg: "#000000", paper: "#1a1a1a", 
-        store: "SYSTEM_32", item: "Source Code" 
-      },
-      "angel": { 
-        color: "#ffd700", bg: "#fffde7", paper: "#ffffff", 
-        store: "HEAVEN", item: "Gold Halo" 
-      }
+      "lottie": { color: "#00e5ff", bg: "#001e3c", paper: "#0a1929", store: "OCEAN_NET", item: "Digital Wave", scent: "SALT WATER" },
+      "matt": { color: "#2e7d32", bg: "#3e2723", paper: "#efebe9", store: "SEQUOIA", item: "Ancient Tree", scent: "PINE NEEDLES" },
+      "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", item: "Porcelain Heart", scent: "DUSTY LACE" },
+      "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", item: "Source Code", scent: "OZONE" },
+      "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", item: "Gold Halo", scent: "VANILLA" }
     };
 
     const commonItems = [
-      {name: "Iced Coffee", price: "$7.50"}, {name: "Sweet Treat", price: "$5.00"},
-      {name: "Lip Gloss", price: "$12.00"}, {name: "Spotify Premium", price: "$11.00"},
-      {name: "Girl Dinner", price: "$8.00"}, {name: "Mental Stability", price: "Sold Out"},
-      {name: "Screen Time", price: "4hrs"}, {name: "Little Walk", price: "Free"}
+      {name: "Iced Coffee", price: 7.50}, {name: "Sweet Treat", price: 5.00},
+      {name: "Lip Gloss", price: 12.00}, {name: "Spotify Premium", price: 11.00},
+      {name: "Girl Dinner", price: 8.00}, {name: "Therapy", price: 150.00},
+      {name: "Screen Time", price: 0.00}, {name: "Little Walk", price: 0.00}
     ];
 
-    // --- 4. RANK & COUNT SYSTEM ---
-    let xp = parseInt(localStorage.getItem('cosmicXP') || 0);
+    // --- 2. STAT TRACKING SYSTEM ---
+    // We load all data from storage
+    let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
+    let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
+    let moodCounts = JSON.parse(localStorage.getItem('loyaltyMoods') || '{}');
 
-    function getRankName(points) {
-      if (points < 5) return "NPC";
-      if (points < 15) return "Main Character";
-      if (points < 30) return "It Girl";
-      if (points < 50) return "Icon";
-      if (points < 80) return "Legend";
-      if (points < 120) return "Cosmic Queen";
-      return "The Universe"; 
+    function getTier(spend) {
+      if (spend < 500) return "WINDOW SHOPPER";
+      if (spend < 1500) return "MALL RAT";
+      if (spend < 5000) return "VIP";
+      if (spend < 10000) return "INFLUENCER";
+      return "THE 1%";
     }
 
-    function updateRankDisplay() {
-      const rank = getRankName(xp);
-      document.getElementById('rankDisplay').innerText = `RANK: ${rank.toUpperCase()} (${xp} XP)`;
-      return rank;
+    function getSignatureScent() {
+      // Find the mood with the highest count
+      let topMood = "numb"; // default
+      let maxCount = 0;
+      
+      for (const [mood, count] of Object.entries(moodCounts)) {
+        if (count > maxCount) {
+          maxCount = count;
+          topMood = mood;
+        }
+      }
+      return moods[topMood] ? moods[topMood].scent : "UNKNOWN";
+    }
+
+    function updateDisplay() {
+      const tier = getTier(lifetimeSpend);
+      document.getElementById('tierDisplay').innerText = `MEMBER: ${tier} ($${Math.floor(lifetimeSpend)})`;
     }
 
     // --- INIT ---
@@ -277,7 +299,7 @@
       btn.onclick = () => generate(key);
       grid.appendChild(btn);
     });
-    updateRankDisplay();
+    updateDisplay();
 
     // --- GENERATE ---
     function generate(moodKey) {
@@ -289,47 +311,34 @@
       let paperColor = "#ffffff";
       let bonusItem = null;
 
-      // Check for Secret
       if (secrets[nameRaw]) {
         const s = secrets[nameRaw];
         theme = { color: s.color, bg: s.bg };
         storeName = s.store;
         paperColor = s.paper;
-        bonusItem = { name: s.item, price: "Priceless" };
+        bonusItem = { name: s.item, price: 999.00 }; // Secret items are expensive!
       }
 
-      // Update Colors
+      // Visuals
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
       document.documentElement.style.setProperty('--text', theme.color);
       document.documentElement.style.setProperty('--paper', paperColor);
-
       document.getElementById('storeName').innerText = storeName;
       
-      // XP Logic
-      xp++;
-      localStorage.setItem('cosmicXP', xp);
-      
-      // MOOD COUNTER LOGIC
-      // We create a unique name for this mood's memory (e.g., "count_rotting")
-      const counterKey = `count_${moodKey}`;
-      // Get current count, or 0 if new
-      let currentCount = parseInt(localStorage.getItem(counterKey) || 0);
-      currentCount++; // Add 1
-      localStorage.setItem(counterKey, currentCount); // Save it
+      // --- LOGIC UPDATES ---
+      // 1. Mood Count
+      moodCounts[moodKey] = (moodCounts[moodKey] || 0) + 1;
+      localStorage.setItem('loyaltyMoods', JSON.stringify(moodCounts));
 
-      const currentRank = updateRankDisplay();
+      // 2. Receipt Count (for Stamps)
+      totalReceipts++;
+      localStorage.setItem('loyaltyCount', totalReceipts);
 
-      // RECEIPT INFO (With Mood Count!)
-      document.getElementById('infoBubble').innerHTML = `
-        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        STATUS: ${currentRank.toUpperCase()}<br>
-        MOOD: ${moodKey.toUpperCase()} (visit #${currentCount})
-      `;
-
-      // Build Items
+      // 3. Build Items & Calculate Total for THIS receipt
+      let currentTotal = 0;
       let pool = [...commonItems];
-      moods[moodKey].items.forEach(i => pool.push({name: i, price: "Mood"}));
+      moods[moodKey].items.forEach(i => pool.push({name: i, price: 20.00})); // Mood items cost $20
       
       const count = Math.floor(Math.random() * 3) + 3;
       const shuffled = pool.sort(() => 0.5 - Math.random());
@@ -339,9 +348,37 @@
 
       let html = '';
       selected.forEach(i => {
-        html += `<div class="item"><span>1x ${i.name}</span><span>${i.price}</span></div>`;
+        currentTotal += i.price;
+        html += `<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
       });
       document.getElementById('itemList').innerHTML = html;
+      document.getElementById('totalText').innerText = `$${currentTotal.toFixed(2)}`;
+
+      // 4. Update Lifetime Spend
+      lifetimeSpend += currentTotal;
+      localStorage.setItem('loyaltySpend', lifetimeSpend);
+      const currentTier = getTier(lifetimeSpend);
+
+      // --- FILL RECEIPT DATA ---
+      document.getElementById('infoBubble').innerHTML = `
+        CUSTOMER: ${nameDisplay.toUpperCase()}<br>
+        MEMBER: ${currentTier}<br>
+        LIFETIME SPEND: $${lifetimeSpend.toFixed(2)}
+      `;
+
+      // Signature Scent
+      const myScent = getSignatureScent();
+      document.getElementById('scentDisplay').innerText = `SIGNATURE SCENT: ${myScent}`;
+
+      // Stamp Card Logic (0-5)
+      const stampsFilled = totalReceipts % 5;
+      let stampString = "";
+      for(let i=0; i<5; i++) {
+        stampString += (i < stampsFilled) ? "♥ " : "♡ ";
+      }
+      // If we just hit a multiple of 5, make them all full!
+      if (stampsFilled === 0 && totalReceipts > 0) stampString = "♥ ♥ ♥ ♥ ♥ (FREE!)";
+      document.getElementById('stampsDisplay').innerText = stampString;
 
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptContainer').style.display = 'block';
@@ -353,6 +390,7 @@
         document.getElementById('controls').style.display = 'flex';
         container.style.display = 'none';
         document.getElementById('nameInput').value = ""; 
+        updateDisplay(); // Refresh the main screen tier display
       }
     });
 
