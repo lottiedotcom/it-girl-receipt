@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Cosmic Receipt</title>
+  <title>Mood Receipt</title>
   
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.png">
@@ -82,7 +82,7 @@
       color: #fff;
     }
 
-    /* RECEIPT BUBBLE LAYOUT */
+    /* RECEIPT LAYOUT */
     .receipt-container {
       perspective: 1000px;
       width: 100%;
@@ -125,11 +125,7 @@
       letter-spacing: 1px;
     }
     
-    .est-text {
-      font-size: 0.75rem;
-      margin-bottom: 20px;
-      opacity: 0.7;
-    }
+    .est-text { font-size: 0.75rem; margin-bottom: 20px; opacity: 0.7; }
 
     .info-bubble {
       border: 2px solid var(--accent);
@@ -138,41 +134,17 @@
       margin-bottom: 25px;
       font-size: 0.85rem;
       line-height: 1.8;
+      text-align: center;
     }
 
-    .item-list {
-      text-align: left;
-      margin-bottom: 20px;
-      padding: 0 5px;
-    }
-    .item { 
-      display: flex; 
-      justify-content: space-between; 
-      margin-bottom: 10px; 
-      font-size: 0.95rem; 
-    }
+    .item-list { text-align: left; margin-bottom: 20px; padding: 0 5px; }
+    .item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
     
-    .divider {
-      border-top: 2px dashed var(--accent);
-      margin: 20px 0;
-      opacity: 0.5;
-    }
+    .divider { border-top: 2px dashed var(--accent); margin: 20px 0; opacity: 0.5; }
 
-    .total { 
-      display: flex; 
-      justify-content: space-between; 
-      font-weight: bold; 
-      font-size: 1.2rem; 
-      color: var(--accent);
-    }
+    .total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--accent); }
     
-    .barcode { 
-      margin-top: 35px; 
-      font-size: 2rem; 
-      opacity: 0.4; 
-      letter-spacing: -3px; 
-      transform: scaleY(0.7); 
-    }
+    .barcode { margin-top: 35px; font-size: 2rem; opacity: 0.4; letter-spacing: -3px; transform: scaleY(0.7); }
 
     .trophy-bar {
       margin-top: 20px;
@@ -211,7 +183,7 @@
 
       <div class="total">
         <span>TOTAL:</span>
-        <span id="totalText">100% CUTE</span>
+        <span id="totalText">100% VALID</span>
       </div>
 
       <div class="barcode">||| || ||||| || ||</div>
@@ -223,29 +195,28 @@
   </div>
 
   <script>
-    // --- 1. RANDOM SHOP NAMES ---
-    // Every time you click, one of these will appear!
+    // --- 1. SHOP NAMES ---
     const shopNames = [
-      "THE VIBE", "ANGEL NUMBERS", "DREAM LOG", "ARCHIVE 001", 
-      "GIRL BLOG", "PURE AURA", "THE SIMULATION", "SOFT RESET",
-      "LOVE LETTER", "MEMORY LANE", "STAR COMMAND", "EUPHORIA",
-      "GLITCH MODE", "SAFE SPACE", "VOID STORE"
+      "THE VIBE", "DREAM LOG", "ARCHIVE 001", "GIRL BLOG", 
+      "PURE AURA", "THE SIMULATION", "SOFT RESET", "MEMORY LANE", 
+      "STAR COMMAND", "EUPHORIA", "GLITCH MODE", "SAFE SPACE", 
+      "VOID STORE", "MOOD SWING", "INNER CHILD"
     ];
 
-    // --- 2. ZODIAC THEMES ---
-    const zodiacs = {
-      aries: { color: "#e57373", bg: "#ffebee", items: ["Impulse Buy", "Loud Laugh", "Red Lipstick", "Main Character"] },
-      taurus: { color: "#66bb6a", bg: "#e8f5e9", items: ["Cozy Blanket", "Nap Time", "Expensive Snack", "Self Care"] },
-      gemini: { color: "#fdd835", bg: "#fffde7", items: ["Chaos", "Yap Session", "Two Phones", "Gossip"] },
-      cancer: { color: "#42a5f5", bg: "#e3f2fd", items: ["Plushie", "Crying", "Comfort Food", "Love Letter"] },
-      leo: { color: "#ffa726", bg: "#fff3e0", items: ["Mirror Selfie", "Gold Jewelry", "Drama", "The Spotlight"] },
-      virgo: { color: "#8d6e63", bg: "#efebe9", items: ["To-Do List", "Clean Room", "Judgement", "Ice Coffee"] },
-      libra: { color: "#ec407a", bg: "#fce4ec", items: ["Pink Drink", "Flirting", "Aesthetic", "Indecision"] },
-      scorpio: { color: "#455a64", bg: "#eceff1", items: ["Revenge", "Sunglasses", "Secrets", "Loyalty"] },
-      sagittarius: { color: "#7e57c2", bg: "#ede7f6", items: ["Plane Ticket", "Philosophy", "Adventure", "Memes"] },
-      capricorn: { color: "#5d4037", bg: "#d7ccc8", items: ["Money", "CEO Energy", "Blazer", "Ambition"] },
-      aquarius: { color: "#26c6da", bg: "#e0f7fa", items: ["Aliens", "God Complex", "Weird Hobby", "Rebellion"] },
-      pisces: { color: "#ab47bc", bg: "#f3e5f5", items: ["Daydream", "Poetry", "Intuition", "Magic Crystals"] }
+    // --- 2. MOOD THEMES (The New Buttons) ---
+    const moods = {
+      rotting: { color: "#78909c", bg: "#eceff1", items: ["Doomscrolling", "Dirty Hair", "Uber Eats", "Screen Time (8h)"] },
+      thriving: { color: "#43a047", bg: "#e8f5e9", items: ["Green Juice", "Yoga Mat", "Skin Glow", "Hydration"] },
+      manic: { color: "#ff9100", bg: "#fff3e0", items: ["Impulse Buy", "Fast Talking", "God Complex", "New Hobby"] },
+      numb: { color: "#bdbdbd", bg: "#fafafa", items: ["Staring at Wall", "Nothing", "Static Noise", "Unknown"] },
+      delusional: { color: "#f06292", bg: "#fce4ec", items: ["Fake Scenario", "Wedding Plan", "He Loves Me", "Fantasy"] },
+      yearning: { color: "#7e57c2", bg: "#ede7f6", items: ["Poetry", "Old Photos", "Sad Music", "The Moon"] },
+      hating: { color: "#d32f2f", bg: "#ffebee", items: ["Blocking Him", "Side Eye", "Gatekeeping", "Judgment"] },
+      healing: { color: "#8d6e63", bg: "#efebe9", items: ["Therapy", "Journaling", "Boundaries", "Tea"] },
+      spiraling: { color: "#304ffe", bg: "#e8eaf6", items: ["Overthinking", "Panic", "Deleting Apps", "Regret"] },
+      lurking: { color: "#2e7d32", bg: "#e8f5e9", items: ["Screenshots", "Refreshing", "Private Tab", "Research"] },
+      posting: { color: "#00b0ff", bg: "#e1f5fe", items: ["Drafts", "Caption Idea", "Clout", "Validation"] },
+      productive: { color: "#fdd835", bg: "#fffde7", items: ["Emails", "Iced Coffee", "To-Do List", "Hustle"] }
     };
 
     const secrets = {
@@ -264,43 +235,42 @@
       {name: "Screen Time", price: "4hrs"}, {name: "Little Walk", price: "Free"}
     ];
 
-    // --- 3. EXPANDED RANK SYSTEM ---
+    // --- 3. RANK SYSTEM ---
     let xp = parseInt(localStorage.getItem('cosmicXP') || 0);
 
     function getRankName(points) {
-      if (points < 5) return "Baby Doll";
-      if (points < 15) return "Star Dust";
-      if (points < 30) return "Moon Child";
-      if (points < 50) return "Sun Chaser";
-      if (points < 80) return "Galaxy Brain";
+      if (points < 5) return "NPC";
+      if (points < 15) return "Main Character";
+      if (points < 30) return "It Girl";
+      if (points < 50) return "Icon";
+      if (points < 80) return "Legend";
       if (points < 120) return "Cosmic Queen";
-      return "The Universe"; // Max Rank
+      return "The Universe"; 
     }
 
     function updateRankDisplay() {
       const rank = getRankName(xp);
-      document.getElementById('rankDisplay').innerText = `CURRENT RANK: ${rank.toUpperCase()} (${xp})`;
+      document.getElementById('rankDisplay').innerText = `RANK: ${rank.toUpperCase()} (${xp} XP)`;
       return rank;
     }
 
     // --- INIT ---
     const grid = document.getElementById('signGrid');
-    Object.keys(zodiacs).forEach(sign => {
+    Object.keys(moods).forEach(key => {
       const btn = document.createElement('button');
       btn.className = 'sign-btn';
-      btn.innerText = sign;
-      btn.onclick = () => generate(sign);
+      btn.innerText = key;
+      btn.onclick = () => generate(key);
       grid.appendChild(btn);
     });
     updateRankDisplay();
 
     // --- GENERATE ---
-    function generate(signKey) {
+    function generate(moodKey) {
       const nameRaw = document.getElementById('nameInput').value.trim().toLowerCase();
       const nameDisplay = document.getElementById('nameInput').value || "Guest";
       
-      let theme = zodiacs[signKey];
-      // Randomly pick a store name!
+      let theme = moods[moodKey];
       let storeName = shopNames[Math.floor(Math.random() * shopNames.length)];
       let paperColor = "#ffffff";
       let bonusItem = null;
@@ -308,7 +278,7 @@
       if (secrets[nameRaw]) {
         const s = secrets[nameRaw];
         theme = { color: s.color, bg: s.bg };
-        storeName = s.store; // Secrets override the random name
+        storeName = s.store;
         paperColor = s.paper;
         bonusItem = { name: s.item, price: "Priceless" };
       }
@@ -325,15 +295,15 @@
       localStorage.setItem('cosmicXP', xp);
       const currentRank = updateRankDisplay();
 
-      // RECEIPT INFO
+      // RECEIPT INFO with RANK
       document.getElementById('infoBubble').innerHTML = `
         CUSTOMER: ${nameDisplay.toUpperCase()}<br>
-        TITLE: ${currentRank.toUpperCase()}<br>
-        SIGN: ${signKey.toUpperCase()}
+        STATUS: ${currentRank.toUpperCase()} (LVL ${xp})<br>
+        MOOD: ${moodKey.toUpperCase()}
       `;
 
       let pool = [...commonItems];
-      zodiacs[signKey].items.forEach(i => pool.push({name: i, price: "Special"}));
+      moods[moodKey].items.forEach(i => pool.push({name: i, price: "Mood"}));
       
       const count = Math.floor(Math.random() * 3) + 3;
       const shuffled = pool.sort(() => 0.5 - Math.random());
