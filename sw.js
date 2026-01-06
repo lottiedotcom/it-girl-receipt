@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cosmic-v9'; // v9 = Nature Update & Mood Board
+const CACHE_NAME = 'cosmic-v10'; // v10 = Everything Update
 const urlsToCache = [
   './',
   './index.html',
