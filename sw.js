@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cosmic-v8'; // v8 = Reward System & Lottie Theme
+const CACHE_NAME = 'cosmic-v9'; // v9 = Nature Update & Mood Board
 const urlsToCache = [
   './',
   './index.html',
