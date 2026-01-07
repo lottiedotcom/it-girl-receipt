@@ -34,6 +34,15 @@
       padding: 20px;
       box-sizing: border-box;
     }
+    
+    /* GHOST MODE CLASS */
+    body.ghost-mode {
+      --bg: #e0e0e0;
+      --accent: #757575;
+      --text: #000;
+      --paper: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+    }
 
     /* CONTROLS */
     .controls { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 10px; }
@@ -62,7 +71,6 @@
     }
     .menu-btn:active { transform: scale(0.95); background: var(--accent); color: white; }
 
-    /* STATS HEADER */
     .stats-header {
       display: flex; justify-content: space-between; background: rgba(255,255,255,0.5);
       padding: 10px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: var(--text);
@@ -81,7 +89,6 @@
       -webkit-mask: var(--mask); mask: var(--mask);
     }
 
-    /* CHECKLIST */
     .checklist-item {
       margin-bottom: 12px; font-size: 1rem; text-align: left; display: flex; align-items: center; gap: 10px;
       cursor: pointer; transition: 0.2s; padding: 5px; border-radius: 5px;
@@ -89,7 +96,6 @@
     .checklist-item:active { background: rgba(0,0,0,0.05); transform: scale(0.98); }
     .checklist-item.checked { text-decoration: line-through; opacity: 0.5; color: var(--accent); }
 
-    /* ID CARD */
     .id-card {
       background: linear-gradient(135deg, #e3f2fd, #f3e5f5); border-radius: 15px; padding: 20px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.2); font-family: "VT323", monospace; position: relative;
@@ -107,14 +113,12 @@
       pointer-events: none; background-size: 200% 200%; animation: holoShine 3s infinite linear;
     }
 
-    /* GACHA */
     .gacha-machine { background: #ffecb3; border: 4px solid #ffca28; border-radius: 20px; padding: 20px; text-align: center; animation: popIn 0.5s ease; box-shadow: 0 10px 0 #ffca28; }
     .gacha-globe { width: 150px; height: 150px; background: rgba(255,255,255,0.5); border-radius: 50%; border: 3px solid #ffca28; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
     .spin-btn { background: #ff6f00; color: white; border: none; padding: 10px 25px; border-radius: 10px; font-family: "VT323", monospace; font-size: 1.5rem; cursor: pointer; box-shadow: 0 5px 0 #e65100; }
     .spin-btn:active { transform: translateY(5px); box-shadow: none; }
     .gacha-prize { margin-top: 20px; padding: 10px; background: white; border-radius: 10px; border: 2px dashed #ffca28; display: none; }
 
-    /* UTILS */
     .close-hint { text-align:center; color: var(--text); font-size:0.8rem; margin-top:20px; opacity:0.6; cursor: pointer; }
     .nav-btn { background: #ff80ab; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; margin-top: 10px; }
     .item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
@@ -123,13 +127,12 @@
     .inv-item.gacha { border: 1px solid #7c4dff; background: #ede7f6; }
     .inv-item.legendary { border: 1px solid #ffd700; background: #fffde7; }
     
-    /* REPORT GRID */
     .report-grid { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 20px; }
     .pixel { width: 18px; height: 18px; border-radius: 4px; background: #eee; }
     .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--accent); }
+    .planet-row { display:flex; justify-content:space-between; border-bottom:1px solid rgba(0,0,0,0.1); padding:8px 0; font-size:0.9rem;}
 
-    /* ANIMATIONS */
     @keyframes popIn { 0% { opacity: 0; transform: translateY(40px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes holoShine { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
@@ -162,23 +165,17 @@
         <h2 style="margin:0; font-size:1.4rem; color:var(--accent);" id="storeName">...</h2>
       </div>
       <div style="font-size:0.75rem; opacity:0.7; margin-bottom:20px;">est. 2026 • digital receipt</div>
-      
       <div id="infoBubble" style="background:rgba(255,255,255,0.1); padding:10px; border-radius:15px; margin-bottom:20px; font-size:0.85rem; line-height:1.5;"></div>
-      
       <div id="itemList" style="text-align:left; margin-bottom:20px;"></div>
-      
       <div style="border-top:2px dashed var(--accent); opacity:0.5; margin:20px 0;"></div>
-      
       <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem; color:var(--accent);">
         <span id="totalLabel">TOTAL:</span><span id="totalText">$0.00</span>
       </div>
-
       <div id="loyaltySection" style="margin-top:25px; border:1px solid var(--accent); border-radius:15px; padding:10px; font-size:0.8rem;">
         <div id="scentDisplay">SCENT: ???</div>
         <div style="border-top:1px dashed var(--accent); margin:5px 0;"></div>
         <div id="stampsDisplay" style="font-size:1.5rem; letter-spacing:5px;">♡♡♡♡♡</div>
       </div>
-      
       <div id="bottomExtras" style="margin-top:20px;"></div>
       <div id="rxNavContainer" style="margin-top:15px;"></div>
     </div>
@@ -196,10 +193,12 @@
 
   <div class="screen" id="reportScreen">
     <div class="paper-sheet">
-      <h2>AURA REPORT</h2>
-      <div id="reportInfo" style="margin:15px 0; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px;"></div>
-      <div id="pixelGrid" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin:10px 0;"></div>
-      <div id="statsBars" style="text-align:left;"></div>
+      <h2>AURA CHART</h2>
+      <div style="font-size:0.8rem; margin-bottom:15px;">cosmic alignment</div>
+      <div id="astrologyChart" style="text-align:left; background:rgba(0,0,0,0.03); padding:15px; border-radius:10px; margin-bottom:20px;"></div>
+      <div style="text-align:left; font-size:0.8rem; font-weight:bold; margin-bottom:5px;">RECENT PIXELS:</div>
+      <div id="pixelGrid" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-bottom:20px;"></div>
+      <div id="vibeForecast" style="font-style:italic; font-size:0.85rem; color:var(--accent); border:1px dashed var(--accent); padding:10px;"></div>
     </div>
     <div class="close-hint" onclick="closeAll()">tap to close</div>
   </div>
@@ -253,9 +252,9 @@
   <div class="screen" id="gachaScreen">
     <div class="gacha-machine">
       <h2 style="margin:0; color:#e65100;">COSMIC GACHA</h2>
-      <div style="font-size:0.8rem; margin-bottom:15px;">Cost: $100 Debt / Spin</div>
+      <div style="font-size:0.8rem; margin-bottom:15px;">Cost: $300 Debt / Spin<br><span style="color:red; font-size:0.7rem;">Requires > -5000 Aura</span></div>
       <div class="gacha-globe" id="gachaGlobe">🔮</div>
-      <button class="spin-btn" onclick="spinGacha()">SPIN ($100)</button>
+      <button class="spin-btn" onclick="spinGacha()">SPIN ($300)</button>
       <div class="gacha-prize" id="gachaPrize">
         <div style="font-size:0.8rem; font-weight:bold; color:#7c4dff;">YOU GOT:</div>
         <div id="prizeName" style="font-size:1.2rem; margin:10px 0;">???</div>
@@ -266,105 +265,101 @@
   </div>
 
   <script>
-    // --- DATA & CONFIG ---
+    // --- DATA ---
     const shopNames = ["THE MALL", "GIRL WORLD", "PLASTIC DREAMS", "ARCHIVE", "ANGEL DEPT", "VELVET ROPE", "LIMITED ED.", "SOLDOUT", "MAIN CHAR."];
     const arts = { default: "♥", nature: "    /\\\n   /  \\\n  /____\\ \n    ||", ocean: ".~ .~~~ ..~", stars: "✨  ✦  ✨", bow: "  /\\ /\\\n  ( o.o )\n   > ^ <", cyber: "[ o_o ]", happy: "^___^", neutral: "-___-" };
 
-    // --- FULL ITEM LIBRARY (50+ ITEMS) ---
-    const allItems = [
-      {name: "Iced Oat Latte", price: 8.50, rare: false}, {name: "Sonny Angel", price: 12.00, rare: false},
-      {name: "Claw Clip", price: 5.00, rare: false}, {name: "Satin Ribbon", price: 2.50, rare: false},
-      {name: "Platform Shoes", price: 120.00, rare: true}, {name: "Blind Box", price: 15.00, rare: false},
-      {name: "Digicam", price: 250.00, rare: true}, {name: "Phone Charm", price: 10.00, rare: false},
-      {name: "Unread Book", price: 18.00, rare: false}, {name: "Thrift Find", price: 25.00, rare: false},
-      {name: "Delivery Fee", price: 5.99, rare: false}, {name: "Strawberry Milk", price: 3.50, rare: false},
-      {name: "Tote Bag", price: 20.00, rare: false}, {name: "Face Mask", price: 4.00, rare: false},
-      {name: "Concert Tickets", price: 300.00, rare: true}, {name: "New Piercing", price: 60.00, rare: true},
-      {name: "Vending Machine", price: 2.00, rare: false}, {name: "Oat Milk Tax", price: 1.00, rare: false},
-      {name: "Lip Gloss", price: 12.00, rare: false}, {name: "Girl Dinner", price: 8.00, rare: false},
-      {name: "Therapy", price: 150.00, rare: true}, {name: "Little Walk", price: 0.00, rare: false},
-      {name: "Sweet Treat", price: 5.00, rare: false}, {name: "Spotify Premium", price: 11.99, rare: false},
-      {name: "Vintage Lamp", price: 45.00, rare: true}, {name: "Cat Ear Headphones", price: 80.00, rare: true},
-      {name: "Crystal", price: 15.00, rare: false}, {name: "Tarot Deck", price: 25.00, rare: false},
-      {name: "Mechanical Keyboard", price: 150.00, rare: true}, {name: "Matcha Whisk", price: 15.00, rare: false},
-      {name: "Weighted Blanket", price: 60.00, rare: true}, {name: "Essential Oil", price: 10.00, rare: false},
-      {name: "Film Roll", price: 18.00, rare: false}, {name: "Succulent", price: 6.00, rare: false},
-      {name: "Fuzzy Socks", price: 8.00, rare: false}, {name: "Sheet Mask", price: 3.00, rare: false},
-      {name: "Crochet Top", price: 35.00, rare: false}, {name: "Vinyl Record", price: 30.00, rare: false},
-      {name: "Rare Sticker", price: 2.00, rare: true}, {name: "Sanrio Plush", price: 25.00, rare: false},
-      {name: "Bubble Tea", price: 7.00, rare: false}, {name: "Crocs", price: 50.00, rare: false},
-      {name: "Designer Bag", price: 2500.00, rare: true}, {name: "Emotional Support Bottle", price: 40.00, rare: false}
+    // ECONOMY BALANCING
+    // range: [minSpend, maxSpend]
+    const moods = {
+      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, avatar: "_(:3 」∠)_", aura: -500, range:[10, 30], items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
+      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", art: "🌿", avatar: "( ﾉ^ω^)ﾉ", aura: 500, range:[40, 100], items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
+      manic: { color: "#ff9100", bg: "#fff3e0", scent: "RED BULL", art: "⚡", avatar: "( ◉_◉ )", aura: -2000, range:[200, 600], items: ["Impulse Buy", "Fast Talking", "God Complex"] },
+      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "STATIC", art: "...", avatar: "( -_- )", aura: -200, range:[5, 15], items: ["Staring at Wall", "Nothing", "White Noise"] },
+      delusional: { color: "#f06292", bg: "#fce4ec", scent: "FROSTING", art: arts.bow, avatar: "( ˘ ³˘)♥", aura: -100, range:[50, 150], items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
+      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN", art: "☁️", avatar: "( ; ω ; )", aura: 100, range:[20, 60], items: ["Poetry", "Old Photos", "Sad Music"] },
+      hating: { color: "#d32f2f", bg: "#ffebee", scent: "SMOKE", art: "✖", avatar: "( ¬_¬ )", aura: -1000, range:[10, 50], items: ["Blocking Him", "Side Eye", "Judgment"] },
+      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE", art: "🕯️", avatar: "( ✨_✨ )", aura: 1000, range:[30, 80], items: ["Therapy", "Journaling", "Boundaries"] },
+      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "WINE", art: "🌀", avatar: "( @ _ @ )", aura: -800, range:[50, 200], items: ["Overthinking", "Panic", "Regret"] },
+      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "SCREEN", art: "👁️", avatar: "( 👁️ ᴥ 👁️ )", aura: -200, range:[0, 20], items: ["Screenshots", "Private Tab", "Research"] },
+      posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", art: "📸", avatar: "( 🤳 )", aura: 200, range:[0, 100], items: ["Drafts", "Clout", "Validation"] },
+      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", avatar: "( ò_ó )", aura: 500, range:[15, 60], items: ["Emails", "Iced Coffee", "To-Do List"] },
+      silly: { color: "#ff4081", bg: "#fce4ec", scent: "BUBBLEGUM", art: arts.happy, avatar: "( 🤪 )", aura: 800, range:[5, 25], items: ["Clown Nose", "Giggles", "Prank Call"] },
+      grateful: { color: "#ffd700", bg: "#fffde7", scent: "SUNSHINE", art: arts.happy, avatar: "( 🙏 )", aura: 1000, range:[0, 50], items: ["Thank You Note", "Warm Hug", "Flowers"] },
+      chill: { color: "#81d4fa", bg: "#e1f5fe", scent: "OCEAN AIR", art: arts.neutral, avatar: "( ˘ω˘ )", aura: 500, range:[20, 40], items: ["Lo-Fi Beats", "Hoodie", "Snack"] },
+      bored: { color: "#b0bec5", bg: "#eceff1", scent: "CARDBOARD", art: arts.neutral, avatar: "( ._. )", aura: 0, range:[5, 15], items: ["Ceiling Tile", "Daydream", "Nap"] },
+      sleepi: { color: "#9fa8da", bg: "#e8eaf6", scent: "LAVENDER", art: "zZz", avatar: "( ᴗ _ ᴗ )", aura: 200, range:[0, 20], items: ["Eye Mask", "Melatonin", "Teddy Bear"] },
+      ouch: { color: "#e57373", bg: "#ffebee", scent: "OINTMENT", art: "T_T", avatar: "( > _ < )", aura: -500, range:[20, 50], items: ["Heating Pad", "Band-aid", "Pain Potion"] },
+      dizzy: { color: "#80cbc4", bg: "#e0f2f1", scent: "GINGER", art: "@_@", avatar: "( @ . @ )", aura: -200, range:[10, 30], items: ["Ginger Ale", "Crackers", "Horizon Line"] },
+      relaxed: { color: "#4db6ac", bg: "#e0f2f1", scent: "EUCALYPTUS", art: "~_~", avatar: "( u _ u )", aura: 800, range:[50, 150], items: ["Incense", "Bath Bomb", "Herbal Tea"] },
+      dissociative: { color: "#cfd8dc", bg: "#f5f5f5", scent: "NOTHING", art: "___", avatar: "( o . o )", aura: -50, range:[0, 10], items: ["Ice Cube", "Reality Anchor", "Hoodie"] }
+    };
+
+    const medicalDb = {
+      rotting: { diagnoses: ["Bed-Gravity Syndrome", "Vitamin D Deficiency"], treatments: ["Open the Blinds", "Wash Your Face", "Stand Up for 1m"], severe: ["CRITICAL BED FUSION", "MOSS GROWTH DETECTED"] },
+      thriving: { diagnoses: ["Main Character Energy", "Excessive Slay"], treatments: ["Keep Slaying", "Take a Selfie", "Write it Down"], severe: ["EGO OVERLOAD", "TOO POWERFUL"] },
+      manic: { diagnoses: ["System Overload", "Zoomies"], treatments: ["Lay on the Floor", "Box Breathing (4s)", "Decaf Tea"], severe: ["VIBE VELOCITY UNSAFE", "CRASH IMMINENT"] },
+      numb: { diagnoses: ["Sensory Deprivation", "Static Noise Brain"], treatments: ["Hold Ice Cube", "Eat Sour Candy", "Cold Water Splash"], severe: ["CONNECTION LOST", "BUFFERING..."] },
+      delusional: { diagnoses: ["Fantasy Fever", "Reality Detachment"], treatments: ["Call a Real Friend", "Touch a Wall", "List 3 Facts"], severe: ["PLOT HOLE DETECTED", "TERMINAL DELULU"] },
+      yearning: { diagnoses: ["Heart Acheness", "Nostalgia Poisoning"], treatments: ["Write & Burn It", "Make New Art", "Call Someone New"], severe: ["PAST LIFE LEAKAGE", "MEMORY LOOP"] },
+      hating: { diagnoses: ["Petty Fever", "Sour Candy Soul"], treatments: ["List 3 Good Things", "Compliment Someone", "Log Off"], severe: ["TOXICITY CRITICAL", "BITTER ROOT"] },
+      healing: { diagnoses: ["Growth Spurt", "Metamorphosis"], treatments: ["Rest & Hydrate", "Gentle Stretch", "Proud of You"], severe: ["BUTTERFLY EFFECT", "RADIANT AURA"] },
+      spiraling: { diagnoses: ["Looping Thoughts", "System Error"], treatments: ["5-4-3-2-1 Method", "Weighted Blanket", "Look at the Sky"], severe: ["LOGIC FAILURE", "INFINITE LOOP"] },
+      lurking: { diagnoses: ["Invisibility Cloak", "Observer Mode"], treatments: ["Post a Comment", "Be Perceived", "Step Away"], severe: ["GHOST SYNDROME", "DATA ONLY"] },
+      posting: { diagnoses: ["Validation Seeking", "Performance Mode"], treatments: ["Airplane Mode (1hr)", "Read a Book", "Private Journal"], severe: ["CLOUT POISONING", "ALGORITHM ADDICTION"] },
+      productive: { diagnoses: ["Hustle Culture Flu", "Human Doing"], treatments: ["Do Nothing (5m)", "Unclench Jaw", "Look at a Tree"], severe: ["MACHINE MODE", "BATTERY DRAIN"] },
+      silly: { diagnoses: ["Chronic Goofiness", "Clownery"], treatments: ["Do a Little Dance", "Make Someone Laugh", "Enjoy the Joy"], severe: ["HONK HONK", "CIRCUS BRAIN"] },
+      grateful: { diagnoses: ["Heart Expansion", "Peaceful Mind"], treatments: ["Say Thank You", "Soak it In", "Share the Love"], severe: ["BLESSED STATE", "LIGHT BEAM"] },
+      chill: { diagnoses: ["Low Cortisol", "Vibe Stabilization"], treatments: ["Stay Hydrated", "Enjoy the Quiet", "Nap"], severe: ["ZERO KELVIN", "STASIS"] },
+      bored: { diagnoses: ["Dopamine Deficiency", "Buffering"], treatments: ["Read a Page", "Draw a Circle", "Clean One Thing"], severe: ["GREY SCREEN", "NO SIGNAL"] },
+      sleepi: { diagnoses: ["Eepy Syndrome", "Battery Low"], treatments: ["Nap Immediately", "Cozy Socks", "Do Not Disturb"], severe: ["POWER OFF", "SYSTEM SHUTDOWN"] },
+      ouch: { diagnoses: ["Glitchy Body", "Physical Form Error"], treatments: ["Magic Kiss", "Heating Pad", "Complain Loudly"], severe: ["HARDWARE DAMAGE", "ERROR 500"] },
+      dizzy: { diagnoses: ["Spin Cycle", "Earthquake Simulator"], treatments: ["Lay Flat", "Close Eyes", "Grounding"], severe: ["GYROSCOPE FAIL", "TILT MODE"] },
+      relaxed: { diagnoses: ["Zen State", "Vibe Alignment"], treatments: ["Stay Here", "Deep Breath", "Enjoy It"], severe: ["LIQUID STATE", "MELTING"] },
+      dissociative: { diagnoses: ["Loading Screen", "Connection Lost"], treatments: ["Touch Ice", "Name 5 Things", "Stomp Feet"], severe: ["SERVER DISCONNECT", "404 BODY NOT FOUND"] },
+      general: { diagnoses: ["Human Condition", "Vibe Shift"], treatments: ["Drink Water", "Deep Breath", "Be Kind to Self"], severe: ["CRITICAL ERROR", "REBOOT NEEDED"] }
+    };
+
+    const forecasts = [
+      "Mercury is in retrograde. Hide your phone.",
+      "Star alignment suggests buying a latte.",
+      "Cosmic energy is low. Rotting is advised.",
+      "Aura is bright. Post that selfie.",
+      "Avoid Exes today. High risk of cringe.",
+      "Money is fake but the vibes are real.",
+      "You are the main character today.",
+      "System update required. Take a nap."
     ];
 
-    // --- FULL MEDICAL DATABASE (Specific to Mood) ---
-    const medicalDb = {
-      rotting: { diagnoses: ["Bed-Gravity Syndrome", "Vitamin D Deficiency"], treatments: ["Open the Blinds", "Wash Your Face", "Stand Up for 1m"] },
-      thriving: { diagnoses: ["Main Character Energy", "Excessive Slay"], treatments: ["Keep Slaying", "Take a Selfie", "Write it Down"] },
-      manic: { diagnoses: ["System Overload", "Zoomies"], treatments: ["Lay on the Floor", "Box Breathing (4s)", "Decaf Tea"] },
-      numb: { diagnoses: ["Sensory Deprivation", "Static Noise Brain"], treatments: ["Hold Ice Cube", "Eat Sour Candy", "Cold Water Splash"] },
-      delusional: { diagnoses: ["Fantasy Fever", "Reality Detachment"], treatments: ["Call a Real Friend", "Touch a Wall", "List 3 Facts"] },
-      yearning: { diagnoses: ["Heart Acheness", "Nostalgia Poisoning"], treatments: ["Write & Burn It", "Make New Art", "Call Someone New"] },
-      hating: { diagnoses: ["Petty Fever", "Sour Candy Soul"], treatments: ["List 3 Good Things", "Compliment Someone", "Log Off"] },
-      healing: { diagnoses: ["Growth Spurt", "Metamorphosis"], treatments: ["Rest & Hydrate", "Gentle Stretch", "Proud of You"] },
-      spiraling: { diagnoses: ["Looping Thoughts", "System Error"], treatments: ["5-4-3-2-1 Method", "Weighted Blanket", "Look at the Sky"] },
-      lurking: { diagnoses: ["Invisibility Cloak", "Observer Mode"], treatments: ["Post a Comment", "Be Perceived", "Step Away"] },
-      posting: { diagnoses: ["Validation Seeking", "Performance Mode"], treatments: ["Airplane Mode (1hr)", "Read a Book", "Private Journal"] },
-      productive: { diagnoses: ["Hustle Culture Flu", "Human Doing"], treatments: ["Do Nothing (5m)", "Unclench Jaw", "Look at a Tree"] },
-      silly: { diagnoses: ["Chronic Goofiness", "Clownery"], treatments: ["Do a Little Dance", "Make Someone Laugh", "Enjoy the Joy"] },
-      grateful: { diagnoses: ["Heart Expansion", "Peaceful Mind"], treatments: ["Say Thank You", "Soak it In", "Share the Love"] },
-      chill: { diagnoses: ["Low Cortisol", "Vibe Stabilization"], treatments: ["Stay Hydrated", "Enjoy the Quiet", "Nap"] },
-      bored: { diagnoses: ["Dopamine Deficiency", "Buffering"], treatments: ["Read a Page", "Draw a Circle", "Clean One Thing"] },
-      sleepi: { diagnoses: ["Eepy Syndrome", "Battery Low"], treatments: ["Nap Immediately", "Cozy Socks", "Do Not Disturb"] },
-      ouch: { diagnoses: ["Glitchy Body", "Physical Form Error", "Hurty Tummy"], treatments: ["Magic Kiss", "Heating Pad", "Complain Loudly"] },
-      dizzy: { diagnoses: ["Spin Cycle", "Earthquake Simulator"], treatments: ["Lay Flat", "Close Eyes", "Grounding"] },
-      relaxed: { diagnoses: ["Zen State", "Vibe Alignment"], treatments: ["Stay Here", "Deep Breath", "Enjoy It"] },
-      dissociative: { diagnoses: ["Loading Screen", "Connection Lost"], treatments: ["Touch Ice", "Name 5 Things", "Stomp Feet"] },
-      general: { diagnoses: ["Human Condition", "Vibe Shift"], treatments: ["Drink Water", "Deep Breath", "Be Kind to Self"] }
-    };
-
-    // --- MOODS & AURA VALUES ---
-    const moods = {
-      rotting: { color: "#78909c", bg: "#eceff1", scent: "BEDSHEETS", art: arts.default, avatar: "_(:3 」∠)_", aura: -1000, items: ["Doomscrolling", "Dirty Hair", "Uber Eats"] },
-      thriving: { color: "#43a047", bg: "#e8f5e9", scent: "MATCHA", art: "🌿", avatar: "( ﾉ^ω^)ﾉ", aura: 500, items: ["Green Juice", "Yoga Mat", "Skin Glow"] },
-      manic: { color: "#ff9100", bg: "#fff3e0", scent: "RED BULL", art: "⚡", avatar: "( ◉_◉ )", aura: -200, items: ["Impulse Buy", "Fast Talking", "God Complex"] },
-      numb: { color: "#bdbdbd", bg: "#fafafa", scent: "STATIC", art: "...", avatar: "( -_- )", aura: -500, items: ["Staring at Wall", "Nothing", "White Noise"] },
-      delusional: { color: "#f06292", bg: "#fce4ec", scent: "FROSTING", art: arts.bow, avatar: "( ˘ ³˘)♥", aura: -100, items: ["Fake Scenario", "He Loves Me", "Fantasy"] },
-      yearning: { color: "#7e57c2", bg: "#ede7f6", scent: "RAIN", art: "☁️", avatar: "( ; ω ; )", aura: 100, items: ["Poetry", "Old Photos", "Sad Music"] },
-      hating: { color: "#d32f2f", bg: "#ffebee", scent: "SMOKE", art: "✖", avatar: "( ¬_¬ )", aura: -1000, items: ["Blocking Him", "Side Eye", "Judgment"] },
-      healing: { color: "#8d6e63", bg: "#efebe9", scent: "SAGE", art: "🕯️", avatar: "( ✨_✨ )", aura: 1000, items: ["Therapy", "Journaling", "Boundaries"] },
-      spiraling: { color: "#304ffe", bg: "#e8eaf6", scent: "WINE", art: "🌀", avatar: "( @ _ @ )", aura: -800, items: ["Overthinking", "Panic", "Regret"] },
-      lurking: { color: "#2e7d32", bg: "#e8f5e9", scent: "SCREEN", art: "👁️", avatar: "( 👁️ ᴥ 👁️ )", aura: -200, items: ["Screenshots", "Private Tab", "Research"] },
-      posting: { color: "#00b0ff", bg: "#e1f5fe", scent: "HAIRSPRAY", art: "📸", avatar: "( 🤳 )", aura: 200, items: ["Drafts", "Clout", "Validation"] },
-      productive: { color: "#fdd835", bg: "#fffde7", scent: "PAPER", art: "📝", avatar: "( ò_ó )", aura: 500, items: ["Emails", "Iced Coffee", "To-Do List"] },
-      silly: { color: "#ff4081", bg: "#fce4ec", scent: "BUBBLEGUM", art: arts.happy, avatar: "( 🤪 )", aura: 800, items: ["Clown Nose", "Giggles", "Prank Call"] },
-      grateful: { color: "#ffd700", bg: "#fffde7", scent: "SUNSHINE", art: arts.happy, avatar: "( 🙏 )", aura: 1000, items: ["Thank You Note", "Warm Hug", "Flowers"] },
-      chill: { color: "#81d4fa", bg: "#e1f5fe", scent: "OCEAN AIR", art: arts.neutral, avatar: "( ˘ω˘ )", aura: 500, items: ["Lo-Fi Beats", "Hoodie", "Snack"] },
-      bored: { color: "#b0bec5", bg: "#eceff1", scent: "CARDBOARD", art: arts.neutral, avatar: "( ._. )", aura: 0, items: ["Ceiling Tile", "Daydream", "Nap"] },
-      sleepi: { color: "#9fa8da", bg: "#e8eaf6", scent: "LAVENDER", art: "zZz", avatar: "( ᴗ _ ᴗ )", aura: 200, items: ["Eye Mask", "Melatonin", "Teddy Bear"] },
-      ouch: { color: "#e57373", bg: "#ffebee", scent: "OINTMENT", art: "T_T", avatar: "( > _ < )", aura: -500, items: ["Heating Pad", "Band-aid", "Pain Potion"] },
-      dizzy: { color: "#80cbc4", bg: "#e0f2f1", scent: "GINGER", art: "@_@", avatar: "( @ . @ )", aura: -200, items: ["Ginger Ale", "Crackers", "Horizon Line"] },
-      relaxed: { color: "#4db6ac", bg: "#e0f2f1", scent: "EUCALYPTUS", art: "~_~", avatar: "( u _ u )", aura: 800, items: ["Incense", "Bath Bomb", "Herbal Tea"] },
-      dissociative: { color: "#cfd8dc", bg: "#f5f5f5", scent: "NOTHING", art: "___", avatar: "( o . o )", aura: -50, items: ["Ice Cube", "Reality Anchor", "Hoodie"] }
-    };
-
-    const secrets = {
-      "lottie": { color: "#00ffff", bg: "#001e3c", paper: "#002845", store: "ATLANTIS", art: arts.ocean, item: "Pearl", scent: "DEEP SEA" },
-      "matt": { color: "#2e4e34", bg: "#1b3323", paper: "#d7ccc8", store: "SEQUOIA", art: arts.nature, item: "Mossy Log", scent: "PINE" },
-      "doll": { color: "#880e4f", bg: "#212121", paper: "#ffebee", store: "MORUTE", art: arts.bow, item: "Porcelain", scent: "LACE" },
-      "cyber": { color: "#00e676", bg: "#000000", paper: "#1a1a1a", store: "SYSTEM_32", art: arts.cyber, item: "Data", scent: "OZONE" },
-      "angel": { color: "#ffd700", bg: "#fffde7", paper: "#ffffff", store: "HEAVEN", art: arts.stars, item: "Halo", scent: "VANILLA" }
-    };
+    const allItems = [
+      {name: "Iced Oat Latte", rare: false}, {name: "Sonny Angel", rare: false}, {name: "Claw Clip", rare: false}, 
+      {name: "Satin Ribbon", rare: false}, {name: "Platform Shoes", rare: true}, {name: "Blind Box", rare: false}, 
+      {name: "Digicam", rare: true}, {name: "Phone Charm", rare: false}, {name: "Unread Book", rare: false}, 
+      {name: "Thrift Find", rare: false}, {name: "Delivery Fee", rare: false}, {name: "Strawberry Milk", rare: false}, 
+      {name: "Tote Bag", rare: false}, {name: "Face Mask", rare: false}, {name: "Concert Tickets", rare: true}, 
+      {name: "New Piercing", rare: true}, {name: "Vending Machine", rare: false}, {name: "Oat Milk Tax", rare: false}, 
+      {name: "Lip Gloss", rare: false}, {name: "Girl Dinner", rare: false}, {name: "Therapy", rare: true}, 
+      {name: "Little Walk", rare: false}, {name: "Sweet Treat", rare: false}, {name: "Spotify Premium", rare: false}, 
+      {name: "Vintage Lamp", rare: true}, {name: "Cat Ear Headphones", rare: true}, {name: "Crystal", rare: false}, 
+      {name: "Tarot Deck", rare: false}, {name: "Mechanical Keyboard", rare: true}, {name: "Matcha Whisk", rare: false}, 
+      {name: "Weighted Blanket", rare: true}, {name: "Essential Oil", rare: false}, {name: "Film Roll", rare: false}, 
+      {name: "Succulent", rare: false}, {name: "Fuzzy Socks", rare: false}, {name: "Sheet Mask", rare: false}, 
+      {name: "Crochet Top", rare: false}, {name: "Vinyl Record", rare: false}, {name: "Rare Sticker", rare: true}, 
+      {name: "Sanrio Plush", rare: false}, {name: "Bubble Tea", rare: false}, {name: "Crocs", rare: false}, 
+      {name: "Designer Bag", rare: true}, {name: "Emotional Support Bottle", rare: false}
+    ];
 
     const gachaLoot = {
       common: ["Glitch Water", "404 Error", "Pixel Heart", "Stardust", "Lucky Penny", "Old Receipt", "Broken Link", "Loading Bar", "Static Noise", "Cloud Storage"],
       rare: ["Angel Wings", "Devil Horns", "Invisibility Potion", "Admin Key", "Moon Rock", "Fairy Dust", "Holographic Sticker", "Void Ticket", "Crystal Ball", "Love Potion"],
       legendary: ["The Moon", "Ban Hammer", "Source Code", "Golden Halo", "Time Machine", "Main Character Script", "The Algorithm"]
     };
+
     const selfCareTasks = ["Drink water", "Face mask", "Phone DND 1hr", "Stretch", "Clean a corner", "Listen to music", "Go outside", "Unclench jaw"];
     const fortunes = ["LUCKY NUMBER: 444", "AURA: PINK", "MANIFESTING: $$$", "VIBE: IMMACULATE", "AVOID: EXES"];
     const coupons = ["VALID FOR: 1 NAP", "VOUCHER: 1 FREE CRY", "ADMIT ONE: TO THE DRAMA", "COUPON: TREAT YOURSELF"];
 
-    // --- STATE ---
+    // STATE
     let lifetimeSpend = parseFloat(localStorage.getItem('loyaltySpend') || 0);
     let lifetimeAura = parseInt(localStorage.getItem('loyaltyAura') || 0);
     let totalReceipts = parseInt(localStorage.getItem('loyaltyCount') || 0);
@@ -372,7 +367,7 @@
     let moodHistory = JSON.parse(localStorage.getItem('loyaltyHistory') || '[]');
     let inventory = JSON.parse(localStorage.getItem('loyaltyInventory') || '{}');
 
-    // --- CORE ---
+    // UTILS
     function updateDisplay() {
       document.getElementById('headerDebt').innerText = `💸 $${Math.floor(lifetimeSpend)}`;
       document.getElementById('headerAura').innerText = `✨ ${lifetimeAura} AURA`;
@@ -398,6 +393,12 @@
       document.getElementById('controls').style.display = 'none';
       const name = document.getElementById('nameInput').value || "Guest";
       
+      // CHEAT CODES CHECK
+      if (type === 'gacha' && name.toLowerCase() === 'rich') { lifetimeSpend += 1000; updateDisplay(); alert("CHEAT ACTIVATED: +$1000"); return; }
+      if (name.toLowerCase() === 'cleanse') { lifetimeAura = 0; updateDisplay(); alert("CHEAT ACTIVATED: AURA RESET"); }
+      if (name.toLowerCase() === 'ghost') { document.body.classList.toggle('ghost-mode'); alert("GHOST MODE TOGGLED"); }
+      if (name.toLowerCase() === 'void') { inventory = {}; alert("INVENTORY WIPED"); }
+
       if(type==='bag') { renderBag(); document.getElementById('bagScreen').style.display='block'; }
       if(type==='report') { renderReport(name); document.getElementById('reportScreen').style.display='block'; }
       if(type==='rx') { renderRx(name); document.getElementById('rxScreen').style.display='block'; }
@@ -405,7 +406,7 @@
       if(type==='id') { renderID(name); document.getElementById('idScreen').style.display='block'; }
     }
 
-    // --- RENDERERS ---
+    // RENDERERS
     function renderID(name) {
       let topMood = "numb"; let max=0;
       for(const [m,c] of Object.entries(moodCounts)){if(c>max){max=c;topMood=m;}}
@@ -419,29 +420,47 @@
     }
 
     function renderReport(name) {
-      let top="numb", max=0; for(const [m,c] of Object.entries(moodCounts)){if(c>max){max=c;top=m;}}
-      document.getElementById('reportInfo').innerHTML=`SUBJECT: ${name.toUpperCase()}<br>ERA: ${top.toUpperCase()}`;
+      // CALC SUN/MOON/RISING
+      const sortedMoods = Object.entries(moodCounts).sort((a,b) => b[1] - a[1]);
+      const sun = sortedMoods[0] ? sortedMoods[0][0] : "Unknown";
+      const moon = sortedMoods[1] ? sortedMoods[1][0] : "Unknown";
+      const rising = moodHistory.length > 0 ? moodHistory[moodHistory.length - 1] : "Unknown";
+      
+      const chartHtml = `
+        <div class="planet-row"><span>☀️ SUN (Core)</span><span>${sun.toUpperCase()}</span></div>
+        <div class="planet-row"><span>🌙 MOON (Inner)</span><span>${moon.toUpperCase()}</span></div>
+        <div class="planet-row"><span>⬆️ RISING (Now)</span><span>${rising.toUpperCase()}</span></div>
+      `;
+      document.getElementById('astrologyChart').innerHTML = chartHtml;
+      
       const pxDiv=document.getElementById('pixelGrid'); pxDiv.innerHTML='';
       moodHistory.slice(-30).forEach(m=>{
         const d=document.createElement('div'); d.className='pixel'; d.style.background=moods[m]?moods[m].color:'#eee'; pxDiv.appendChild(d);
       });
-      let bars=''; Object.entries(moodCounts).sort((a,b)=>b[1]-a[1]).slice(0,5).forEach(([m, c])=>{
-        const pct=Math.round((c/totalReceipts)*100);
-        bars+=`<div style="display:flex; justify-content:space-between; font-size:0.8rem;"><span>${m.toUpperCase()}</span><span>${pct}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%; background:${moods[m].color}"></div></div>`;
-      });
-      document.getElementById('statsBars').innerHTML=bars;
+      
+      const forecast = forecasts[Math.floor(Math.random() * forecasts.length)];
+      document.getElementById('vibeForecast').innerText = `COSMIC FORECAST: ${forecast}`;
     }
 
     function renderRx(name, specificMood = null) {
       let target = specificMood;
       if(!target) {
-        if (moodHistory.length > 0) target = moodHistory[moodHistory.length - 1]; // Last mood
+        if (moodHistory.length > 0) target = moodHistory[moodHistory.length - 1]; 
         else target = "general";
       }
-      const d = medicalDb[target] || medicalDb.general;
+      const data = medicalDb[target] || medicalDb.general;
+      
+      // CHECK STREAK
+      const last3 = moodHistory.slice(-3);
+      const isStreak = last3.length === 3 && last3.every(m => m === last3[0]) && last3[0] === target;
+      
+      const diagList = isStreak && data.severe ? data.severe : data.diagnoses;
+      const diag = diagList[Math.floor(Math.random() * diagList.length)];
+      const treat = data.treatments[Math.floor(Math.random() * data.treatments.length)];
+      
       document.getElementById('rxName').innerText=name.toUpperCase();
-      document.getElementById('rxDiagnosis').innerText=d.diagnoses[Math.floor(Math.random()*d.diagnoses.length)];
-      document.getElementById('rxTreatment').innerText=d.treatments[Math.floor(Math.random()*d.treatments.length)];
+      document.getElementById('rxDiagnosis').innerText=diag;
+      document.getElementById('rxTreatment').innerText=treat;
     }
 
     function renderBag() {
@@ -460,11 +479,18 @@
     }
 
     function spinGacha() {
-      if(lifetimeSpend<100) { alert("Need $100 Debt!"); return; }
-      lifetimeSpend-=100; localStorage.setItem('loyaltySpend', lifetimeSpend); updateDisplay();
+      if (lifetimeAura < -5000) { alert("⛔ BAD VIBES DETECTED. MACHINE JAMMED. PLEASE HEAL AURA."); return; }
+      if (lifetimeSpend < 300) { alert("Need $300 Debt!"); return; }
+      
+      lifetimeSpend -= 300; localStorage.setItem('loyaltySpend', lifetimeSpend); updateDisplay();
+      
       const globe=document.getElementById('gachaGlobe'); globe.style.animation="shake 0.5s";
       setTimeout(()=>{ globe.style.animation=""; 
-        const r=Math.random(); let t='common'; if(r>0.85)t='legendary'; else if(r>0.5)t='rare';
+        const r=Math.random(); 
+        let t='common'; 
+        if(r>0.95) t='legendary'; // 5%
+        else if(r>0.70) t='rare'; // 25%
+        
         const item=gachaLoot[t][Math.floor(Math.random()*gachaLoot[t].length)];
         inventory[item]=(inventory[item]||0)+1; localStorage.setItem('loyaltyInventory', JSON.stringify(inventory));
         document.getElementById('prizeName').innerText=item;
@@ -473,31 +499,27 @@
       }, 500);
     }
 
-    // --- GENERATE ---
+    // --- GENERATE RECEIPT ---
     function generate(moodKey) {
       const name = document.getElementById('nameInput').value || "Guest";
       const theme = moods[moodKey];
       
-      // State
       moodCounts[moodKey] = (moodCounts[moodKey]||0)+1; 
       localStorage.setItem('loyaltyMoods', JSON.stringify(moodCounts));
       moodHistory.push(moodKey); if(moodHistory.length>50) moodHistory.shift();
       localStorage.setItem('loyaltyHistory', JSON.stringify(moodHistory));
       totalReceipts++; localStorage.setItem('loyaltyCount', totalReceipts);
       
-      // Aura
       lifetimeAura += theme.aura; localStorage.setItem('loyaltyAura', lifetimeAura);
 
       document.getElementById('controls').style.display = 'none';
       document.getElementById('receiptScreen').style.display = 'block';
 
-      // Visuals
       document.documentElement.style.setProperty('--bg', theme.bg);
       document.documentElement.style.setProperty('--accent', theme.color);
       document.documentElement.style.setProperty('--text', theme.color);
       document.getElementById('asciiDisplay').innerText = theme.art;
 
-      // REWARD?
       if (totalReceipts % 5 === 0) {
         document.getElementById('storeName').innerText = "SELF CARE";
         document.getElementById('infoBubble').innerHTML = `STATUS: <b>REWARD UNLOCKED</b><br>Click tasks to claim Aura!`;
@@ -510,16 +532,21 @@
         document.getElementById('rxNavContainer').innerHTML = "";
         document.getElementById('bottomExtras').innerHTML = `<div class="forecast">ENJOY YOUR BREAK</div>`;
       } else {
-        // SHOPPING
         document.getElementById('storeName').innerText = shopNames[Math.floor(Math.random()*shopNames.length)];
         let pool = [...allItems];
-        theme.items.forEach(i => pool.push({name:i, price:20}));
-        const selected = pool.sort(()=>0.5-Math.random()).slice(0,4);
+        theme.items.forEach(i => pool.push({name:i, rare:false})); // Specific mood items
+        
+        const count = Math.floor(Math.random() * 3) + 3;
+        const selected = pool.sort(()=>0.5-Math.random()).slice(0, count);
         
         let html='', total=0;
+        const minPrice = theme.range[0], maxPrice = theme.range[1];
+        
         selected.forEach(i => {
-          total+=i.price;
-          html+=`<div class="item"><span>1x ${i.name}</span><span>$${i.price.toFixed(2)}</span></div>`;
+          // Calculate variable price based on mood range
+          const price = Math.random() * (maxPrice - minPrice) + minPrice;
+          total += price;
+          html += `<div class="item"><span>1x ${i.name}</span><span>$${price.toFixed(2)}</span></div>`;
           inventory[i.name] = (inventory[i.name]||0)+1;
         });
         localStorage.setItem('loyaltyInventory', JSON.stringify(inventory));
@@ -531,7 +558,6 @@
         document.getElementById('infoBubble').innerHTML = `MOOD: ${moodKey.toUpperCase()}<br>AURA CHANGE: ${theme.aura > 0 ? '+' : ''}${theme.aura}`;
         document.getElementById('loyaltySection').style.display = 'block';
         document.getElementById('rxNavContainer').innerHTML = `<button class="nav-btn" onclick="openScreen('rx')">NEED TREATMENT?</button>`;
-        // Save mood for Rx context
         document.getElementById('rxNavContainer').onclick = () => renderRx(name, moodKey);
         
         document.getElementById('scentDisplay').innerText = `SCENT: ${theme.scent}`;
@@ -557,7 +583,7 @@
       lifetimeAura += 2000; localStorage.setItem('loyaltyAura', lifetimeAura); updateDisplay();
     }
 
-    // --- INIT ---
+    // INIT
     const grid = document.getElementById('signGrid');
     Object.keys(moods).forEach(key => {
       const btn = document.createElement('button');
